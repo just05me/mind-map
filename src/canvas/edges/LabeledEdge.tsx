@@ -2,15 +2,19 @@ import {
   BaseEdge,
   EdgeLabelRenderer,
   getBezierPath,
+  useInternalNode,
   type EdgeProps,
 } from '@xyflow/react'
 import { useEffect, useRef, useState } from 'react'
 import { useApp } from '../../store/AppContext'
 import type { AppEdge } from '../../model/types'
 import { Icon } from '../../ui/Icon'
+import { getEdgeParams } from './floating'
 
 export function LabeledEdge({
   id,
+  source,
+  target,
   sourceX,
   sourceY,
   targetX,
@@ -25,13 +29,22 @@ export function LabeledEdge({
   const { deleteElements, updateEdgeData } = useApp()
   const [editing, setEditing] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Float the endpoints to the nearest borders once both nodes are measured;
+  // fall back to the handle-based coordinates React Flow supplies otherwise.
+  const sourceNode = useInternalNode(source)
+  const targetNode = useInternalNode(target)
+  const floating =
+    sourceNode && targetNode ? getEdgeParams(sourceNode, targetNode) : null
+
   const [path, labelX, labelY] = getBezierPath({
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
-    sourcePosition,
-    targetPosition,
+    sourceX: floating?.sx ?? sourceX,
+    sourceY: floating?.sy ?? sourceY,
+    targetX: floating?.tx ?? targetX,
+    targetY: floating?.ty ?? targetY,
+    sourcePosition: floating?.sourcePos ?? sourcePosition,
+    targetPosition: floating?.targetPos ?? targetPosition,
+    curvature: 0.3,
   })
   const label = data?.label ?? ''
 
@@ -48,7 +61,7 @@ export function LabeledEdge({
       <BaseEdge id={id} path={path} style={style} markerEnd={markerEnd} interactionWidth={24} />
       <EdgeLabelRenderer>
         <div
-          className="nodrag nopan pointer-events-auto absolute"
+          className="nodrag nopan pointer-events-auto absolute flex flex-col items-center"
           style={{ transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)` }}
         >
           {editing ? (

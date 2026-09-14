@@ -145,6 +145,19 @@ h2,
   box-shadow: 0 0 0 1px var(--accent), var(--shadow-soft);
 }
 
+/* Signature-shape nodes (cylinder, rack, …): icon-with-caption card. */
+.node-shape {
+  background: var(--panel-solid);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow 120ms ease, border-color 120ms ease;
+}
+
+.node-shape.is-selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow-soft);
+}
+
 /* ---------- Controls ---------- */
 
 .icon-btn,

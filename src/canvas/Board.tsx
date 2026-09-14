@@ -2,6 +2,7 @@ import {
   Background,
   BackgroundVariant,
   ConnectionMode,
+  MarkerType,
   MiniMap,
   ReactFlow,
   SelectionMode,
@@ -108,6 +109,12 @@ export function Board() {
           ...edge.style,
           stroke: color,
           strokeWidth: edge.selected ? 2.6 : 1.6,
+        },
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          width: 15,
+          height: 15,
+          color,
         },
       }
     })

@@ -20,7 +20,6 @@ export function createNodeAt(
     data: {
       kind: kind.id,
       title: kind.name,
-      subtitle: type === 'kind' ? kind.name : undefined,
       status: 'planned',
       items: [],
     },

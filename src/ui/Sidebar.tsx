@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react'
 import { KindBadge } from '../canvas/nodes/KindBadge'
 import { QUICK_COLORS } from '../canvas/SelectionToolbar'
 import { requireKind } from '../model/kinds'
+import { nodeDesign } from '../model/node-design'
 import { isStatusBoardType } from '../model/node-type'
 import { matchPaperPreset, PAPER_PRESETS, paperColor } from '../model/paper'
 import { STATUSES, statusClass, statusLabel } from '../model/status'
@@ -332,6 +333,7 @@ function NodeInspector({ node }: { node: AppNode }) {
   const items = node.data.items ?? []
   const hasStatus = isStatusBoardType(node.type)
   const hasDetails = node.type === 'kind' || node.type === 'comment' || node.type === 'note'
+  const fields = node.type === 'kind' ? nodeDesign(node.data.kind).fields : null
   const parent = node.parentId ? project.nodes.find((item) => item.id === node.parentId) : undefined
 
   return (
@@ -390,10 +392,10 @@ function NodeInspector({ node }: { node: AppNode }) {
       {hasDetails ? (
         <Section title="Описание">
           <label className="block">
-            <FieldLabel>Подзаголовок</FieldLabel>
+            <FieldLabel>{fields?.subtitleLabel ?? 'Подзаголовок'}</FieldLabel>
             <input
               className="field text-[13px]"
-              placeholder="GET /api/chat"
+              placeholder={fields?.subtitlePlaceholder ?? 'Короткое пояснение'}
               value={node.data.subtitle ?? ''}
               onChange={(event) => updateNodeData(node.id, { subtitle: event.target.value })}
             />
@@ -411,22 +413,25 @@ function NodeInspector({ node }: { node: AppNode }) {
 
       {node.type === 'kind' ? (
         <Section title="Детали" defaultOpen={Boolean(node.data.path || items.length)}>
-          <label className="block">
-            <FieldLabel>Путь в коде</FieldLabel>
-            <input
-              className="field font-mono text-xs"
-              placeholder="src/lib/example.ts"
-              value={node.data.path ?? ''}
-              onChange={(event) => updateNodeData(node.id, { path: event.target.value })}
-            />
-          </label>
+          {fields?.showPath ? (
+            <label className="block">
+              <FieldLabel>Путь в коде</FieldLabel>
+              <input
+                className="field font-mono text-xs"
+                placeholder="src/lib/example.ts"
+                value={node.data.path ?? ''}
+                onChange={(event) => updateNodeData(node.id, { path: event.target.value })}
+              />
+            </label>
+          ) : null}
           <div>
-            <FieldLabel>Пункты (модели, инструменты…)</FieldLabel>
+            <FieldLabel>{fields?.itemsLabel ?? 'Пункты'}</FieldLabel>
             <div className="space-y-1">
               {items.map((item, index) => (
                 <div key={index} className="flex gap-1">
                   <input
                     className="field flex-1 text-xs"
+                    placeholder={fields?.itemsPlaceholder}
                     value={item}
                     onChange={(event) => {
                       const next = [...items]

@@ -1,4 +1,4 @@
-import type { KindDef } from '../types'
+import type { KindDef } from '../model/types'
 
 export function ColorField({
   label,
@@ -43,41 +43,6 @@ export function ColorField({
           </button>
         ) : null}
       </div>
-    </label>
-  )
-}
-
-export function ColorSwatch({
-  color,
-  onChange,
-  title,
-}: {
-  color: string
-  onChange?: (color: string) => void
-  title?: string
-}) {
-  if (!onChange) {
-    return (
-      <span
-        title={title}
-        className="inline-block h-3 w-3 shrink-0 rounded-full border border-black/10 dark:border-white/15"
-        style={{ background: color }}
-      />
-    )
-  }
-  return (
-    <label title={title} className="nodrag relative inline-block h-3 w-3 shrink-0">
-      <span
-        className="absolute inset-0 rounded-full border border-black/10 dark:border-white/15"
-        style={{ background: color }}
-      />
-      <input
-        type="color"
-        className="absolute inset-0 cursor-pointer opacity-0"
-        value={normalizeHex(color)}
-        onChange={(event) => onChange(event.target.value)}
-        onPointerDown={(event) => event.stopPropagation()}
-      />
     </label>
   )
 }

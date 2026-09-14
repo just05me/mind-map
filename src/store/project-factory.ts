@@ -1,6 +1,6 @@
-import { cloneBuiltinKinds } from '../kinds/catalog'
+import { cloneBuiltinKinds } from '../model/kinds'
 import { createId } from '../lib/id'
-import type { Project } from '../types'
+import type { Project } from '../model/types'
 
 export function createEmptyProject(title = 'Новый проект'): Project {
   return {

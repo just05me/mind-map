@@ -1,6 +1,6 @@
 import { NodeResizer, type NodeProps } from '@xyflow/react'
 import { useApp } from '../../store/AppContext'
-import type { AppNode, TextAlign, TextWeight } from '../../types'
+import type { AppNode, TextAlign, TextWeight } from '../../model/types'
 import { InlineTitle } from './InlineTitle'
 
 export function TextNode({ id, data, selected }: NodeProps<AppNode>) {

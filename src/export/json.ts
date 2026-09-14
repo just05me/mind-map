@@ -1,7 +1,7 @@
-import { mergeBuiltinKinds } from '../kinds/catalog'
-import { downloadText, slugify } from '../lib/download'
+import { mergeBuiltinKinds } from '../model/kinds'
+import { downloadText, slugify } from './download'
 import { createEmptyProject } from '../store/project-factory'
-import type { Project } from '../types'
+import type { Project } from '../model/types'
 
 export function exportProjectJson(project: Project): void {
   downloadText(

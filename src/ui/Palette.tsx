@@ -1,11 +1,10 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { useState } from 'react'
 import { KindBadge } from '../canvas/nodes/KindBadge'
-import { KIND_GROUPS, createCustomKind, kindsInGroup } from '../kinds/catalog'
 import { useUiMotion } from '../lib/motion'
+import { KIND_GROUPS, createCustomKind, kindsInGroup, type KindGroupId } from '../model/kinds'
+import type { KindDef } from '../model/types'
 import { useApp } from '../store/AppContext'
-import type { KindGroupId } from '../kinds/catalog'
-import type { KindDef } from '../types'
 import { Icon } from './Icon'
 
 export function Palette() {

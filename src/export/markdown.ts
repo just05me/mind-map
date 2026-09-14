@@ -1,8 +1,8 @@
-import { requireKind } from '../kinds/catalog'
-import { downloadText, slugify } from '../lib/download'
-import { isStatusBoardType } from '../lib/node-type'
-import { STATUSES, statusLabel } from '../lib/status'
-import type { Project } from '../types'
+import { requireKind } from '../model/kinds'
+import { downloadText, slugify } from './download'
+import { isStatusBoardType } from '../model/node-type'
+import { STATUSES, statusLabel } from '../model/status'
+import type { Project } from '../model/types'
 
 export function projectToMarkdown(project: Project): string {
   const lines: string[] = [`# ${project.title}`, '']

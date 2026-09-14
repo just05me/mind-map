@@ -1,10 +1,10 @@
 import { useReactFlow } from '@xyflow/react'
-import { createNodeAt } from '../canvas/create-node'
-import { MOD_KEY } from '../canvas/shortcuts'
-import { nodeTypeForKind } from '../lib/node-type'
+import { createNodeAt } from './create-node'
+import { MOD_KEY } from './shortcuts'
+import { nodeTypeForKind } from '../model/node-type'
 import { useApp } from '../store/AppContext'
-import type { KindId } from '../types'
-import { Icon, type IconName } from './Icon'
+import type { KindId } from '../model/types'
+import { Icon, type IconName } from '../ui/Icon'
 
 const QUICK_START: { kind: KindId; label: string; icon: IconName }[] = [
   { kind: 'module', label: 'Узел', icon: 'box' },

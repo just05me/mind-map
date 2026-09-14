@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { supportsInlineTitle } from '../lib/node-type'
+import { supportsInlineTitle } from '../model/node-type'
 import { useApp } from '../store/AppContext'
-import type { KindId } from '../types'
+import type { KindId } from '../model/types'
 import { Icon, type IconName } from '../ui/Icon'
 import { MOD_KEY } from './shortcuts'
 

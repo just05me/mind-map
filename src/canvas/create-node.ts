@@ -1,7 +1,7 @@
-import { requireKind } from '../kinds/catalog'
+import { requireKind } from '../model/kinds'
 import { createId } from '../lib/id'
-import { nodeTypeForKind } from '../lib/node-type'
-import type { AppNode, AppNodeType, KindId, Project } from '../types'
+import { nodeTypeForKind } from '../model/node-type'
+import type { AppNode, AppNodeType, KindId, Project } from '../model/types'
 
 export function createNodeAt(
   project: Project,

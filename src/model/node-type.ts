@@ -1,4 +1,4 @@
-import type { AppNodeType, KindId } from '../types'
+import type { AppNodeType, KindId } from './types'
 
 export function nodeTypeForKind(kind: KindId): AppNodeType {
   switch (kind) {

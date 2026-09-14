@@ -6,7 +6,7 @@ import {
 } from '@xyflow/react'
 import { useEffect, useRef, useState } from 'react'
 import { useApp } from '../../store/AppContext'
-import type { AppEdge } from '../../types'
+import type { AppEdge } from '../../model/types'
 import { Icon } from '../../ui/Icon'
 
 export function LabeledEdge({

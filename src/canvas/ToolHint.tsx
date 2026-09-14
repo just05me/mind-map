@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { requireKind } from '../kinds/catalog'
+import { requireKind } from '../model/kinds'
 import { useUiMotion } from '../lib/motion'
 import { useApp } from '../store/AppContext'
-import { Icon } from './Icon'
+import { Icon } from '../ui/Icon'
 
 /** Tells the user what the next click does while a non-default tool is active. */
 export function ToolHint() {

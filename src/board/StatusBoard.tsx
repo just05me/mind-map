@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { KindBadge } from '../canvas/nodes/KindBadge'
-import { requireKind } from '../kinds/catalog'
-import { isStatusBoardType } from '../lib/node-type'
-import { STATUSES, statusLabel } from '../lib/status'
+import { requireKind } from '../model/kinds'
+import { isStatusBoardType } from '../model/node-type'
+import { STATUSES, statusLabel } from '../model/status'
 import { useApp } from '../store/AppContext'
-import type { AppNode, Status } from '../types'
+import type { AppNode, Status } from '../model/types'
 
 export function StatusBoard() {
   const { project, updateNodeData, selectNode, state } = useApp()

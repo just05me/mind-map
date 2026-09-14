@@ -1,8 +1,8 @@
 import { NodeResizer, type NodeProps } from '@xyflow/react'
-import { nodeAccent } from '../../lib/node-color'
-import { requireKind } from '../../kinds/catalog'
+import { nodeAccent } from '../../model/color'
+import { requireKind } from '../../model/kinds'
 import { useApp } from '../../store/AppContext'
-import type { AppNode } from '../../types'
+import type { AppNode } from '../../model/types'
 import { InlineTitle } from './InlineTitle'
 import { NodeHandles } from './NodeHandles'
 

@@ -1,4 +1,4 @@
-import type { Status } from '../types'
+import type { Status } from './types'
 
 export function statusLabel(status: Status): string {
   switch (status) {
@@ -35,15 +35,3 @@ export function statusClass(status: Status): string {
 }
 
 export const STATUSES: Status[] = ['planned', 'doing', 'done', 'broken']
-
-export function parseStatus(value: string): Status {
-  switch (value) {
-    case 'planned':
-    case 'doing':
-    case 'done':
-    case 'broken':
-      return value
-    default:
-      return 'planned'
-  }
-}

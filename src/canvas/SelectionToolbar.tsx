@@ -1,6 +1,6 @@
 import { NodeToolbar, Position } from '@xyflow/react'
-import { requireKind } from '../kinds/catalog'
-import { supportsInlineTitle } from '../lib/node-type'
+import { requireKind } from '../model/kinds'
+import { supportsInlineTitle } from '../model/node-type'
 import { useApp } from '../store/AppContext'
 import { Icon } from '../ui/Icon'
 

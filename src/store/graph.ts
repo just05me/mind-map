@@ -1,5 +1,5 @@
 import { createId } from '../lib/id'
-import type { AppEdge, AppNode } from '../types'
+import type { AppEdge, AppNode } from '../model/types'
 
 export type Graph = { nodes: AppNode[]; edges: AppEdge[] }
 

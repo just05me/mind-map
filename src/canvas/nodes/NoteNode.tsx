@@ -1,9 +1,9 @@
 import { type NodeProps } from '@xyflow/react'
-import { nodeAccent, nodeFill } from '../../lib/node-color'
-import { requireKind } from '../../kinds/catalog'
-import { statusLabel } from '../../lib/status'
+import { nodeAccent, nodeFill } from '../../model/color'
+import { requireKind } from '../../model/kinds'
+import { statusLabel } from '../../model/status'
 import { useApp } from '../../store/AppContext'
-import type { AppNode } from '../../types'
+import type { AppNode } from '../../model/types'
 import { InlineTitle } from './InlineTitle'
 import { NodeHandles } from './NodeHandles'
 

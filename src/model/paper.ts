@@ -1,4 +1,4 @@
-import type { ThemeMode } from '../types'
+import type { ThemeMode } from './types'
 
 export type PaperPresetId = 'auto' | 'warm' | 'cool' | 'paper' | 'ink'
 

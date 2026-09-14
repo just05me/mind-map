@@ -1,5 +1,5 @@
-import { contrastText } from '../../lib/color'
-import type { KindDef } from '../../types'
+import { contrastText } from '../../model/color'
+import type { KindDef } from '../../model/types'
 
 export function KindBadge({
   kind,

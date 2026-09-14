@@ -1,5 +1,5 @@
 import Dagre from '@dagrejs/dagre'
-import type { AppEdge, AppNode, AppNodeType } from '../types'
+import type { AppEdge, AppNode, AppNodeType } from '../model/types'
 
 function nodeSize(node: AppNode): { width: number; height: number } {
   const measuredW = node.measured?.width

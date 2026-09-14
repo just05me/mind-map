@@ -1,8 +1,8 @@
 import { getNodesBounds, getViewportForBounds } from '@xyflow/react'
 import { toPng } from 'html-to-image'
-import { downloadDataUrl, slugify } from '../lib/download'
-import { resolveCanvasColor } from '../lib/paper'
-import type { Project, ThemeMode } from '../types'
+import { downloadDataUrl, slugify } from './download'
+import { resolveCanvasColor } from '../model/paper'
+import type { Project, ThemeMode } from '../model/types'
 
 const IMAGE_WIDTH = 1920
 const IMAGE_HEIGHT = 1080

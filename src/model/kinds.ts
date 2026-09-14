@@ -1,5 +1,5 @@
 import { createId } from '../lib/id'
-import type { KindDef, KindId } from '../types'
+import type { KindDef, KindId } from './types'
 
 export const BUILTIN_KINDS: KindDef[] = [
   { id: 'entry', name: 'Вход', letter: 'E', color: '#0071e3', builtin: true },
@@ -75,7 +75,7 @@ export function cloneBuiltinKinds(): KindDef[] {
   return BUILTIN_KINDS.map((kind) => ({ ...kind }))
 }
 
-export function findKind(kinds: KindDef[], id: KindId): KindDef | undefined {
+function findKind(kinds: KindDef[], id: KindId): KindDef | undefined {
   return kinds.find((kind) => kind.id === id)
 }
 

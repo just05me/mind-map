@@ -16,7 +16,7 @@ import {
   useReducer,
   type ReactNode,
 } from 'react'
-import { mergeBuiltinKinds, removeKind, upsertKind } from '../kinds/catalog'
+import { mergeBuiltinKinds, removeKind, upsertKind } from '../model/kinds'
 import { createId } from '../lib/id'
 import type {
   AppEdge,
@@ -30,7 +30,7 @@ import type {
   Project,
   ThemeMode,
   ViewMode,
-} from '../types'
+} from '../model/types'
 import {
   extractSubgraph,
   instantiateSubgraph,

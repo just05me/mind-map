@@ -1,5 +1,5 @@
-import { mergeBuiltinKinds } from '../kinds/catalog'
-import type { PersistedStore, Project, ThemeMode } from '../types'
+import { mergeBuiltinKinds } from '../model/kinds'
+import type { PersistedStore, Project, ThemeMode } from '../model/types'
 import { createEmptyProject } from './project-factory'
 
 const STORAGE_KEY = 'mind-map.store.v1'

@@ -1,0 +1,25 @@
+export function downloadText(filename: string, content: string, mime: string): void {
+  const blob = new Blob([content], { type: mime })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  link.click()
+  URL.revokeObjectURL(url)
+}
+
+export function downloadDataUrl(filename: string, dataUrl: string): void {
+  const link = document.createElement('a')
+  link.href = dataUrl
+  link.download = filename
+  link.click()
+}
+
+export function slugify(value: string): string {
+  const slug = value
+    .trim()
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, '-')
+    .replace(/^-|-$/g, '')
+  return slug || 'project'
+}

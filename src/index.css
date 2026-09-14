@@ -1,0 +1,208 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+  --bg: #f5f5f7;
+  --panel: rgba(255, 255, 255, 0.62);
+  --panel-solid: #f6f6f8;
+  --panel-heavy: rgba(246, 246, 248, 0.88);
+  --panel-muted: rgba(255, 255, 255, 0.42);
+  --border: rgba(0, 0, 0, 0.08);
+  --hairline: rgba(255, 255, 255, 0.55);
+  --text: #1d1d1f;
+  --muted: #6e6e73;
+  --accent: #0071e3;
+  --accent-soft: rgba(0, 113, 227, 0.12);
+  --shadow: 0 10px 32px rgba(15, 18, 28, 0.1);
+  --shadow-soft: 0 4px 18px rgba(15, 18, 28, 0.06);
+  --chrome-blur: 22px;
+  font: 100%/1.47 system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: #0b0b0d;
+  --panel: rgba(28, 28, 30, 0.72);
+  --panel-solid: #1c1c1e;
+  --panel-heavy: rgba(44, 44, 46, 0.88);
+  --panel-muted: rgba(44, 44, 46, 0.55);
+  --border: rgba(255, 255, 255, 0.1);
+  --hairline: rgba(255, 255, 255, 0.12);
+  --text: #f5f5f7;
+  --muted: #a1a1a6;
+  --accent: #0a84ff;
+  --accent-soft: rgba(10, 132, 255, 0.18);
+  --shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  letter-spacing: 0;
+  font-optical-sizing: auto;
+}
+
+h1,
+h2,
+.display {
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.chrome {
+  background: var(--panel);
+  backdrop-filter: blur(var(--chrome-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--chrome-blur)) saturate(180%);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+}
+
+.chrome-heavy {
+  background: var(--panel-heavy);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.chrome-bar {
+  background: var(--panel);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.pressable {
+  transition: transform 100ms ease-out, background-color 120ms ease, color 120ms ease;
+}
+
+.pressable:active {
+  transform: scale(0.97);
+}
+
+.field {
+  width: 100%;
+  border-radius: 0.7rem;
+  border: 1px solid var(--border);
+  background: var(--panel-solid);
+  padding: 0.45rem 0.65rem;
+  color: var(--text);
+  outline: none;
+}
+
+.field:focus {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+}
+
+.react-flow {
+  background: transparent;
+}
+
+.invisible .react-flow,
+.invisible .react-flow__renderer,
+.invisible .react-flow__pane {
+  visibility: hidden !important;
+}
+
+.react-flow__minimap {
+  background: var(--panel-heavy) !important;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.react-flow__controls {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  background: var(--panel-heavy);
+}
+
+.react-flow__controls-button {
+  background: transparent !important;
+  border-bottom-color: var(--border) !important;
+  fill: var(--text) !important;
+}
+
+.react-flow__controls-button:active {
+  transform: scale(0.97);
+}
+
+.react-flow__attribution {
+  background: transparent !important;
+  opacity: 0.45;
+}
+
+.react-flow__edge-path {
+  stroke-linecap: round;
+}
+
+.node-card {
+  box-shadow: var(--shadow-soft);
+}
+
+.kind-dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
+.tool-text .react-flow__pane {
+  cursor: text;
+}
+
+.tool-pan .react-flow__pane {
+  cursor: grab;
+}
+
+.tool-connect .react-flow__pane,
+.tool-frame .react-flow__pane,
+.tool-add .react-flow__pane {
+  cursor: crosshair;
+}
+
+.inline-editor {
+  width: 100%;
+  resize: none;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .chrome,
+  .chrome-heavy,
+  .chrome-bar {
+    background: var(--panel-solid);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pressable,
+  .pressable:active {
+    transition: none;
+    transform: none;
+  }
+}

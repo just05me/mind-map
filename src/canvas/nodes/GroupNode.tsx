@@ -1,9 +1,10 @@
-import { Handle, NodeResizer, Position, type NodeProps } from '@xyflow/react'
+import { NodeResizer, type NodeProps } from '@xyflow/react'
 import { nodeAccent } from '../../lib/node-color'
 import { requireKind } from '../../kinds/catalog'
 import { useApp } from '../../store/AppContext'
 import type { AppNode } from '../../types'
 import { InlineTitle } from './InlineTitle'
+import { NodeHandles } from './NodeHandles'
 
 export function GroupNode({ id, data, selected }: NodeProps<AppNode>) {
   const { project } = useApp()
@@ -32,8 +33,7 @@ export function GroupNode({ id, data, selected }: NodeProps<AppNode>) {
         placeholder="Группа"
         className="px-2 py-1 text-[11px] font-medium uppercase tracking-wide text-[var(--muted)]"
       />
-      <Handle type="target" position={Position.Left} className="!h-2.5 !w-2.5 !bg-zinc-400" />
-      <Handle type="source" position={Position.Right} className="!h-2.5 !w-2.5 !bg-zinc-400" />
+      <NodeHandles />
     </div>
   )
 }

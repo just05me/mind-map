@@ -1,62 +1,213 @@
-import { AnimatePresence, motion } from 'motion/react'
+import { useState, type ReactNode } from 'react'
 import { KindBadge } from '../canvas/nodes/KindBadge'
+import { QUICK_COLORS } from '../canvas/SelectionToolbar'
 import { requireKind } from '../kinds/catalog'
-import { useUiMotion } from '../lib/motion'
 import { isStatusBoardType } from '../lib/node-type'
 import { matchPaperPreset, PAPER_PRESETS, paperColor } from '../lib/paper'
-import { STATUSES, parseStatus, statusLabel } from '../lib/status'
+import { STATUSES, statusClass, statusLabel } from '../lib/status'
 import { useApp } from '../store/AppContext'
-import type { AppNode, TextAlign, TextWeight } from '../types'
+import type { AppEdge, AppNode, Status, TextAlign, TextWeight } from '../types'
 import { ColorField, KindColorRow } from './ColorField'
+import { Icon } from './Icon'
 
 export function Sidebar() {
   const { project, state } = useApp()
+  const selectedNodes = project.nodes.filter((item) => item.selected)
   const node = project.nodes.find((item) => item.id === state.selectedNodeId)
   const edge = project.edges.find((item) => item.id === state.selectedEdgeId)
-  const motionUi = useUiMotion()
 
+  if (node) return <NodeInspector key={node.id} node={node} />
+  if (edge) return <EdgeInspector key={edge.id} edgeId={edge.id} />
+  if (selectedNodes.length > 1) return <MultiInspector nodes={selectedNodes} />
+  return <BoardInspector />
+}
+
+function Section({
+  title,
+  children,
+  defaultOpen = true,
+}: {
+  title: string
+  children: ReactNode
+  defaultOpen?: boolean
+}) {
+  const [open, setOpen] = useState(defaultOpen)
   return (
-    <aside className="chrome-heavy flex h-full w-[280px] flex-col overflow-hidden rounded-[1.35rem]">
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={node?.id ?? edge?.id ?? 'board'}
-          initial={motionUi.panelEnter}
-          animate={motionUi.panelShown}
-          exit={motionUi.panelLeave}
-          transition={motionUi.spring}
-          className="flex min-h-0 flex-1 flex-col overflow-y-auto"
+    <section className="border-b border-[var(--border)] last:border-b-0">
+      <button
+        type="button"
+        className="flex w-full items-center gap-1 px-3 py-2.5 text-[11px] font-semibold text-[var(--muted)] hover:text-[var(--text)]"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+      >
+        <Icon name="chevronDown" size={12} className={`transition-transform ${open ? '' : '-rotate-90'}`} />
+        {title}
+      </button>
+      {open ? <div className="space-y-3 px-3 pb-3">{children}</div> : null}
+    </section>
+  )
+}
+
+function FieldLabel({ children }: { children: ReactNode }) {
+  return <span className="mb-1 block text-[11px] text-[var(--muted)]">{children}</span>
+}
+
+function StatusPicker({ value, onChange }: { value?: Status; onChange: (status: Status) => void }) {
+  return (
+    <div className="grid grid-cols-2 gap-1">
+      {STATUSES.map((status) => (
+        <button
+          key={status}
+          type="button"
+          aria-pressed={value === status}
+          className={`rounded-lg border px-2 py-1 text-[11px] ${
+            value === status
+              ? `border-transparent ${statusClass(status)} font-medium`
+              : 'border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)]'
+          }`}
+          onClick={() => onChange(status)}
         >
-          {node ? (
-            <NodeInspector node={node} />
-          ) : edge ? (
-            <EdgeInspector edgeId={edge.id} color={edge.data?.color} />
-          ) : (
-            <BoardInspector />
-          )}
-        </motion.div>
-      </AnimatePresence>
-    </aside>
+          {statusLabel(status)}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function SwatchRow({
+  value,
+  onChange,
+}: {
+  value?: string
+  onChange: (color: string | undefined) => void
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      {QUICK_COLORS.map((color) => (
+        <button
+          key={color}
+          type="button"
+          aria-label={`Цвет ${color}`}
+          className={`swatch !h-5 !w-5 ${value === color ? 'is-active' : ''}`}
+          style={{ background: color }}
+          onClick={() => onChange(color)}
+        />
+      ))}
+      <label className="swatch swatch-custom !h-5 !w-5" title="Свой цвет">
+        <input
+          type="color"
+          className="absolute inset-0 cursor-pointer opacity-0"
+          value={value && /^#[0-9a-f]{6}$/i.test(value) ? value : '#8e8e93'}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      </label>
+      {value ? (
+        <button type="button" className="ml-auto text-[11px] text-[var(--muted)] hover:text-[var(--text)]" onClick={() => onChange(undefined)}>
+          Сброс
+        </button>
+      ) : null}
+    </div>
+  )
+}
+
+function InspectorHeader({
+  eyebrow,
+  children,
+  onDuplicate,
+  onDelete,
+}: {
+  eyebrow: ReactNode
+  children: ReactNode
+  onDuplicate?: () => void
+  onDelete: () => void
+}) {
+  return (
+    <div className="border-b border-[var(--border)] px-3 py-3">
+      <div className="flex items-center justify-between gap-2">
+        <div className="min-w-0 text-[11px] text-[var(--muted)]">{eyebrow}</div>
+        <div className="flex shrink-0 items-center gap-0.5">
+          {onDuplicate ? (
+            <button type="button" className="icon-btn" aria-label="Дублировать" data-tip="Дублировать" data-tip-side="left" onClick={onDuplicate}>
+              <Icon name="copy" size={15} />
+            </button>
+          ) : null}
+          <button type="button" className="icon-btn danger" aria-label="Удалить" data-tip="Удалить" data-tip-side="left" onClick={onDelete}>
+            <Icon name="trash" size={15} />
+          </button>
+        </div>
+      </div>
+      {children}
+    </div>
   )
 }
 
 function BoardInspector() {
-  const { project, state, setCanvasColor, updateKind, selectNode } = useApp()
+  const { project, state, setCanvasColor, updateKind, selectNode, setShortcutsOpen } = useApp()
   const preset = matchPaperPreset(project.canvasColor, state.theme)
-  const used = project.nodes.filter((node) => isStatusBoardType(node.type) || node.type === 'text')
+  const cards = project.nodes.filter((node) => isStatusBoardType(node.type))
+  const kindCounts = new Map<string, number>()
+  for (const node of cards) kindCounts.set(node.data.kind, (kindCounts.get(node.data.kind) ?? 0) + 1)
+  const listed = project.nodes.filter((node) => isStatusBoardType(node.type) || node.type === 'text' || node.type === 'frame')
 
   return (
-    <div className="px-4 py-4">
-      <div className="text-[11px] font-semibold uppercase tracking-wide text-[var(--muted)]">
-        Доска
+    <>
+      <div className="px-3 py-3 text-[12px] leading-5 text-[var(--muted)]">
+        Выберите элемент на холсте, чтобы изменить его.{' '}
+        <button type="button" className="underline hover:text-[var(--text)]" onClick={() => setShortcutsOpen(true)}>
+          Горячие клавиши
+        </button>
       </div>
-      <h2 className="display mt-1 text-[17px] font-semibold">Где я и что дальше</h2>
-      <p className="mt-1 text-[12px] leading-5 text-[var(--muted)]">
-        Карта слева, свойства здесь. Двойной клик по холсту пишет текст. Выберите инструмент сверху.
-      </p>
 
-      <div className="mt-4">
-        <div className="mb-2 text-xs text-[var(--muted)]">Бумага холста</div>
-        <div className="grid grid-cols-2 gap-1.5">
+      <Section title="Сводка">
+        {cards.length === 0 ? (
+          <div className="text-[12px] text-[var(--muted)]">Пока пусто</div>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 gap-1">
+              {STATUSES.map((status) => (
+                <div key={status} className={`flex items-center justify-between rounded-lg px-2 py-1 text-[11px] ${statusClass(status)}`}>
+                  <span>{statusLabel(status)}</span>
+                  <span className="font-semibold tabular-nums">
+                    {cards.filter((node) => node.data.status === status).length}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-x-3 gap-y-1">
+              {[...kindCounts.entries()].map(([kindId, count]) => {
+                const kind = requireKind(project.kinds, kindId)
+                return (
+                  <span key={kindId} className="flex items-center gap-1.5 text-[11px]">
+                    <span className="kind-dot" style={{ background: kind.color }} />
+                    {kind.name} <span className="text-[var(--muted)]">{count}</span>
+                  </span>
+                )
+              })}
+            </div>
+          </>
+        )}
+      </Section>
+
+      {listed.length > 0 ? (
+        <Section title={`Элементы · ${listed.length}`}>
+          <div className="-mx-1 max-h-[240px] space-y-px overflow-y-auto">
+            {listed.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className="flex w-full items-center gap-2 rounded-lg px-1 py-1 text-left text-[12px] hover:bg-[var(--panel-muted)]"
+                onClick={() => selectNode(item.id)}
+              >
+                <KindBadge kind={requireKind(project.kinds, item.data.kind)} size={18} shape="square" />
+                <span className="truncate">{item.data.title || 'Без названия'}</span>
+              </button>
+            ))}
+          </div>
+        </Section>
+      ) : null}
+
+      <Section title="Холст">
+        <div className="grid grid-cols-3 gap-1.5">
           {PAPER_PRESETS.map((item) => {
             const color = paperColor(item, state.theme)
             const active = preset === item.id
@@ -64,273 +215,263 @@ function BoardInspector() {
               <button
                 key={item.id}
                 type="button"
-                className={`pressable rounded-xl border px-2 py-2 text-left text-[11px] ${
-                  active ? 'border-[var(--accent)]' : 'border-[var(--border)]'
+                className={`rounded-lg border p-1 text-left text-[10px] ${
+                  active ? 'border-[var(--accent)] text-[var(--accent)]' : 'border-[var(--border)] text-[var(--muted)]'
                 }`}
-                onPointerDown={() => setCanvasColor(item.id === 'auto' ? undefined : color)}
+                onClick={() => setCanvasColor(item.id === 'auto' ? undefined : color)}
               >
-                <span
-                  className="mb-1 block h-5 rounded-md border border-black/5"
-                  style={{ background: color }}
-                />
+                <span className="mb-1 block h-5 rounded-md border border-black/5" style={{ background: color }} />
                 {item.label}
               </button>
             )
           })}
         </div>
-        <div className="mt-2">
-          <ColorField
-            label="Свой цвет холста"
-            value={preset === 'custom' ? project.canvasColor : undefined}
-            fallback={paperColor(PAPER_PRESETS[0], state.theme)}
-            allowClear
-            onChange={(color) => setCanvasColor(color)}
-          />
-        </div>
-      </div>
+        <ColorField
+          label="Свой цвет"
+          value={preset === 'custom' ? project.canvasColor : undefined}
+          fallback={paperColor(PAPER_PRESETS[0], state.theme)}
+          allowClear
+          onChange={(color) => setCanvasColor(color)}
+        />
+      </Section>
 
-      <div className="mt-5">
-        <div className="mb-2 text-xs text-[var(--muted)]">Цвета типов</div>
+      <Section title="Цвета типов" defaultOpen={false}>
         <div className="space-y-1.5">
           {project.kinds.map((kind) => (
-            <KindColorRow
-              key={kind.id}
-              kind={kind}
-              onChange={(color) => updateKind({ ...kind, color })}
-            />
+            <KindColorRow key={kind.id} kind={kind} onChange={(color) => updateKind({ ...kind, color })} />
           ))}
         </div>
-      </div>
-
-      {used.length > 0 ? (
-        <div className="mt-5">
-          <div className="mb-2 text-xs text-[var(--muted)]">На доске</div>
-          <div className="space-y-1">
-            {used.slice(0, 8).map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                className="pressable flex w-full items-center gap-2 rounded-lg px-1 py-1 text-left text-xs hover:bg-[var(--panel-muted)]"
-                onPointerDown={() => selectNode(item.id)}
-              >
-                <KindBadge kind={requireKind(project.kinds, item.data.kind)} size={18} />
-                <span className="truncate">{item.data.title || 'Без названия'}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : null}
-    </div>
+      </Section>
+    </>
   )
 }
 
-function EdgeInspector({ edgeId, color }: { edgeId: string; color?: string }) {
-  const { project, updateEdgeData, selectEdge } = useApp()
-  const edge = project.edges.find((item) => item.id === edgeId)
-  const source = project.nodes.find((node) => node.id === edge?.source)
-  const fallback = source ? requireKind(project.kinds, source.data.kind).color : '#8e8e93'
+function MultiInspector({ nodes }: { nodes: AppNode[] }) {
+  const { updateNodeData, duplicateNodes, deleteElements } = useApp()
+  const ids = nodes.map((node) => node.id)
+  const cards = nodes.filter((node) => isStatusBoardType(node.type))
+  const sharedStatus = cards.every((node) => node.data.status === cards[0]?.data.status)
+    ? cards[0]?.data.status
+    : undefined
 
   return (
-    <div className="px-4 py-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="text-[11px] font-semibold uppercase tracking-wide text-[var(--muted)]">
-            Связь
-          </div>
-          <div className="mt-1 text-[15px] font-medium">Цвет линии</div>
-        </div>
-        <button
-          type="button"
-          className="pressable rounded-lg px-2 text-lg leading-none text-[var(--muted)]"
-          onPointerDown={() => selectEdge(null)}
-          aria-label="Закрыть"
-        >
-          ×
-        </button>
-      </div>
-      <div className="mt-4">
-        <ColorField
-          label="Цвет связи"
-          value={color}
-          fallback={fallback}
-          allowClear
-          onChange={(next) => updateEdgeData(edgeId, { color: next })}
+    <>
+      <InspectorHeader
+        eyebrow="Несколько элементов"
+        onDuplicate={() => duplicateNodes(ids)}
+        onDelete={() => deleteElements(ids)}
+      >
+        <div className="mt-1 text-[15px] font-medium">Выбрано: {nodes.length}</div>
+      </InspectorHeader>
+      {cards.length > 0 ? (
+        <Section title="Статус">
+          <StatusPicker
+            value={sharedStatus}
+            onChange={(status) => {
+              for (const node of cards) updateNodeData(node.id, { status })
+            }}
+          />
+        </Section>
+      ) : null}
+      <Section title="Цвет">
+        <SwatchRow
+          onChange={(color) => {
+            for (const id of ids) updateNodeData(id, { accentColor: color })
+          }}
         />
-      </div>
-    </div>
+      </Section>
+    </>
+  )
+}
+
+function EdgeInspector({ edgeId }: { edgeId: string }) {
+  const { project, updateEdgeData, deleteElements, selectNode } = useApp()
+  const edge = project.edges.find((item) => item.id === edgeId)
+  if (!edge) return null
+  const source = project.nodes.find((node) => node.id === edge.source)
+  const target = project.nodes.find((node) => node.id === edge.target)
+
+  return (
+    <>
+      <InspectorHeader eyebrow="Связь" onDelete={() => deleteElements([], [edgeId])}>
+        <div className="mt-1 flex items-center gap-1.5 text-[13px]">
+          <button type="button" className="truncate hover:underline" onClick={() => source && selectNode(source.id)}>
+            {source?.data.title || '—'}
+          </button>
+          <span className="text-[var(--muted)]">→</span>
+          <button type="button" className="truncate hover:underline" onClick={() => target && selectNode(target.id)}>
+            {target?.data.title || '—'}
+          </button>
+        </div>
+      </InspectorHeader>
+      <Section title="Подпись">
+        <input
+          className="field text-[13px]"
+          placeholder="Например: session, first message"
+          value={edge.data?.label ?? ''}
+          onChange={(event) => updateEdgeData(edgeId, { label: event.target.value || undefined })}
+        />
+      </Section>
+      <Section title="Цвет линии">
+        <SwatchRow value={edge.data?.color} onChange={(color) => updateEdgeData(edgeId, { color })} />
+      </Section>
+    </>
   )
 }
 
 function NodeInspector({ node }: { node: AppNode }) {
-  const { project, updateNodeData, detachFromGroup, removeCustomKind, selectNode, updateKind } = useApp()
+  const {
+    project,
+    updateNodeData,
+    detachFromGroup,
+    removeCustomKind,
+    duplicateNodes,
+    deleteElements,
+  } = useApp()
   const kind = requireKind(project.kinds, node.data.kind)
-  const outgoing = project.edges
-    .filter((edge) => edge.source === node.id)
-    .map((edge) => project.nodes.find((item) => item.id === edge.target))
-    .filter((item) => item != null)
-  const incoming = project.edges
-    .filter((edge) => edge.target === node.id)
-    .map((edge) => project.nodes.find((item) => item.id === edge.source))
-    .filter((item) => item != null)
   const items = node.data.items ?? []
-  const showTextControls = node.type === 'text'
+  const hasStatus = isStatusBoardType(node.type)
+  const hasDetails = node.type === 'kind' || node.type === 'comment' || node.type === 'note'
+  const parent = node.parentId ? project.nodes.find((item) => item.id === node.parentId) : undefined
 
   return (
     <>
-      <div className="flex items-center gap-2 px-4 pt-4">
-        <KindBadge kind={kind} />
-        <div className="min-w-0 flex-1">
-          <div className="text-xs text-[var(--muted)]">{kind.name}</div>
+      <InspectorHeader
+        eyebrow={
+          <span className="flex items-center gap-1.5">
+            <KindBadge kind={{ ...kind, color: node.data.accentColor ?? kind.color }} size={16} shape="square" />
+            {kind.name}
+            {parent ? <span className="truncate">· в «{parent.data.title}»</span> : null}
+          </span>
+        }
+        onDuplicate={() => duplicateNodes([node.id])}
+        onDelete={() => deleteElements([node.id])}
+      >
+        {node.type === 'text' ? null : (
           <input
-            className="w-full bg-transparent text-[15px] font-medium tracking-[-0.015em] outline-none"
+            className="mt-1 w-full rounded-md bg-transparent px-1 -mx-1 text-[15px] font-medium tracking-[-0.015em] outline-none hover:bg-[var(--panel-muted)] focus:bg-[var(--panel-muted)]"
+            value={node.data.title}
+            placeholder="Название"
+            onChange={(event) => updateNodeData(node.id, { title: event.target.value })}
+          />
+        )}
+      </InspectorHeader>
+
+      {node.type === 'text' ? (
+        <Section title="Текст">
+          <textarea
+            className="field min-h-[64px] text-[13px]"
             value={node.data.title}
             onChange={(event) => updateNodeData(node.id, { title: event.target.value })}
           />
-        </div>
-        <button
-          type="button"
-          className="pressable rounded-lg px-2 text-lg leading-none text-[var(--muted)]"
-          onPointerDown={() => selectNode(null)}
-          aria-label="Закрыть"
-        >
-          ×
-        </button>
-      </div>
+          <TextControls node={node} />
+        </Section>
+      ) : null}
 
-      <div className="space-y-3 px-4 py-4 text-sm">
-        <ColorField
-          label="Заливка узла"
-          value={node.data.fillColor}
-          fallback={node.type === 'note' ? '#f5d76e' : undefined}
-          allowClear
-          onChange={(color) => updateNodeData(node.id, { fillColor: color })}
-        />
-        <ColorField
-          label="Акцент"
-          value={node.data.accentColor}
-          fallback={kind.color}
-          allowClear
-          onChange={(color) => updateNodeData(node.id, { accentColor: color })}
-        />
-        <ColorField
-          label="Цвет типа по умолчанию"
-          value={kind.color}
-          onChange={(color) => {
-            if (color) updateKind({ ...kind, color })
-          }}
-        />
+      {hasStatus ? (
+        <Section title="Статус">
+          <StatusPicker value={node.data.status} onChange={(status) => updateNodeData(node.id, { status })} />
+        </Section>
+      ) : null}
 
-        {showTextControls ? <TextControls node={node} /> : null}
+      {node.type !== 'text' ? (
+        <Section title="Цвет">
+          <div>
+            <FieldLabel>Акцент</FieldLabel>
+            <SwatchRow value={node.data.accentColor} onChange={(color) => updateNodeData(node.id, { accentColor: color })} />
+          </div>
+          <div>
+            <FieldLabel>Заливка</FieldLabel>
+            <SwatchRow value={node.data.fillColor} onChange={(color) => updateNodeData(node.id, { fillColor: color })} />
+          </div>
+        </Section>
+      ) : null}
 
-        {node.type !== 'text' && node.type !== 'divider' ? (
+      {hasDetails ? (
+        <Section title="Описание">
           <label className="block">
-            <span className="mb-1 block text-xs text-[var(--muted)]">Статус</span>
-            <select
-              className="field"
-              value={node.data.status}
-              onChange={(event) => updateNodeData(node.id, { status: parseStatus(event.target.value) })}
-            >
-              {STATUSES.map((status) => (
-                <option key={status} value={status}>
-                  {statusLabel(status)}
-                </option>
-              ))}
-            </select>
+            <FieldLabel>Подзаголовок</FieldLabel>
+            <input
+              className="field text-[13px]"
+              placeholder="GET /api/chat"
+              value={node.data.subtitle ?? ''}
+              onChange={(event) => updateNodeData(node.id, { subtitle: event.target.value })}
+            />
           </label>
-        ) : null}
+          <label className="block">
+            <FieldLabel>Заметки</FieldLabel>
+            <textarea
+              className="field min-h-[72px] text-[13px]"
+              value={node.data.description ?? ''}
+              onChange={(event) => updateNodeData(node.id, { description: event.target.value })}
+            />
+          </label>
+        </Section>
+      ) : null}
 
-        {node.type === 'kind' || node.type === 'comment' || node.type === 'note' ? (
-          <>
-            <label className="block">
-              <span className="mb-1 block text-xs text-[var(--muted)]">Подзаголовок</span>
-              <input
-                className="field"
-                value={node.data.subtitle ?? ''}
-                onChange={(event) => updateNodeData(node.id, { subtitle: event.target.value })}
-              />
-            </label>
-            <label className="block">
-              <span className="mb-1 block text-xs text-[var(--muted)]">Описание</span>
-              <textarea
-                className="field min-h-[72px]"
-                value={node.data.description ?? ''}
-                onChange={(event) => updateNodeData(node.id, { description: event.target.value })}
-              />
-            </label>
-          </>
-        ) : null}
-
-        {node.type === 'kind' ? (
-          <>
-            <label className="block">
-              <span className="mb-1 block text-xs text-[var(--muted)]">Путь в коде</span>
-              <input
-                className="field font-mono text-xs"
-                placeholder="src/lib/example.ts"
-                value={node.data.path ?? ''}
-                onChange={(event) => updateNodeData(node.id, { path: event.target.value })}
-              />
-            </label>
-            <div>
-              <div className="mb-1 text-xs text-[var(--muted)]">Пункты</div>
-              <div className="space-y-1">
-                {items.map((item, index) => (
-                  <div key={`${item}-${index}`} className="flex gap-1">
-                    <input
-                      className="field flex-1 text-xs"
-                      value={item}
-                      onChange={(event) => {
-                        const next = [...items]
-                        next[index] = event.target.value
-                        updateNodeData(node.id, { items: next })
-                      }}
-                    />
-                    <button
-                      type="button"
-                      className="pressable px-2 text-xs text-[var(--muted)]"
-                      onClick={() =>
-                        updateNodeData(node.id, { items: items.filter((_, i) => i !== index) })
-                      }
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  className="pressable text-xs text-[var(--accent)]"
-                  onClick={() => updateNodeData(node.id, { items: [...items, ''] })}
-                >
-                  + пункт
-                </button>
-              </div>
+      {node.type === 'kind' ? (
+        <Section title="Детали" defaultOpen={Boolean(node.data.path || items.length)}>
+          <label className="block">
+            <FieldLabel>Путь в коде</FieldLabel>
+            <input
+              className="field font-mono text-xs"
+              placeholder="src/lib/example.ts"
+              value={node.data.path ?? ''}
+              onChange={(event) => updateNodeData(node.id, { path: event.target.value })}
+            />
+          </label>
+          <div>
+            <FieldLabel>Пункты (модели, инструменты…)</FieldLabel>
+            <div className="space-y-1">
+              {items.map((item, index) => (
+                <div key={index} className="flex gap-1">
+                  <input
+                    className="field flex-1 text-xs"
+                    value={item}
+                    onChange={(event) => {
+                      const next = [...items]
+                      next[index] = event.target.value
+                      updateNodeData(node.id, { items: next })
+                    }}
+                  />
+                  <button
+                    type="button"
+                    className="icon-btn"
+                    aria-label="Убрать пункт"
+                    onClick={() => updateNodeData(node.id, { items: items.filter((_, i) => i !== index) })}
+                  >
+                    <Icon name="close" size={13} />
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                className="flex items-center gap-1 text-xs text-[var(--accent)]"
+                onClick={() => updateNodeData(node.id, { items: [...items, ''] })}
+              >
+                <Icon name="plus" size={12} /> Пункт
+              </button>
             </div>
-          </>
-        ) : null}
+          </div>
+        </Section>
+      ) : null}
 
-        {node.parentId ? (
-          <button
-            type="button"
-            className="pressable text-xs text-[var(--muted)] underline"
-            onClick={() => detachFromGroup(node.id)}
-          >
-            Убрать из группы
-          </button>
-        ) : null}
+      <RelationsSection node={node} />
 
-        {!kind.builtin ? (
-          <button
-            type="button"
-            className="pressable text-xs text-red-500"
-            onClick={() => removeCustomKind(kind.id)}
-          >
-            Удалить свой тип
-          </button>
-        ) : null}
-      </div>
-
-      <RelationList title="Вызывает" nodes={outgoing} onOpen={selectNode} />
-      <RelationList title="Вызывается" nodes={incoming} onOpen={selectNode} />
+      {parent || !kind.builtin ? (
+        <div className="flex flex-col items-start gap-2 px-3 py-3">
+          {parent ? (
+            <button type="button" className="btn-ghost !px-0" onClick={() => detachFromGroup(node.id)}>
+              <Icon name="unlink" size={14} /> Вынести из «{parent.data.title}»
+            </button>
+          ) : null}
+          {!kind.builtin ? (
+            <button type="button" className="btn-ghost !px-0 !text-red-500" onClick={() => removeCustomKind(kind.id)}>
+              Удалить тип «{kind.name}»
+            </button>
+          ) : null}
+        </div>
+      ) : null}
     </>
   )
 }
@@ -341,102 +482,111 @@ function TextControls({ node }: { node: AppNode }) {
   const align = (node.data.textAlign ?? 'left') as TextAlign
 
   return (
-    <div className="space-y-3">
+    <>
       <label className="block">
-        <span className="mb-1 block text-xs text-[var(--muted)]">Кегль · {node.data.fontSize ?? 28}</span>
+        <FieldLabel>Размер · {node.data.fontSize ?? 28}</FieldLabel>
         <input
           type="range"
           min={12}
           max={72}
           value={node.data.fontSize ?? 28}
-          className="w-full"
+          className="w-full accent-[var(--accent)]"
           onChange={(event) => updateNodeData(node.id, { fontSize: Number(event.target.value) })}
         />
       </label>
-      <div>
-        <div className="mb-1 text-xs text-[var(--muted)]">Насыщенность</div>
-        <div className="flex gap-1">
-          {([400, 500, 600, 700] as const).map((item) => (
-            <button
-              key={item}
-              type="button"
-              className={`pressable flex-1 rounded-lg border px-2 py-1 text-[11px] ${
-                weight === item ? 'border-[var(--accent)] bg-[var(--accent-soft)]' : 'border-[var(--border)]'
-              }`}
-              onPointerDown={() => updateNodeData(node.id, { fontWeight: item })}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div>
-        <div className="mb-1 text-xs text-[var(--muted)]">Выравнивание</div>
-        <div className="flex gap-1">
+      <div className="flex gap-2">
+        <div className="segmented flex-1">
           {([
-            ['left', 'Слева'],
-            ['center', 'Центр'],
-            ['right', 'Справа'],
+            [400, 'Aa'],
+            [600, 'Aa'],
+            [700, 'Aa'],
           ] as const).map(([value, label]) => (
             <button
               key={value}
               type="button"
-              className={`pressable flex-1 rounded-lg border px-2 py-1 text-[11px] ${
-                align === value ? 'border-[var(--accent)] bg-[var(--accent-soft)]' : 'border-[var(--border)]'
-              }`}
-              onPointerDown={() => updateNodeData(node.id, { textAlign: value })}
+              aria-pressed={weight === value}
+              style={{ fontWeight: value }}
+              onClick={() => updateNodeData(node.id, { fontWeight: value })}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <div className="segmented flex-1">
+          {([
+            ['left', '⇤'],
+            ['center', '↔'],
+            ['right', '⇥'],
+          ] as const).map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              aria-pressed={align === value}
+              onClick={() => updateNodeData(node.id, { textAlign: value })}
             >
               {label}
             </button>
           ))}
         </div>
       </div>
-      <ColorField
-        label="Цвет текста"
-        value={node.data.textColor}
-        fallback="#1d1d1f"
-        allowClear
-        onChange={(color) => updateNodeData(node.id, { textColor: color })}
-      />
-    </div>
+      <div>
+        <FieldLabel>Цвет текста</FieldLabel>
+        <SwatchRow value={node.data.textColor} onChange={(color) => updateNodeData(node.id, { textColor: color })} />
+      </div>
+    </>
   )
 }
 
-function RelationList({
-  title,
-  nodes,
-  onOpen,
-}: {
-  title: string
-  nodes: { id: string; data: { title: string; kind: string } }[]
-  onOpen: (id: string) => void
-}) {
-  const { project } = useApp()
+function RelationsSection({ node }: { node: AppNode }) {
+  const { project, selectNode, deleteElements } = useApp()
+  const relations = project.edges.flatMap((edge): { edge: AppEdge; other: AppNode; direction: 'in' | 'out' }[] => {
+    if (edge.source === node.id) {
+      const other = project.nodes.find((item) => item.id === edge.target)
+      return other ? [{ edge, other, direction: 'out' }] : []
+    }
+    if (edge.target === node.id) {
+      const other = project.nodes.find((item) => item.id === edge.source)
+      return other ? [{ edge, other, direction: 'in' }] : []
+    }
+    return []
+  })
+
   return (
-    <section className="border-t border-[var(--border)] px-4 py-3">
-      <div className="mb-2 text-xs font-medium uppercase tracking-wide text-[var(--muted)]">
-        {title}
-      </div>
-      {nodes.length === 0 ? (
-        <div className="text-xs text-[var(--muted)]">Нет связей</div>
+    <Section title={`Связи · ${relations.length}`} defaultOpen={relations.length > 0}>
+      {relations.length === 0 ? (
+        <div className="text-[12px] text-[var(--muted)]">
+          Потяните от точки на краю узла к другому узлу.
+        </div>
       ) : (
-        <div className="space-y-1">
-          {nodes.map((item) => {
-            const kind = requireKind(project.kinds, item.data.kind)
-            return (
+        <div className="-mx-1 space-y-px">
+          {relations.map(({ edge, other, direction }) => (
+            <div key={edge.id} className="group flex items-center gap-1 rounded-lg px-1 hover:bg-[var(--panel-muted)]">
+              <span className="w-4 text-center text-[11px] text-[var(--muted)]" title={direction === 'out' ? 'Вызывает' : 'Вызывается'}>
+                {direction === 'out' ? '→' : '←'}
+              </span>
               <button
-                key={item.id}
                 type="button"
-                onPointerDown={() => onOpen(item.id)}
-                className="pressable flex w-full items-center gap-2 rounded-lg px-1 py-1 text-left text-xs hover:bg-[var(--panel-muted)]"
+                className="flex min-w-0 flex-1 items-center gap-2 py-1 text-left text-[12px]"
+                onClick={() => selectNode(other.id)}
               >
-                <KindBadge kind={kind} size={18} />
-                <span className="truncate">{item.data.title}</span>
+                <KindBadge kind={requireKind(project.kinds, other.data.kind)} size={16} shape="square" />
+                <span className="truncate">{other.data.title || 'Без названия'}</span>
+                {edge.data?.label ? (
+                  <span className="truncate text-[10px] text-[var(--muted)]">{edge.data.label}</span>
+                ) : null}
               </button>
-            )
-          })}
+              <button
+                type="button"
+                className="icon-btn danger opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
+                aria-label="Удалить связь"
+                onClick={() => deleteElements([], [edge.id])}
+              >
+                <Icon name="close" size={12} />
+              </button>
+            </div>
+          ))}
         </div>
       )}
-    </section>
+    </Section>
   )
 }

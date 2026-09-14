@@ -2,11 +2,14 @@ import { ReactFlowProvider } from '@xyflow/react'
 import { StatusBoard } from './board/StatusBoard'
 import { Board } from './canvas/Board'
 import { CanvasToolbar } from './canvas/CanvasToolbar'
+import { ZoomControls } from './canvas/ZoomControls'
 import { AppProvider, useApp } from './store/AppContext'
 import { EmptyHint } from './ui/EmptyHint'
-import { Legend } from './ui/Legend'
 import { Palette } from './ui/Palette'
+import { SidePanel } from './ui/SidePanel'
+import { ShortcutsDialog } from './ui/ShortcutsDialog'
 import { Sidebar } from './ui/Sidebar'
+import { ToolHint } from './ui/ToolHint'
 import { Toolbar } from './ui/Toolbar'
 
 function Workspace() {
@@ -16,36 +19,36 @@ function Workspace() {
   return (
     <div className="flex h-full min-h-0 flex-col bg-[var(--bg)] text-[var(--text)]">
       <Toolbar />
-      <div className="relative min-h-0 flex-1">
+      <div className="relative min-h-0 flex-1 overflow-clip">
         <div
-          className={`absolute inset-0 ${
-            mapVisible ? '' : 'pointer-events-none invisible opacity-0'
-          }`}
+          className={`absolute inset-0 ${mapVisible ? '' : 'pointer-events-none invisible opacity-0'}`}
         >
           <Board />
           <EmptyHint />
-          <div className="absolute left-1/2 top-3 z-20 -translate-x-1/2">
+          <ToolHint />
+          <div className="pointer-events-none absolute inset-x-0 bottom-3 z-20 flex justify-center">
             <CanvasToolbar />
           </div>
-          <div className="absolute bottom-3 left-[232px] z-10 max-w-[min(360px,calc(100%-520px))]">
-            <Legend />
+          <div className="absolute bottom-3 right-3 z-20">
+            <ZoomControls />
           </div>
-          <div className="absolute bottom-3 left-3 top-3 z-20">
+          <SidePanel side="left" title="Элементы" icon="box">
             <Palette />
-          </div>
-          <div className="absolute bottom-3 right-3 top-3 z-20">
+          </SidePanel>
+          <SidePanel side="right" title="Свойства" icon="edit">
             <Sidebar />
-          </div>
+          </SidePanel>
         </div>
         {state.view === 'board' ? (
           <div className="absolute inset-0 bg-[var(--bg)]">
             <StatusBoard />
-            <div className="absolute bottom-3 right-3 top-3 z-20">
+            <SidePanel side="right" title="Свойства" icon="edit">
               <Sidebar />
-            </div>
+            </SidePanel>
           </div>
         ) : null}
       </div>
+      <ShortcutsDialog />
     </div>
   )
 }

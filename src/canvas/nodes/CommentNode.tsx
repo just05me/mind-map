@@ -1,9 +1,10 @@
-import { Handle, Position, type NodeProps } from '@xyflow/react'
+import { type NodeProps } from '@xyflow/react'
 import { nodeAccent, nodeFill } from '../../lib/node-color'
 import { requireKind } from '../../kinds/catalog'
 import { useApp } from '../../store/AppContext'
 import type { AppNode } from '../../types'
 import { InlineTitle } from './InlineTitle'
+import { NodeHandles } from './NodeHandles'
 
 export function CommentNode({ id, data, selected }: NodeProps<AppNode>) {
   const { project } = useApp()
@@ -22,7 +23,7 @@ export function CommentNode({ id, data, selected }: NodeProps<AppNode>) {
         borderLeft: `3px solid ${accent}`,
       }}
     >
-      <Handle type="target" position={Position.Left} className="!h-2.5 !w-2.5 !bg-amber-700" />
+      <NodeHandles />
       <div className="text-[10px] font-semibold uppercase tracking-wide text-amber-800/70">
         Комментарий
       </div>
@@ -40,7 +41,6 @@ export function CommentNode({ id, data, selected }: NodeProps<AppNode>) {
         multiline
         className="mt-1 whitespace-pre-wrap text-[12px] leading-4 text-[#5a4a2a]"
       />
-      <Handle type="source" position={Position.Right} className="!h-2.5 !w-2.5 !bg-amber-700" />
     </div>
   )
 }

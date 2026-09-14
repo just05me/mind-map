@@ -67,7 +67,12 @@ export function saveStore(payload: {
   const data: PersistedStore = {
     version: 1,
     currentId: payload.currentId,
-    projects: payload.projects,
+    // Selection and drag flags are session state; reopening should start clean.
+    projects: payload.projects.map((project) => ({
+      ...project,
+      nodes: project.nodes.map(({ selected: _selected, dragging: _dragging, ...node }) => node),
+      edges: project.edges.map(({ selected: _selected, ...edge }) => edge),
+    })),
     theme: payload.theme,
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data))

@@ -39,7 +39,8 @@ export function projectToMarkdown(project: Project): string {
       const source = project.nodes.find((node) => node.id === edge.source)
       const target = project.nodes.find((node) => node.id === edge.target)
       if (!source || !target) continue
-      lines.push(`- ${source.data.title} → ${target.data.title}`)
+      const label = edge.data?.label ? ` (${edge.data.label})` : ''
+      lines.push(`- ${source.data.title} → ${target.data.title}${label}`)
     }
     lines.push('')
   }

@@ -1,10 +1,20 @@
 import { contrastText } from '../../lib/color'
 import type { KindDef } from '../../types'
 
-export function KindBadge({ kind, size = 28 }: { kind: KindDef; size?: number }) {
+export function KindBadge({
+  kind,
+  size = 28,
+  shape = 'round',
+}: {
+  kind: KindDef
+  size?: number
+  shape?: 'round' | 'square'
+}) {
   return (
     <span
-      className="inline-flex shrink-0 items-center justify-center rounded-full text-[11px] font-semibold leading-none"
+      className={`inline-flex shrink-0 items-center justify-center text-[11px] font-semibold leading-none ${
+        shape === 'square' ? 'rounded-[0.45rem]' : 'rounded-full'
+      }`}
       style={{
         width: size,
         height: size,

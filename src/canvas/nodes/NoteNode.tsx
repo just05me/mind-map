@@ -1,10 +1,11 @@
-import { Handle, Position, type NodeProps } from '@xyflow/react'
+import { type NodeProps } from '@xyflow/react'
 import { nodeAccent, nodeFill } from '../../lib/node-color'
 import { requireKind } from '../../kinds/catalog'
 import { statusLabel } from '../../lib/status'
 import { useApp } from '../../store/AppContext'
 import type { AppNode } from '../../types'
 import { InlineTitle } from './InlineTitle'
+import { NodeHandles } from './NodeHandles'
 
 export function NoteNode({ id, data, selected }: NodeProps<AppNode>) {
   const { project } = useApp()
@@ -19,9 +20,9 @@ export function NoteNode({ id, data, selected }: NodeProps<AppNode>) {
       }`}
       style={{ background: fill, boxShadow: `0 10px 24px ${accent}33` }}
     >
-      <Handle type="target" position={Position.Left} className="!h-2.5 !w-2.5 !bg-amber-800" />
+      <NodeHandles />
       <div className="text-[11px] font-medium uppercase tracking-wide text-amber-900/70">
-        Стикер · {statusLabel(data.status)}
+        {data.status === 'planned' ? 'Стикер' : `Стикер · ${statusLabel(data.status)}`}
       </div>
       <InlineTitle
         nodeId={id}
@@ -39,7 +40,6 @@ export function NoteNode({ id, data, selected }: NodeProps<AppNode>) {
           className="mt-1 whitespace-pre-wrap text-[12px] leading-4 text-[#4a3b1f]"
         />
       ) : null}
-      <Handle type="source" position={Position.Right} className="!h-2.5 !w-2.5 !bg-amber-800" />
     </div>
   )
 }

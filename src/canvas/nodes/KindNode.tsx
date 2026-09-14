@@ -1,16 +1,16 @@
-import { Handle, Position, type NodeProps } from '@xyflow/react'
+import { type NodeProps } from '@xyflow/react'
 import { contrastText } from '../../lib/color'
 import { nodeAccent, nodeFill } from '../../lib/node-color'
 import { requireKind } from '../../kinds/catalog'
 import { statusClass, statusLabel } from '../../lib/status'
 import { useApp } from '../../store/AppContext'
-import { ColorSwatch } from '../../ui/ColorField'
 import type { AppNode } from '../../types'
 import { InlineTitle } from './InlineTitle'
+import { NodeHandles } from './NodeHandles'
 import { KindBadge } from './KindBadge'
 
 export function KindNode({ id, data, selected }: NodeProps<AppNode>) {
-  const { project, updateNodeData } = useApp()
+  const { project } = useApp()
   const kind = requireKind(project.kinds, data.kind)
   const items = data.items?.filter(Boolean) ?? []
   const accent = nodeAccent(data, kind)
@@ -20,19 +20,18 @@ export function KindNode({ id, data, selected }: NodeProps<AppNode>) {
 
   return (
     <div
-      className={`node-card min-w-[220px] max-w-[280px] rounded-[1.05rem] border px-3 py-2.5 ${
-        selected ? 'ring-2 ring-[var(--accent)]/30' : ''
+      className={`node-card min-w-[220px] max-w-[280px] rounded-[0.9rem] border px-3 py-2.5 ${
+        selected ? 'is-selected' : ''
       }`}
       style={{
         background: fill,
-        borderColor: selected ? accent : 'var(--border)',
+        borderColor: 'var(--border)',
         color: textColor,
-        boxShadow: `inset 3px 0 0 ${accent}`,
       }}
     >
-      <Handle type="target" position={Position.Left} className="!h-2.5 !w-2.5 !border-[var(--panel-solid)] !bg-zinc-400" />
+      <NodeHandles />
       <div className="flex items-start gap-2.5">
-        <KindBadge kind={{ ...kind, color: accent }} />
+        <KindBadge kind={{ ...kind, color: accent }} shape="square" />
         <div className="min-w-0 flex-1">
           <InlineTitle
             nodeId={id}
@@ -44,27 +43,22 @@ export function KindNode({ id, data, selected }: NodeProps<AppNode>) {
             <div className="truncate text-[11px] opacity-70">{data.subtitle}</div>
           ) : null}
         </div>
-        <div className="flex flex-col items-end gap-1">
-          <ColorSwatch
-            color={accent}
-            title="Цвет узла"
-            onChange={(color) => updateNodeData(id, { accentColor: color })}
-          />
-          <span className={`rounded-full px-1.5 py-0.5 text-[10px] ${statusClass(data.status)}`}>
+        {data.status !== 'planned' ? (
+          <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[10px] ${statusClass(data.status)}`}>
             {statusLabel(data.status)}
           </span>
-        </div>
+        ) : null}
       </div>
       {items.length > 0 ? (
-        <ul className="mt-2 space-y-0.5 pl-[38px] text-[11px] opacity-70">
+        <ul className="mt-2 space-y-0.5 border-t border-[var(--border)] pt-2 text-[11px] opacity-80">
           {items.slice(0, 4).map((item) => (
-            <li key={item} className="truncate">
+            <li key={item} className="flex items-center gap-1.5 truncate">
+              <span className="kind-dot !h-1.5 !w-1.5" style={{ background: accent }} />
               {item}
             </li>
           ))}
         </ul>
       ) : null}
-      <Handle type="source" position={Position.Right} className="!h-2.5 !w-2.5 !border-[var(--panel-solid)] !bg-zinc-400" />
     </div>
   )
 }

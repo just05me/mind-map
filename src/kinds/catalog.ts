@@ -40,29 +40,29 @@ export type KindGroup = {
 
 export const KIND_GROUPS: KindGroup[] = [
   {
+    id: 'annotate',
+    title: 'Доска',
+    ids: ['note', 'text', 'comment', 'frame', 'group', 'decision', 'divider'],
+  },
+  {
     id: 'structure',
     title: 'Структура',
-    ids: ['entry', 'module', 'service', 'group', 'frame'],
+    ids: ['entry', 'module', 'service', 'api', 'external'],
   },
   {
     id: 'runtime',
-    title: 'Среда',
-    ids: ['store', 'api', 'queue', 'cache', 'event', 'job', 'webhook'],
+    title: 'Данные и среда',
+    ids: ['store', 'queue', 'cache', 'event', 'job', 'webhook'],
   },
   {
     id: 'people',
-    title: 'Люди и решения',
-    ids: ['person', 'agent', 'tool', 'decision', 'auth'],
+    title: 'Люди и ИИ',
+    ids: ['person', 'agent', 'model', 'tool', 'auth'],
   },
   {
     id: 'quality',
-    title: 'Качество',
-    ids: ['test', 'model', 'file', 'env'],
-  },
-  {
-    id: 'annotate',
-    title: 'На холсте',
-    ids: ['text', 'note', 'comment', 'divider', 'external'],
+    title: 'Код и качество',
+    ids: ['file', 'env', 'test'],
   },
   {
     id: 'custom',

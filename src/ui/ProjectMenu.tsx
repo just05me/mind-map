@@ -1,118 +1,109 @@
-import { AnimatePresence, motion } from 'motion/react'
 import { useRef, useState } from 'react'
 import { parseImportedProject } from '../export/json'
-import { useUiMotion } from '../lib/motion'
 import { useApp } from '../store/AppContext'
+import { Dropdown } from './Dropdown'
+import { Icon } from './Icon'
+import { MenuButton } from './Toolbar'
 
 export function ProjectMenu() {
-  const {
-    state,
-    project,
-    createProject,
-    duplicateCurrent,
-    deleteProject,
-    switchProject,
-    importProject,
-  } = useApp()
-  const [open, setOpen] = useState(false)
+  const { state, project, createProject, duplicateCurrent, deleteProject, switchProject, importProject } = useApp()
   const fileRef = useRef<HTMLInputElement>(null)
-  const motionUi = useUiMotion()
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [importError, setImportError] = useState<string | null>(null)
 
   return (
-    <div className="relative">
-      <button
-        type="button"
-        className="pressable rounded-full border border-[var(--border)] bg-[var(--panel-solid)] px-3 py-1.5 text-sm"
-        onPointerDown={() => setOpen((value) => !value)}
-      >
-        Проекты
-      </button>
-      <AnimatePresence>
-        {open ? (
-          <motion.div
-            initial={motionUi.popEnter}
-            animate={motionUi.popShown}
-            exit={motionUi.popLeave}
-            transition={motionUi.spring}
-            style={{ transformOrigin: 'top left' }}
-            className="chrome-heavy absolute left-0 top-full z-40 mt-2 w-72 rounded-[1.2rem] p-2"
+    <>
+      <Dropdown
+        width="w-72"
+        trigger={({ toggle, open }) => (
+          <button
+            type="button"
+            className={`bar-btn ${open ? 'is-active' : ''}`}
+            onClick={() => {
+              setConfirmDelete(false)
+              setImportError(null)
+              toggle()
+            }}
           >
-            <div className="max-h-56 space-y-1 overflow-y-auto">
+            <Icon name="folder" size={15} />
+            Проекты
+            <Icon name="chevronDown" size={12} className="opacity-60" />
+          </button>
+        )}
+      >
+        {(close) => (
+          <>
+            <div className="px-2.5 pb-1 pt-1.5 text-[11px] font-semibold text-[var(--muted)]">
+              Мои проекты · {state.projects.length}
+            </div>
+            <div className="max-h-64 space-y-px overflow-y-auto">
               {state.projects.map((item) => (
                 <button
                   key={item.id}
                   type="button"
-                  onPointerDown={() => {
+                  role="menuitem"
+                  onClick={() => {
                     switchProject(item.id)
-                    setOpen(false)
+                    close()
                   }}
-                  className={`pressable flex w-full flex-col rounded-xl px-3 py-2 text-left ${
+                  className={`flex w-full flex-col rounded-xl px-2.5 py-1.5 text-left ${
                     item.id === project.id ? 'bg-[var(--accent-soft)]' : 'hover:bg-[var(--panel-muted)]'
                   }`}
                 >
-                  <span className="truncate text-sm">{item.title}</span>
+                  <span className="truncate text-[13px]">{item.title || 'Без названия'}</span>
                   <span className="text-[11px] text-[var(--muted)]">
-                    {item.nodes.length} узлов · {new Date(item.updatedAt).toLocaleString('ru')}
+                    {item.nodes.length} элементов · {new Date(item.updatedAt).toLocaleDateString('ru')}
                   </span>
                 </button>
               ))}
             </div>
-            <div className="mt-2 grid grid-cols-2 gap-1 border-t border-[var(--border)] pt-2">
-              <button
-                type="button"
-                className="pressable rounded-lg px-2 py-1.5 text-xs hover:bg-[var(--panel-muted)]"
-                onPointerDown={() => {
-                  createProject()
-                  setOpen(false)
-                }}
-              >
-                Создать
-              </button>
-              <button
-                type="button"
-                className="pressable rounded-lg px-2 py-1.5 text-xs hover:bg-[var(--panel-muted)]"
-                onPointerDown={() => {
-                  duplicateCurrent()
-                  setOpen(false)
-                }}
-              >
-                Дублировать
-              </button>
-              <button
-                type="button"
-                className="pressable rounded-lg px-2 py-1.5 text-xs hover:bg-[var(--panel-muted)]"
-                onPointerDown={() => fileRef.current?.click()}
-              >
-                Импорт JSON
-              </button>
-              <button
-                type="button"
-                className="pressable rounded-lg px-2 py-1.5 text-xs text-red-500 hover:bg-red-500/10"
-                onPointerDown={() => {
-                  deleteProject(project.id)
-                  setOpen(false)
-                }}
-              >
-                Удалить
-              </button>
-            </div>
-            <input
-              ref={fileRef}
-              type="file"
-              accept="application/json"
-              className="hidden"
-              onChange={async (event) => {
-                const file = event.target.files?.[0]
-                event.target.value = ''
-                if (!file) return
-                const text = await file.text()
-                importProject(parseImportedProject(text))
-                setOpen(false)
-              }}
-            />
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </div>
+            <div className="my-1 h-px bg-[var(--border)]" />
+            <MenuButton icon="plus" label="Новый проект" onClick={() => { createProject(); close() }} />
+            <MenuButton icon="copy" label="Дублировать текущий" onClick={() => { duplicateCurrent(); close() }} />
+            <MenuButton icon="folder" label="Импорт из JSON…" onClick={() => fileRef.current?.click()} />
+            {importError ? <div className="px-2.5 py-1 text-[11px] text-red-500">{importError}</div> : null}
+            <div className="my-1 h-px bg-[var(--border)]" />
+            {confirmDelete ? (
+              <div className="flex items-center gap-1 px-1 py-1">
+                <span className="flex-1 px-1.5 text-[12px]">Удалить «{project.title}»?</span>
+                <button
+                  type="button"
+                  className="rounded-lg bg-red-500 px-2 py-1 text-[12px] text-white"
+                  onClick={() => {
+                    deleteProject(project.id)
+                    setConfirmDelete(false)
+                    close()
+                  }}
+                >
+                  Удалить
+                </button>
+                <button type="button" className="btn-ghost" onClick={() => setConfirmDelete(false)}>
+                  Нет
+                </button>
+              </div>
+            ) : (
+              <MenuButton icon="trash" label="Удалить текущий" danger onClick={() => setConfirmDelete(true)} />
+            )}
+          </>
+        )}
+      </Dropdown>
+      <input
+        ref={fileRef}
+        type="file"
+        accept="application/json"
+        className="hidden"
+        onChange={async (event) => {
+          const file = event.target.files?.[0]
+          event.target.value = ''
+          if (!file) return
+          try {
+            importProject(parseImportedProject(await file.text()))
+            setImportError(null)
+          } catch (err) {
+            setImportError(err instanceof Error ? err.message : 'Не удалось прочитать файл')
+          }
+        }}
+      />
+    </>
   )
 }

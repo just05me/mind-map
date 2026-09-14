@@ -1,182 +1,159 @@
-import { AnimatePresence, motion } from 'motion/react'
 import { useState } from 'react'
 import { exportProjectJson } from '../export/json'
 import { exportProjectMarkdown } from '../export/markdown'
 import { exportMapPng } from '../export/png'
-import { isStatusBoardType } from '../lib/node-type'
-import { useUiMotion } from '../lib/motion'
-import { STATUSES, statusLabel } from '../lib/status'
 import { useApp } from '../store/AppContext'
-import type { LayoutCommand, ViewMode } from '../types'
+import type { ViewMode } from '../types'
+import { Dropdown } from './Dropdown'
+import { Icon, type IconName } from './Icon'
 import { ProjectMenu } from './ProjectMenu'
 
 export function Toolbar() {
-  const { project, state, setView, setTheme, renameProject, requestLayout } = useApp()
-  const [exportOpen, setExportOpen] = useState(false)
+  const { project, state, setView, setTheme, renameProject, requestLayout, setShortcutsOpen, toggleAllPanels } =
+    useApp()
   const [error, setError] = useState<string | null>(null)
-  const motionUi = useUiMotion()
-
-  const statusCounts = STATUSES.map((status) => ({
-    status,
-    count: project.nodes.filter((node) => isStatusBoardType(node.type) && node.data.status === status).length,
-  }))
-
-  const kindCounts = project.kinds
-    .map((kind) => ({
-      kind,
-      count: project.nodes.filter((node) => node.data.kind === kind.id && isStatusBoardType(node.type)).length,
-    }))
-    .filter((item) => item.count > 0)
-    .slice(0, 4)
+  const panelsHidden = !state.leftPanelOpen && !state.rightPanelOpen
 
   return (
-    <header className="chrome-bar relative z-30 flex h-[58px] shrink-0 items-center gap-3 px-3">
-      <ProjectMenu />
-      <div className="min-w-[160px] flex-1">
+    <header className="chrome-bar relative z-30 grid h-12 shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-3 px-2">
+      <div className="flex min-w-0 items-center gap-1">
+        <ProjectMenu />
+        <span className="text-[var(--muted)]">/</span>
         <input
-          className="display w-full bg-transparent text-[15px] font-semibold outline-none"
+          className="min-w-0 max-w-[320px] flex-1 truncate rounded-md bg-transparent px-1.5 py-1 text-[13px] font-semibold outline-none hover:bg-[var(--panel-muted)] focus:bg-[var(--panel-muted)]"
           value={project.title}
+          aria-label="Название проекта"
           onChange={(event) => renameProject(event.target.value, project.description)}
-        />
-        <input
-          className="w-full bg-transparent text-[11px] text-[var(--muted)] outline-none"
-          placeholder="Описание проекта"
-          value={project.description ?? ''}
-          onChange={(event) => renameProject(project.title, event.target.value)}
         />
       </div>
 
       <ViewToggle view={state.view} onChange={setView} />
 
-      <div className="hidden items-center gap-1 xl:flex">
-        {kindCounts.map((item) => (
-          <span
-            key={item.kind.id}
-            className="rounded-full border border-[var(--border)] bg-[var(--panel-solid)] px-2 py-0.5 text-[11px] text-[var(--muted)]"
-          >
-            {item.count} {item.kind.name.toLowerCase()}
-          </span>
-        ))}
-        {statusCounts.map((item) => (
-          <span
-            key={item.status}
-            className="rounded-full border border-[var(--border)] bg-[var(--panel-solid)] px-2 py-0.5 text-[11px] text-[var(--muted)]"
-          >
-            {item.count} {statusLabel(item.status).toLowerCase()}
-          </span>
-        ))}
-      </div>
-
-      <div className="flex items-center gap-1">
-        {(['horizontal', 'vertical', 'fit'] as const).map((command) => (
-          <button
-            key={command}
-            type="button"
-            className="pressable rounded-full border border-[var(--border)] bg-[var(--panel-solid)] px-2.5 py-1 text-[12px]"
-            onPointerDown={() => requestLayout(command)}
-          >
-            {layoutLabel(command)}
+      <div className="flex items-center justify-end gap-1">
+        {error ? (
+          <button type="button" className="mr-2 text-[11px] text-red-500" onClick={() => setError(null)}>
+            {error} ✕
           </button>
-        ))}
-      </div>
+        ) : null}
 
-      <div className="relative">
+        {state.view === 'map' ? (
+          <Dropdown
+            align="right"
+            trigger={({ toggle, open }) => (
+              <button type="button" className={`bar-btn ${open ? 'is-active' : ''}`} onClick={toggle}>
+                <Icon name="layout" size={15} />
+                <span className="hidden md:inline">Упорядочить</span>
+              </button>
+            )}
+          >
+            {(close) => (
+              <>
+                <MenuButton icon="columns" label="Выстроить слева направо" onClick={() => { requestLayout('horizontal'); close() }} />
+                <MenuButton icon="layout" label="Выстроить сверху вниз" onClick={() => { requestLayout('vertical'); close() }} />
+                <MenuButton icon="fit" label="Показать всё" hint="⇧1" onClick={() => { requestLayout('fit'); close() }} />
+              </>
+            )}
+          </Dropdown>
+        ) : null}
+
+        <Dropdown
+          align="right"
+          trigger={({ toggle, open }) => (
+            <button type="button" className={`bar-btn ${open ? 'is-active' : ''}`} onClick={toggle}>
+              <Icon name="download" size={15} />
+              <span className="hidden md:inline">Экспорт</span>
+            </button>
+          )}
+        >
+          {(close) => (
+            <>
+              <MenuButton label="PNG — картинка карты" onClick={() => {
+                void exportMapPng(project, state.theme).catch((err: unknown) =>
+                  setError(err instanceof Error ? err.message : 'Ошибка PNG'),
+                )
+                close()
+              }} />
+              <MenuButton label="Markdown — текстом" onClick={() => { exportProjectMarkdown(project); close() }} />
+              <MenuButton label="JSON — для импорта" onClick={() => { exportProjectJson(project); close() }} />
+            </>
+          )}
+        </Dropdown>
+
+        <span className="toolbar-sep" />
+
         <button
           type="button"
-          className="pressable rounded-full border border-[var(--border)] bg-[var(--panel-solid)] px-2.5 py-1 text-[12px]"
-          onPointerDown={() => setExportOpen((value) => !value)}
+          className={`icon-btn ${panelsHidden ? 'is-active' : ''}`}
+          data-tip={panelsHidden ? 'Показать панели · ⌘\\' : 'Скрыть панели · ⌘\\'}
+          aria-label={panelsHidden ? 'Показать панели · ⌘\\' : 'Скрыть панели · ⌘\\'}
+          data-tip-side="bottom"
+          onClick={toggleAllPanels}
         >
-          Экспорт
+          <Icon name="panelLeft" />
         </button>
-        <AnimatePresence>
-          {exportOpen ? (
-            <motion.div
-              initial={motionUi.popEnter}
-              animate={motionUi.popShown}
-              exit={motionUi.popLeave}
-              transition={motionUi.spring}
-              style={{ transformOrigin: 'top right' }}
-              className="chrome-heavy absolute right-0 top-full z-40 mt-2 w-40 rounded-2xl p-1"
-            >
-              <button
-                type="button"
-                className="pressable w-full rounded-xl px-3 py-1.5 text-left text-xs hover:bg-[var(--panel-muted)]"
-                onPointerDown={() => {
-                  exportProjectJson(project)
-                  setExportOpen(false)
-                }}
-              >
-                JSON
-              </button>
-              <button
-                type="button"
-                className="pressable w-full rounded-xl px-3 py-1.5 text-left text-xs hover:bg-[var(--panel-muted)]"
-                onPointerDown={() => {
-                  exportProjectMarkdown(project)
-                  setExportOpen(false)
-                }}
-              >
-                Markdown
-              </button>
-              <button
-                type="button"
-                className="pressable w-full rounded-xl px-3 py-1.5 text-left text-xs hover:bg-[var(--panel-muted)]"
-                onPointerDown={() => {
-                  void exportMapPng(project, state.theme).catch((err: unknown) =>
-                    setError(err instanceof Error ? err.message : 'Ошибка PNG'),
-                  )
-                  setExportOpen(false)
-                }}
-              >
-                PNG карты
-              </button>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
+        <button
+          type="button"
+          className="icon-btn"
+          data-tip={state.theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
+          aria-label={state.theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
+          data-tip-side="bottom"
+          onClick={() => setTheme(state.theme === 'dark' ? 'light' : 'dark')}
+        >
+          <Icon name={state.theme === 'dark' ? 'sun' : 'moon'} />
+        </button>
+        <button
+          type="button"
+          className="icon-btn"
+          data-tip="Горячие клавиши · ?"
+          aria-label="Горячие клавиши · ?"
+          data-tip-side="bottom"
+          onClick={() => setShortcutsOpen(true)}
+        >
+          <Icon name="keyboard" />
+        </button>
       </div>
-
-      <button
-        type="button"
-        className="pressable rounded-full border border-[var(--border)] bg-[var(--panel-solid)] px-2.5 py-1 text-[12px]"
-        onPointerDown={() => setTheme(state.theme === 'dark' ? 'light' : 'dark')}
-      >
-        {state.theme === 'dark' ? 'Светлая' : 'Тёмная'}
-      </button>
-      {error ? <span className="text-[11px] text-red-500">{error}</span> : null}
     </header>
+  )
+}
+
+export function MenuButton({
+  label,
+  icon,
+  hint,
+  danger,
+  onClick,
+}: {
+  label: string
+  icon?: IconName
+  hint?: string
+  danger?: boolean
+  onClick: () => void
+}) {
+  return (
+    <button type="button" role="menuitem" className={`menu-item ${danger ? 'danger' : ''}`} onClick={onClick}>
+      {icon ? <Icon name={icon} size={15} className="opacity-80" /> : null}
+      <span className="flex-1">{label}</span>
+      {hint ? <kbd className="kbd-hint">{hint}</kbd> : null}
+    </button>
   )
 }
 
 function ViewToggle({ view, onChange }: { view: ViewMode; onChange: (view: ViewMode) => void }) {
   return (
-    <div className="flex rounded-full border border-[var(--border)] bg-[var(--panel-solid)] p-0.5">
+    <div className="segmented" role="tablist">
       {(['map', 'board'] as const).map((mode) => (
         <button
           key={mode}
           type="button"
-          onPointerDown={() => onChange(mode)}
-          className={`pressable rounded-full px-3 py-1 text-[12px] ${
-            view === mode ? 'bg-[var(--accent)] text-white' : 'text-[var(--muted)]'
-          }`}
+          role="tab"
+          aria-pressed={view === mode}
+          aria-selected={view === mode}
+          onClick={() => onChange(mode)}
         >
-          {mode === 'map' ? 'Карта' : 'Доска'}
+          <Icon name={mode === 'map' ? 'map' : 'columns'} size={14} />
+          {mode === 'map' ? 'Схема' : 'Статусы'}
         </button>
       ))}
     </div>
   )
-}
-
-function layoutLabel(command: LayoutCommand): string {
-  switch (command) {
-    case 'horizontal':
-      return 'Горизонт'
-    case 'vertical':
-      return 'Вертикаль'
-    case 'fit':
-      return 'Вписать'
-    default: {
-      const _never: never = command
-      return _never
-    }
-  }
 }

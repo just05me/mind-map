@@ -52,6 +52,7 @@ export type KindDef = {
 
 export type EdgeData = {
   color?: string
+  label?: string
 }
 
 export type AppNode = Node<NodeData, AppNodeType>

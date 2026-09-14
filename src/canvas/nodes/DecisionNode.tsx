@@ -21,10 +21,10 @@ export function DecisionNode({ id, data, selected }: NodeProps<AppNode>) {
         }`}
         style={{ background: fill, boxShadow: 'var(--shadow-soft)' }}
       />
-      <Handle type="target" position={Position.Top} className="!h-2.5 !w-2.5 !bg-zinc-400" />
-      <Handle type="source" position={Position.Right} className="!h-2.5 !w-2.5 !bg-zinc-400" />
-      <Handle type="target" position={Position.Left} id="in-left" className="!h-2.5 !w-2.5 !bg-zinc-400" />
-      <Handle type="source" position={Position.Bottom} id="out-bottom" className="!h-2.5 !w-2.5 !bg-zinc-400" />
+      <Handle type="target" position={Position.Top} className="app-handle" />
+      <Handle type="source" position={Position.Right} className="app-handle" />
+      <Handle type="target" position={Position.Left} id="in-left" className="app-handle" />
+      <Handle type="source" position={Position.Bottom} id="out-bottom" className="app-handle" />
       <div className="absolute inset-0 flex items-center justify-center px-6">
         <InlineTitle
           nodeId={id}

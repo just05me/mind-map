@@ -25,12 +25,25 @@ export function InlineTitle({
   const ref = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
-    if (!editing || !ref.current) return
-    const el = ref.current
-    el.focus()
-    el.select()
-    el.style.height = 'auto'
-    el.style.height = `${el.scrollHeight}px`
+    if (!editing) return undefined
+    // A freshly added node stays hidden until React Flow measures it, and hidden
+    // elements refuse focus — retry for a few frames.
+    let frame = 0
+    let attempts = 0
+    const tryFocus = () => {
+      const el = ref.current
+      if (!el) return
+      el.focus()
+      if (document.activeElement === el) {
+        el.select()
+        el.style.height = 'auto'
+        el.style.height = `${el.scrollHeight}px`
+        return
+      }
+      if (attempts++ < 20) frame = requestAnimationFrame(tryFocus)
+    }
+    tryFocus()
+    return () => cancelAnimationFrame(frame)
   }, [editing])
 
   const commit = (next: string) => {

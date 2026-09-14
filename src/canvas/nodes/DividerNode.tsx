@@ -23,8 +23,8 @@ export function DividerNode({ data, selected }: NodeProps<AppNode>) {
         className="h-[2px] w-full rounded-full"
         style={{ background: accent, opacity: selected ? 1 : 0.75 }}
       />
-      <Handle type="target" position={Position.Left} className="!h-2 !w-2 !bg-zinc-400" />
-      <Handle type="source" position={Position.Right} className="!h-2 !w-2 !bg-zinc-400" />
+      <Handle type="target" position={Position.Left} className="app-handle" />
+      <Handle type="source" position={Position.Right} className="app-handle" />
     </div>
   )
 }

@@ -12,7 +12,9 @@ export function StatusBoard() {
   const cards = project.nodes.filter((node) => isStatusBoardType(node.type))
 
   return (
-    <div className="flex h-full gap-3 overflow-x-auto bg-[var(--bg)] p-4">
+    <div
+      className={`flex h-full gap-3 overflow-x-auto bg-[var(--bg)] p-4 pt-14 ${state.rightPanelOpen ? 'pr-[312px]' : ''}`}
+    >
       {STATUSES.map((status) => {
         const columnCards = cards.filter((node) => node.data.status === status)
         return (

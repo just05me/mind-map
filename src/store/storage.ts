@@ -4,7 +4,7 @@ import { createEmptyProject } from './project-factory'
 
 const STORAGE_KEY = 'mind-map.store.v1'
 
-function isProject(value: unknown): value is Project {
+export function isProject(value: unknown): value is Project {
   if (!value || typeof value !== 'object') return false
   const project = value as Partial<Project>
   return (
@@ -17,7 +17,7 @@ function isProject(value: unknown): value is Project {
   )
 }
 
-function hydrateProject(project: Project): Project {
+export function hydrateProject(project: Project): Project {
   return {
     ...project,
     kinds: mergeBuiltinKinds(project.kinds),
@@ -59,6 +59,14 @@ export function loadStore(): { projects: Project[]; currentId: string; theme: Th
   }
 }
 
+export function toPersistedProject(project: Project): Project {
+  return {
+    ...project,
+    nodes: project.nodes.map(({ selected: _selected, dragging: _dragging, ...node }) => node),
+    edges: project.edges.map(({ selected: _selected, ...edge }) => edge),
+  }
+}
+
 export function saveStore(payload: {
   projects: Project[]
   currentId: string
@@ -68,11 +76,7 @@ export function saveStore(payload: {
     version: 1,
     currentId: payload.currentId,
     // Selection and drag flags are session state; reopening should start clean.
-    projects: payload.projects.map((project) => ({
-      ...project,
-      nodes: project.nodes.map(({ selected: _selected, dragging: _dragging, ...node }) => node),
-      edges: project.edges.map(({ selected: _selected, ...edge }) => edge),
-    })),
+    projects: payload.projects.map(toPersistedProject),
     theme: payload.theme,
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data))

@@ -4,24 +4,45 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "dev": "concurrently -k -n api,web -c cyan,magenta \"npm run dev:server\" \"npm run dev:web\"",
+    "dev:web": "vite",
+    "dev:server": "tsx watch server/src/index.ts",
+    "build": "prisma generate && tsc -b && vite build && tsc -p server/tsconfig.json",
+    "preview": "vite preview",
+    "start": "node server/dist/index.js",
+    "typecheck": "prisma generate && tsc -b --pretty false && tsc -p server/tsconfig.json --pretty false",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "postinstall": "prisma generate"
+  },
+  "prisma": {
+    "schema": "server/prisma/schema.prisma"
   },
   "dependencies": {
     "@dagrejs/dagre": "^1.1.4",
+    "@hono/node-server": "^1.19.5",
+    "@prisma/client": "^6.16.2",
     "@xyflow/react": "^12.8.5",
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.2",
+    "hono": "^4.9.8",
     "html-to-image": "^1.11.13",
     "motion": "^13.2.0",
+    "prisma": "^6.16.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.13",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^24.5.2",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.2",
+    "concurrently": "^9.2.1",
     "tailwindcss": "^4.1.13",
+    "tsx": "^4.20.5",
     "typescript": "~5.9.2",
     "vite": "^7.1.5"
   }

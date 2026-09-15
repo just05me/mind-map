@@ -5,7 +5,9 @@ import { CanvasToolbar } from './canvas/CanvasToolbar'
 import { EmptyHint } from './canvas/EmptyHint'
 import { ToolHint } from './canvas/ToolHint'
 import { ZoomControls } from './canvas/ZoomControls'
+import { AuthProvider, useAuth } from './store/AuthContext'
 import { AppProvider, useApp } from './store/AppContext'
+import { AuthScreen, LoadingScreen } from './ui/AuthScreen'
 import { Palette } from './ui/Palette'
 import { ShortcutsDialog } from './ui/ShortcutsDialog'
 import { Sidebar } from './ui/Sidebar'
@@ -53,12 +55,30 @@ function Workspace() {
   )
 }
 
+function Root() {
+  const { status } = useAuth()
+  switch (status) {
+    case 'loading':
+      return <LoadingScreen />
+    case 'guest':
+      return <AuthScreen />
+    case 'ready':
+      return <Workspace />
+    default: {
+      const _never: never = status
+      return _never
+    }
+  }
+}
+
 export default function App() {
   return (
-    <AppProvider>
-      <ReactFlowProvider>
-        <Workspace />
-      </ReactFlowProvider>
-    </AppProvider>
+    <AuthProvider>
+      <AppProvider>
+        <ReactFlowProvider>
+          <Root />
+        </ReactFlowProvider>
+      </AppProvider>
+    </AuthProvider>
   )
 }

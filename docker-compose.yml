@@ -1,0 +1,37 @@
+# Скопируйте .env.example → .env и задайте SESSION_SECRET и POSTGRES_PASSWORD.
+# В production не оставляйте пароли и секреты из примера — compose подставит
+# значения из .env, слабых значений по умолчанию здесь нет.
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: mindmap
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env — do not use a weak value in production}
+      POSTGRES_DB: mindmap
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mindmap -d mindmap"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://mindmap:${POSTGRES_PASSWORD}@db:5432/mindmap
+      SESSION_SECRET: ${SESSION_SECRET:?Set a long random SESSION_SECRET in .env}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

@@ -1,0 +1,48 @@
+---
+description: Persist, импорт/экспорт и контракт Project с API
+globs: "{src/store,src/export,src/model,server,boards,scripts}/**/*.{ts,tsx,js,mjs,json}"
+alwaysApply: false
+---
+
+# Данные и хранение
+
+Поток:
+
+```text
+действие UI → reducer → Project / UiPrefs → saveStore / saveUiPrefs → localStorage
+после входа → remote-sync → /api/projects (только свои)
+файл / boards/*.json → parseImportedProject → importProject
+```
+
+| Слой | Делает | Не делает |
+|---|---|---|
+| `useApp` | действия для UI | сырой `localStorage`, разбор JSON |
+| reducer | правила, undo/redo, оркестрация графа | запись в storage, скачивание файлов |
+| `storage.ts` / `ui-prefs.ts` | ключи, версия, hydrate, сброс session-флагов | бизнес-ветки, JSX |
+| `api.ts` / `remote-sync.ts` | сессия и CRUD проектов | правила графа |
+| `server/` | пользователи, ACL, Prisma | XYFlow |
+| `export/*` | JSON / Markdown / PNG, парсер импорта | мутации стора |
+| `boards/` + `scripts/` | готовые `Project` | другой формат, чем `src/model/types.ts` |
+
+Ключи: `mind-map.store.v1`, `mind-map.ui.v1`. Конверт — `PersistedStore` (`version: 1`).
+
+## Контракт и ошибки
+
+- Канон — `Project`, `PersistedStore`, `NodeData` в `src/model/types.ts`. Поля **camelCase** (`updatedAt`, `canvasColor`), не snake_case.
+- Загрузка терпит битые данные: `isProject` + `hydrateProject` + `mergeBuiltinKinds`. При сбое — пустой проект, приложение не падает.
+- Импорт: новый `id` через `createEmptyProject` / `createId`, встроенные kinds сливаются. Сырому JSON не доверяй.
+- В persist не пиши `selected` и `dragging` — это сессия.
+- Persist стора дебаунсится в `AppProvider` (~350 мс). Не вызывай `localStorage` из узлов и панелей.
+- Ошибка пользователю — короткая русская строка.
+
+```ts
+const parsed = JSON.parse(raw) as Partial<PersistedStore>
+const projects = Array.isArray(parsed.projects)
+  ? parsed.projects.filter(isProject).map(hydrateProject)
+  : []
+```
+
+- Id только через `createId('n' | 'e' | 'proj' | 'kind')`.
+- Скрипт в `scripts/` пишет тот же `Project`, что импортирует приложение. Не выдумывай поля.
+- Смена формы persist — новый ключ или `version`, плюс чтение старого формата.
+- CRUD проекта на API — только владелец (`userId`).

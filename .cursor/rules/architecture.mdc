@@ -1,0 +1,54 @@
+---
+description: Слои, домены и как добавлять фичи в mind_map
+alwaysApply: true
+---
+
+# Архитектура
+
+Полный стек: React 19 · TypeScript · Vite 7 · `@xyflow/react` · Tailwind 4 · Motion · Hono · Prisma · PostgreSQL.
+Канон продукта — `README.md`.
+
+Не путать: **Kind** = тип в каталоге (`module`, `api`, `note`); **AppNodeType** = рендерер XYFlow (`kind`, `frame`, `text`); **map / board** = два вида одних и тех же узлов; **Project** = сохранённая доска; **Graph** = `nodes` + `edges` текущего проекта.
+
+## Слои
+
+```text
+UI (canvas / board / ui) → useApp / dispatch → reducer → graph / model → API + localStorage | export/*
+```
+
+- Правила графа, undo и владение данными — в `src/store` и `src/model`, не в узлах и не в панелях.
+- Мутации только через действия `useApp()`. Не копируй граф в локальный стейт «насовсем».
+- Источник истины для графа — `Project` в сторе. После входа проекты также пишутся в API; XYFlow рисует холст, это не второй движок.
+- Пользователи и ACL проектов — в `server/`. Не ходи в БД из React.
+
+## Папки
+
+| Папка | Ответственность |
+|---|---|
+| `src/model` | Типы, каталог kinds, статусы, цвета, бумага холста |
+| `src/store` | Состояние, история, persist, API, сессия |
+| `src/canvas` | Вид «Схема»: холст, узлы, связи, меню, раскладка |
+| `src/board` | Вид «Статусы» |
+| `src/ui` | Шапка, панели, меню, иконки, экраны входа |
+| `src/export` | JSON, Markdown, PNG |
+| `src/lib` | Чистые мелочи: `id`, `motion` |
+| `server/` | Hono API, Prisma, сессии |
+| `boards/` | Готовые JSON проектов |
+| `scripts/` | Генераторы JSON в `boards/` |
+
+## Как добавить фичу
+
+| Задача | Порядок |
+|---|---|
+| Тип узла | `AppNodeType` → `node-type.ts` → `create-node.ts` → `canvas/nodes/*` → `nodeTypes` в `Board.tsx` |
+| Kind в каталоге | `BUILTIN_KINDS` + `KIND_GROUPS` → `node-design.ts` при новой форме |
+| Поле узла/проекта | `src/model/types.ts` → hydrate в `storage.ts` и `server/src/project-payload.ts` → reducer/UI → README, если видно пользователю |
+| Экспорт | модуль в `src/export` → пункт в `Toolbar` → README |
+| Эндпоинт API | `server/src/app.ts` (+ Prisma, если новое поле) |
+| Скрипт доски | `scripts/*.mjs` пишет тот же `Project`, что в `src/model/types.ts` |
+
+Не добавляй второй роутер или UI-библиотеку без явного запроса.
+
+Чеклист: логика в store/model/server · типы согласованы · persist/импорт не ломают старые JSON · секреты не в git.
+
+При генерации кода сверяй API библиотек (XYFlow, Motion, Tailwind, Vite, Hono, Prisma) через context7.

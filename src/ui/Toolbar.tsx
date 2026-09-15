@@ -4,8 +4,10 @@ import { exportProjectMarkdown } from '../export/markdown'
 import { exportMapPng } from '../export/png'
 import { useApp } from '../store/AppContext'
 import type { ViewMode } from '../model/types'
+import { AccountMenu } from './AccountMenu'
 import { Dropdown } from './Dropdown'
-import { Icon, type IconName } from './Icon'
+import { Icon } from './Icon'
+import { MenuButton } from './MenuButton'
 import { ProjectMenu } from './ProjectMenu'
 
 export function Toolbar() {
@@ -111,30 +113,9 @@ export function Toolbar() {
         >
           <Icon name="keyboard" />
         </button>
+        <AccountMenu />
       </div>
     </header>
-  )
-}
-
-export function MenuButton({
-  label,
-  icon,
-  hint,
-  danger,
-  onClick,
-}: {
-  label: string
-  icon?: IconName
-  hint?: string
-  danger?: boolean
-  onClick: () => void
-}) {
-  return (
-    <button type="button" role="menuitem" className={`menu-item ${danger ? 'danger' : ''}`} onClick={onClick}>
-      {icon ? <Icon name={icon} size={15} className="opacity-80" /> : null}
-      <span className="flex-1">{label}</span>
-      {hint ? <kbd className="kbd-hint">{hint}</kbd> : null}
-    </button>
   )
 }
 

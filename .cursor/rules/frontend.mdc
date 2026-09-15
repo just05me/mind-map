@@ -1,0 +1,42 @@
+---
+description: React, XYFlow, Tailwind и состояние UI mind_map
+globs: src/**/*.{tsx,css}
+alwaysApply: false
+---
+
+# Frontend (React)
+
+```text
+App / Workspace     оболочка, вид map | board
+canvas/             схема XYFlow, узлы, связи, меню холста
+board/              колонки статусов
+ui/                 шапка, панели, меню, иконки
+store/AppContext    единственный стор
+lib/motion          пружины и reduced motion
+```
+
+- Экран оркестрирует; узлы — в `canvas/nodes/`, хром — в `src/ui`.
+- Граф и проекты — только `useApp()`. Не клади копию `project.nodes` во второй стор: Zustand и Query в проекте нет.
+- Общий UI: `Icon`, `Dropdown`, классы `chrome` / `chrome-heavy` / `bar-btn` / `node-card`. Не подключай новую UI-библиотеку ради одной кнопки.
+- Именованный export. Явные props (`project`, `onChange`).
+- Новый `AppNodeType` регистрируй в `nodeTypes` у `Board`.
+
+## Состояние и ошибки
+
+- Функциональные компоненты + хуки. Локальный `useState` — только эфемерное (меню, drag-over колонки, текст ошибки экспорта).
+- Ошибки пользователю — короткая русская строка в хроме, не stack.
+
+```tsx
+setError(err instanceof Error ? err.message : 'Ошибка PNG')
+```
+
+- Пустой холст / пустая колонка ≠ ошибка (`EmptyHint`, «Перетащите карточку сюда»).
+- Async (PNG) — без double-submit; лови отказ.
+- Поля данных — camelCase, как в `NodeData`.
+- Не изобретай второй граф: раскладка через `layout.ts` + `requestLayout`, связи через стор.
+
+## UI
+
+- Токены: CSS-переменные в `src/index.css` (`--bg`, `--panel`, `--text`, `--accent`). Тема — класс `dark` на `documentElement`.
+- Tailwind 4 + существующие утилиты. Анимация панелей — `useUiMotion`, не произвольный Motion.
+- Жесты холста: выделение, рамки-родители, плавающие handles, контекстное меню — как уже сделано в `Board`.

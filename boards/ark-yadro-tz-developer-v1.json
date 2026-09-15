@@ -1,0 +1,5325 @@
+{
+  "id": "proj_ark_yadro_tz_dev_v1",
+  "title": "Арк ядро — ТЗ разработчика v1",
+  "description": "Внутреннее ТЗ разработчика «Арк ядро» · v1 · 15.09.2026. Полная схема разделов 1–21.",
+  "kinds": [
+    {
+      "id": "entry",
+      "name": "Вход",
+      "letter": "E",
+      "color": "#0071e3",
+      "builtin": true
+    },
+    {
+      "id": "module",
+      "name": "Модуль",
+      "letter": "M",
+      "color": "#5e5ce6",
+      "builtin": true
+    },
+    {
+      "id": "service",
+      "name": "Сервис",
+      "letter": "S",
+      "color": "#8e8e93",
+      "builtin": true
+    },
+    {
+      "id": "store",
+      "name": "Хранилище",
+      "letter": "D",
+      "color": "#ffd60a",
+      "builtin": true
+    },
+    {
+      "id": "api",
+      "name": "API",
+      "letter": "P",
+      "color": "#5856d6",
+      "builtin": true
+    },
+    {
+      "id": "tool",
+      "name": "Инструмент",
+      "letter": "T",
+      "color": "#ff9f0a",
+      "builtin": true
+    },
+    {
+      "id": "agent",
+      "name": "Агент",
+      "letter": "A",
+      "color": "#30d158",
+      "builtin": true
+    },
+    {
+      "id": "model",
+      "name": "Модель",
+      "letter": "○",
+      "color": "#d1d1d6",
+      "builtin": true
+    },
+    {
+      "id": "external",
+      "name": "Внешнее",
+      "letter": "X",
+      "color": "#ff453a",
+      "builtin": true
+    },
+    {
+      "id": "note",
+      "name": "Стикер",
+      "letter": "N",
+      "color": "#ffd60a",
+      "builtin": true
+    },
+    {
+      "id": "group",
+      "name": "Группа",
+      "letter": "G",
+      "color": "#636366",
+      "builtin": true
+    },
+    {
+      "id": "text",
+      "name": "Текст",
+      "letter": "Aa",
+      "color": "#1d1d1f",
+      "builtin": true
+    },
+    {
+      "id": "comment",
+      "name": "Комментарий",
+      "letter": "!",
+      "color": "#ff9f0a",
+      "builtin": true
+    },
+    {
+      "id": "frame",
+      "name": "Рамка",
+      "letter": "[]",
+      "color": "#8e8e93",
+      "builtin": true
+    },
+    {
+      "id": "divider",
+      "name": "Линия",
+      "letter": "—",
+      "color": "#636366",
+      "builtin": true
+    },
+    {
+      "id": "decision",
+      "name": "Решение",
+      "letter": "◇",
+      "color": "#bf5af2",
+      "builtin": true
+    },
+    {
+      "id": "person",
+      "name": "Человек",
+      "letter": "Ч",
+      "color": "#64d2ff",
+      "builtin": true
+    },
+    {
+      "id": "queue",
+      "name": "Очередь",
+      "letter": "Q",
+      "color": "#30d158",
+      "builtin": true
+    },
+    {
+      "id": "event",
+      "name": "Событие",
+      "letter": "С",
+      "color": "#ff375f",
+      "builtin": true
+    },
+    {
+      "id": "file",
+      "name": "Файл",
+      "letter": "Ф",
+      "color": "#0a84ff",
+      "builtin": true
+    },
+    {
+      "id": "env",
+      "name": "Конфиг",
+      "letter": "$",
+      "color": "#ac8e68",
+      "builtin": true
+    },
+    {
+      "id": "test",
+      "name": "Тест",
+      "letter": "t",
+      "color": "#32ade6",
+      "builtin": true
+    },
+    {
+      "id": "job",
+      "name": "Задача",
+      "letter": "J",
+      "color": "#ffd60a",
+      "builtin": true
+    },
+    {
+      "id": "webhook",
+      "name": "Вебхук",
+      "letter": "W",
+      "color": "#ff6482",
+      "builtin": true
+    },
+    {
+      "id": "cache",
+      "name": "Кэш",
+      "letter": "C",
+      "color": "#5e5ce6",
+      "builtin": true
+    },
+    {
+      "id": "auth",
+      "name": "Доступ",
+      "letter": "@",
+      "color": "#ff9f0a",
+      "builtin": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "f_guide",
+      "type": "frame",
+      "position": {
+        "x": 80,
+        "y": 40
+      },
+      "data": {
+        "kind": "frame",
+        "title": "Точка входа",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#0071e314",
+        "accentColor": "#0071e3"
+      },
+      "style": {
+        "width": 3200,
+        "height": 853
+      }
+    },
+    {
+      "id": "n_root",
+      "type": "text",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_guide",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "text",
+        "title": "Арк ядро — внутреннее ТЗ разработчика v1",
+        "status": "planned",
+        "items": [],
+        "fontSize": 28,
+        "fontWeight": 700,
+        "textAlign": "left"
+      },
+      "style": {
+        "width": 560
+      }
+    },
+    {
+      "id": "n_guide",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 124
+      },
+      "parentId": "f_guide",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Как читать схему",
+        "description": "Внутреннее ТЗ разработчика «Арк ядро», v1, 15.09.2026. Заказчику не передаётся.\nЧитать слева направо, рамки 1→21. Жёлтый стикер в рамке — зачем раздел и связи. Клик по стикеру открывает «Заметки» справа.\nПриоритет: функциональность — ТЗ заказчика (Арк_ядро.html, вкладка «ТЗ»); реализация — этот документ.\nКарта: 1 границы · 2 архитектура · 3 среды · 4 роли · 5 ЖЦ · 6 отделы · 7 мосты · 8 БЗ · 9 таблицы · 10 доступ · 11 API · 12 UI · 13 бот · 14 коннекторы · 15 парсер · 16 скиллы · 17 лимиты · 18 инфра · 19 тесты · 20 вехи · 21 риски.\nMVP: ТЗ заказчика, разделы 4–16. Не входит: 1С, МойСклад, amoCRM, Bitrix24, Payme, Click, IP-телефония, узбекский UI, локальная LLM, нативные мобильные.",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_root_product",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 626
+      },
+      "parentId": "f_guide",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "entry",
+        "title": "Продукт",
+        "subtitle": "Оптовая компания · Ташкент",
+        "description": "Мультиагентная платформа. Задача ставится на верхнем уровне, дальше агенты проходят цикл.",
+        "status": "doing",
+        "items": [
+          "оценка → планирование",
+          "декомпозиция → выполнение",
+          "техпроверка → приём → доработка"
+        ]
+      }
+    },
+    {
+      "id": "f_ctx",
+      "type": "frame",
+      "position": {
+        "x": 80,
+        "y": 981
+      },
+      "data": {
+        "kind": "frame",
+        "title": "1. Контекст и границы",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#0071e314",
+        "accentColor": "#0071e3"
+      },
+      "style": {
+        "width": 592,
+        "height": 979
+      }
+    },
+    {
+      "id": "n_note_f_ctx",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_ctx",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 1. Контекст и границы",
+        "description": "Границы продукта и этапов. Цикл: оценка → план → декомпозиция → выполнение → техпроверка → приём → доработка. MVP = ТЗ заказчика, разделы 4–16. Связь: этапы → среды (3) и вехи (20).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_ctx_product",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 260
+      },
+      "parentId": "f_ctx",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "entry",
+        "title": "Продукт",
+        "subtitle": "Мультиагентная платформа",
+        "status": "doing",
+        "items": [
+          "Опт · Ташкент",
+          "Задача на верхнем уровне",
+          "Дальше цикл агентов"
+        ]
+      }
+    },
+    {
+      "id": "n_ctx_cycle",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 260
+      },
+      "parentId": "f_ctx",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "Цикл агентов",
+        "subtitle": "Сквозной конвейер",
+        "status": "doing",
+        "items": [
+          "оценка → планирование",
+          "декомпозиция → выполнение",
+          "техпроверка → приём",
+          "доработка"
+        ]
+      }
+    },
+    {
+      "id": "n_ctx_dev",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 404
+      },
+      "parentId": "f_ctx",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "env",
+        "title": "Разработка",
+        "subtitle": "local docker compose",
+        "status": "planned",
+        "items": [
+          "API моделей",
+          "Локальный контур"
+        ]
+      }
+    },
+    {
+      "id": "n_ctx_s1",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 404
+      },
+      "parentId": "f_ctx",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "env",
+        "title": "Этап 1 — тестовый месяц",
+        "subtitle": "VPS + управляемая PostgreSQL",
+        "status": "planned",
+        "items": [
+          "Claude + DeepSeek"
+        ]
+      }
+    },
+    {
+      "id": "n_ctx_s2",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 582
+      },
+      "parentId": "f_ctx",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "env",
+        "title": "Этап 2 — выбор архитектуры",
+        "subtitle": "Без переписывания",
+        "status": "planned",
+        "items": [
+          "облако РУз",
+          "свой сервер",
+          "локальная LLM"
+        ]
+      }
+    },
+    {
+      "id": "n_ctx_s3",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 582
+      },
+      "parentId": "f_ctx",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "env",
+        "title": "Этап 3 — релиз",
+        "subtitle": "Сопровождение",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_ctx_mvp",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 821
+      },
+      "parentId": "f_ctx",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "module",
+        "title": "Входит в MVP",
+        "subtitle": "ТЗ заказчика, разделы 4–16",
+        "status": "doing",
+        "items": [
+          "Всё из ТЗ заказчика 4–16"
+        ]
+      }
+    },
+    {
+      "id": "n_ctx_out",
+      "type": "note",
+      "position": {
+        "x": 304,
+        "y": 821
+      },
+      "parentId": "f_ctx",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Не входит",
+        "description": "1С, МойСклад, amoCRM, Bitrix24, Payme, Click, IP-телефония; узбекский язык UI; локальная LLM; нативные мобильные приложения.",
+        "status": "broken",
+        "items": []
+      }
+    },
+    {
+      "id": "f_arch",
+      "type": "frame",
+      "position": {
+        "x": 1044,
+        "y": 981
+      },
+      "data": {
+        "kind": "frame",
+        "title": "2. Архитектура",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#5e5ce614",
+        "accentColor": "#5e5ce6"
+      },
+      "style": {
+        "width": 876,
+        "height": 1444
+      }
+    },
+    {
+      "id": "n_note_f_arch",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 2. Архитектура",
+        "description": "Клиенты → BFF (Node 20) → Core C++20 из Anton; Redis, Workers, PG+pgvector; Claude Sonnet 5 и DeepSeek V4 Flash. Берём supervisor, todo, оркестратор, kb, org.yaml, bff/web; удаляем mock и PixiJS. Связь: стек внутри; SPA → 12, бот → 13.",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_arch_spa",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 292
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "entry",
+        "title": "Web SPA",
+        "subtitle": "React",
+        "status": "doing",
+        "items": [
+          "HTTPS / WSS"
+        ]
+      }
+    },
+    {
+      "id": "n_arch_mini",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 292
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "entry",
+        "title": "Telegram Mini App",
+        "subtitle": "?tg=1",
+        "status": "planned",
+        "items": [
+          "HMAC initData"
+        ]
+      }
+    },
+    {
+      "id": "n_arch_bot",
+      "type": "kind",
+      "position": {
+        "x": 588,
+        "y": 292
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "entry",
+        "title": "Telegram Bot",
+        "subtitle": "telegraf",
+        "status": "planned",
+        "items": [
+          "текст / голос",
+          "inline-кнопки"
+        ]
+      }
+    },
+    {
+      "id": "n_arch_bff",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 513
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "service",
+        "title": "Backend BFF",
+        "subtitle": "Node 20 + TypeScript",
+        "status": "doing",
+        "items": [
+          "auth · RBAC · API",
+          "бот · STT · cron",
+          "интеграции"
+        ]
+      }
+    },
+    {
+      "id": "n_arch_core",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 513
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "service",
+        "title": "Core C++20",
+        "subtitle": "из Anton · оркестрация",
+        "status": "doing",
+        "items": [
+          "REST / WS + events",
+          "пишет только свои таблицы"
+        ]
+      }
+    },
+    {
+      "id": "n_arch_redis",
+      "type": "kind",
+      "position": {
+        "x": 588,
+        "y": 513
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "cache",
+        "title": "Redis 7",
+        "subtitle": "очереди BullMQ",
+        "status": "planned",
+        "items": [
+          "сессии cookie 12ч"
+        ]
+      }
+    },
+    {
+      "id": "n_arch_workers",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 700
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "queue",
+        "title": "Workers",
+        "subtitle": "BullMQ",
+        "status": "planned",
+        "items": [
+          "парсер",
+          "эмбеддинги"
+        ]
+      }
+    },
+    {
+      "id": "n_arch_pg",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 700
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "PostgreSQL 16",
+        "subtitle": "pgvector",
+        "status": "doing",
+        "items": [
+          "BFF → PG",
+          "Core → PG"
+        ]
+      }
+    },
+    {
+      "id": "n_arch_claude",
+      "type": "kind",
+      "position": {
+        "x": 588,
+        "y": 700
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "model",
+        "title": "Claude Sonnet 5",
+        "subtitle": "Anthropic",
+        "status": "planned",
+        "items": [
+          "Оркестратор",
+          "Планировщик",
+          "Рук. отдела",
+          "Ревьюер · Акцептор"
+        ]
+      }
+    },
+    {
+      "id": "n_arch_ds",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 877
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "model",
+        "title": "DeepSeek V4 Flash",
+        "subtitle": "триаж / исполнитель / базовый ИИ",
+        "status": "planned",
+        "items": [
+          "Первичная оценка",
+          "Базовый ИИ",
+          "Исполнитель"
+        ]
+      }
+    },
+    {
+      "id": "n_anton_take",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 877
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "file",
+        "title": "Из Anton — берём",
+        "subtitle": "github.com/just05me/anton",
+        "status": "done",
+        "items": [
+          "supervisor / scheduler",
+          "teamcore/todo · dispatcher",
+          "orchestrator + гейт",
+          "providers · bus · kb",
+          "org.yaml · bff · web admin"
+        ]
+      }
+    },
+    {
+      "id": "n_anton_drop",
+      "type": "note",
+      "position": {
+        "x": 588,
+        "y": 877
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Из Anton — удаляем",
+        "description": "web/src/data/* · PixiJS офис · server/ mock. claude_code не в проде. kb: SQLite → PG+pgvector. sqlite_store только для тестов + PgStore.",
+        "status": "broken",
+        "items": []
+      }
+    },
+    {
+      "id": "n_stack_core",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 936
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "tool",
+        "title": "Стек · Core",
+        "subtitle": "C++20 CMake + vcpkg",
+        "status": "planned",
+        "items": [
+          "REST + WS",
+          "libpqxx"
+        ]
+      }
+    },
+    {
+      "id": "n_stack_be",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 936
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "tool",
+        "title": "Стек · Backend",
+        "subtitle": "Node 20 · TS · Express",
+        "status": "planned",
+        "items": [
+          "Zod",
+          "telegraf",
+          "BullMQ"
+        ]
+      }
+    },
+    {
+      "id": "n_stack_fe",
+      "type": "kind",
+      "position": {
+        "x": 588,
+        "y": 936
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "tool",
+        "title": "Стек · Frontend",
+        "subtitle": "React 18 · Vite · TS",
+        "status": "planned",
+        "items": [
+          "Canvas 2D"
+        ]
+      }
+    },
+    {
+      "id": "n_stack_data",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 1097
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "tool",
+        "title": "Стек · данные / ML",
+        "subtitle": "PG16 · Redis7",
+        "status": "planned",
+        "items": [
+          "pgvector · tsvector",
+          "bge-m3 CPU/облако",
+          "Yandex SpeechKit + Whisper"
+        ]
+      }
+    },
+    {
+      "id": "n_stack_ops",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 1097
+      },
+      "parentId": "f_arch",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "tool",
+        "title": "Стек · ops",
+        "subtitle": "Caddy LE · Compose · GHA",
+        "status": "planned",
+        "items": [
+          "Cloudflare DNS"
+        ]
+      }
+    },
+    {
+      "id": "f_env",
+      "type": "frame",
+      "position": {
+        "x": 2008,
+        "y": 981
+      },
+      "data": {
+        "kind": "frame",
+        "title": "3. Среды",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#ac8e6814",
+        "accentColor": "#ac8e68"
+      },
+      "style": {
+        "width": 592,
+        "height": 892
+      }
+    },
+    {
+      "id": "n_note_f_env",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_env",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 3. Среды",
+        "description": "local = docker compose + mock; prod = VPS + managed PG, .env.prod. Переход: полный цикл на реальных моделях для 4 отделов, RBAC, дашборд/орг/Todo/чат/бот/Mini App, бэкап, CI зелёный. Связь: инфра (18), маршрутизация как в 19, веха M8.",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_env_local",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 292
+      },
+      "parentId": "f_env",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "env",
+        "title": "local",
+        "subtitle": "docker compose + mock",
+        "status": "planned",
+        "items": [
+          ".env локально"
+        ]
+      }
+    },
+    {
+      "id": "n_env_prod",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 292
+      },
+      "parentId": "f_env",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "env",
+        "title": "prod",
+        "subtitle": "VPS + managed PG",
+        "status": "planned",
+        "items": [
+          ".env.prod",
+          "права 600"
+        ]
+      }
+    },
+    {
+      "id": "n_env_go",
+      "type": "decision",
+      "position": {
+        "x": 20,
+        "y": 402
+      },
+      "parentId": "f_env",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "decision",
+        "title": "Критерии перехода",
+        "subtitle": "local → prod",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_env_cycle",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 402
+      },
+      "parentId": "f_env",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "Полный цикл",
+        "subtitle": "реальные модели · 4 отдела",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_env_route",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 596
+      },
+      "parentId": "f_env",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "module",
+        "title": "Маршрутизация",
+        "subtitle": "раздел 19 / роли",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_env_rbac",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 596
+      },
+      "parentId": "f_env",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "auth",
+        "title": "RBAC готов",
+        "subtitle": "admin → owner → employee",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_env_ui",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 856
+      },
+      "parentId": "f_env",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "entry",
+        "title": "Поверхности живы",
+        "status": "planned",
+        "items": [
+          "дашборд / орг / Todo",
+          "чат / бот / Mini App"
+        ]
+      }
+    },
+    {
+      "id": "n_env_ops",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 856
+      },
+      "parentId": "f_env",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "file",
+        "title": "Операции",
+        "status": "planned",
+        "items": [
+          "бэкап локально",
+          "CI зелёный"
+        ]
+      }
+    },
+    {
+      "id": "f_roles",
+      "type": "frame",
+      "position": {
+        "x": 2688,
+        "y": 981
+      },
+      "data": {
+        "kind": "frame",
+        "title": "4. Роли агентов",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#30d15814",
+        "accentColor": "#30d158"
+      },
+      "style": {
+        "width": 592,
+        "height": 1375
+      }
+    },
+    {
+      "id": "n_note_f_roles",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_roles",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 4. Роли агентов",
+        "description": "Восемь ролей, JSON fail-closed, 1 повтор, затем эскалация. confidence<0.6 → +1 уровень; simple+found=false → предложить задачу; out_of_scope → временный отдел; needs_clarification → чат. Связь: шаги ЖЦ (5), отделы (6).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_role_valid",
+      "type": "comment",
+      "position": {
+        "x": 20,
+        "y": 276
+      },
+      "parentId": "f_roles",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "comment",
+        "title": "Контракты JSON",
+        "description": "Валидация fail-closed. 1 повтор, затем эскалация.",
+        "status": "doing",
+        "items": []
+      }
+    },
+    {
+      "id": "n_role_triage",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 276
+      },
+      "parentId": "f_roles",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "agent",
+        "title": "Первичная оценка",
+        "subtitle": "DeepSeek V4 Flash → TriageResult",
+        "status": "planned",
+        "items": [
+          "level: simple|medium|complex|out_of_scope",
+          "departments",
+          "confidence 0..1",
+          "reason",
+          "needs_clarification?"
+        ]
+      }
+    },
+    {
+      "id": "n_role_base",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 454
+      },
+      "parentId": "f_roles",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "agent",
+        "title": "Базовый ИИ",
+        "subtitle": "DeepSeek → DirectAnswer",
+        "status": "planned",
+        "items": [
+          "answer",
+          "sources",
+          "found",
+          "suggest_task?"
+        ]
+      }
+    },
+    {
+      "id": "n_role_orch",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 454
+      },
+      "parentId": "f_roles",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "agent",
+        "title": "Оркестратор",
+        "subtitle": "Claude Sonnet 5",
+        "status": "planned",
+        "items": [
+          "ведёт цикл",
+          "стоп-условия"
+        ]
+      }
+    },
+    {
+      "id": "n_role_plan",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 598
+      },
+      "parentId": "f_roles",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "agent",
+        "title": "Планировщик",
+        "subtitle": "Claude → Plan",
+        "status": "planned",
+        "items": [
+          "blocks[{id,department,title}]",
+          "description · deps",
+          "acceptance_criteria"
+        ]
+      }
+    },
+    {
+      "id": "n_role_lead",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 598
+      },
+      "parentId": "f_roles",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "agent",
+        "title": "Руководитель отдела",
+        "subtitle": "Claude",
+        "status": "planned",
+        "items": [
+          "подзадачи на борд"
+        ]
+      }
+    },
+    {
+      "id": "n_role_exec",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 810
+      },
+      "parentId": "f_roles",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "agent",
+        "title": "Исполнитель",
+        "subtitle": "DeepSeek → WorkResult",
+        "status": "planned",
+        "items": [
+          "status done|blocked",
+          "artifact",
+          "used_sources",
+          "blockers?"
+        ]
+      }
+    },
+    {
+      "id": "n_role_rev",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 810
+      },
+      "parentId": "f_roles",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "agent",
+        "title": "Ревьюер",
+        "subtitle": "Claude → ReviewVerdict",
+        "status": "planned",
+        "items": [
+          "pass | rework",
+          "issues"
+        ]
+      }
+    },
+    {
+      "id": "n_role_acc",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 920
+      },
+      "parentId": "f_roles",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "agent",
+        "title": "Акцептор",
+        "subtitle": "Claude → AcceptanceVerdict",
+        "status": "planned",
+        "items": [
+          "accept | rework | escalate",
+          "unmet_requirements",
+          "comment"
+        ]
+      }
+    },
+    {
+      "id": "n_role_r1",
+      "type": "decision",
+      "position": {
+        "x": 304,
+        "y": 920
+      },
+      "parentId": "f_roles",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "decision",
+        "title": "confidence < 0.6",
+        "subtitle": "+1 уровень",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_role_r2",
+      "type": "decision",
+      "position": {
+        "x": 20,
+        "y": 826
+      },
+      "parentId": "f_roles",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "decision",
+        "title": "simple + found=false",
+        "subtitle": "предложить задачу",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_role_r3",
+      "type": "decision",
+      "position": {
+        "x": 304,
+        "y": 826
+      },
+      "parentId": "f_roles",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "decision",
+        "title": "out_of_scope",
+        "subtitle": "временный отдел",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_role_r4",
+      "type": "decision",
+      "position": {
+        "x": 20,
+        "y": 936
+      },
+      "parentId": "f_roles",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "decision",
+        "title": "needs_clarification",
+        "subtitle": "вопрос в чат",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "f_lc",
+      "type": "frame",
+      "position": {
+        "x": 80,
+        "y": 2513
+      },
+      "data": {
+        "kind": "frame",
+        "title": "5. Жизненный цикл задачи",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#ffd60a14",
+        "accentColor": "#ffd60a"
+      },
+      "style": {
+        "width": 592,
+        "height": 891
+      }
+    },
+    {
+      "id": "n_note_f_lc",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_lc",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 5. Жизненный цикл задачи",
+        "description": "queued → triage → (direct_answer → done) или planning → in_work → review → acceptance → awaiting_approval? → done. Rework назад; любой шаг → stopped|failed|escalated. max_rework=3, max_rounds=12, 120с×2, бюджет → approval. Durable-before-publish. Связь: роли (4), подтверждения (17).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_lc_flow",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 324
+      },
+      "parentId": "f_lc",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "Основной поток",
+        "subtitle": "queued → … → done",
+        "status": "doing",
+        "items": [
+          "queued → triage",
+          "direct_answer → done",
+          "или planning → in_work",
+          "review → acceptance",
+          "awaiting_approval? → done"
+        ]
+      }
+    },
+    {
+      "id": "n_lc_rework",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 324
+      },
+      "parentId": "f_lc",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "event",
+        "title": "Rework",
+        "subtitle": "обратно по циклу",
+        "status": "planned",
+        "items": [
+          "с issues",
+          "max_rework_cycles = 3"
+        ]
+      }
+    },
+    {
+      "id": "n_lc_stop",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 486
+      },
+      "parentId": "f_lc",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "event",
+        "title": "С любого шага",
+        "status": "broken",
+        "items": [
+          "stopped",
+          "failed",
+          "escalated"
+        ]
+      }
+    },
+    {
+      "id": "n_lc_limits",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 486
+      },
+      "parentId": "f_lc",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "env",
+        "title": "Лимиты цикла",
+        "status": "planned",
+        "items": [
+          "max_rounds = 12",
+          "таймаут 120с ×2 backoff",
+          "стоп Anton",
+          "бюджет → awaiting_approval"
+        ]
+      }
+    },
+    {
+      "id": "n_lc_durable",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 732
+      },
+      "parentId": "f_lc",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "module",
+        "title": "Durable-before-publish",
+        "subtitle": "сначала запись, потом событие",
+        "status": "doing",
+        "items": [
+          "recovery fold",
+          "rework с issues"
+        ]
+      }
+    },
+    {
+      "id": "n_lc_approval",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 732
+      },
+      "parentId": "f_lc",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "auth",
+        "title": "awaiting_approval",
+        "subtitle": "бюджет / стоп",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "f_dept",
+      "type": "frame",
+      "position": {
+        "x": 1044,
+        "y": 2513
+      },
+      "data": {
+        "kind": "frame",
+        "title": "6. Отделы",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#64d2ff14",
+        "accentColor": "#64d2ff"
+      },
+      "style": {
+        "width": 592,
+        "height": 849
+      }
+    },
+    {
+      "id": "n_note_f_dept",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_dept",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 6. Отделы",
+        "description": "config/org.yaml (sales: lead claude max1, executor deepseek max4, budget 150, idle 15). out_of_scope → DeptTemplateDraft → шаблон после done; похожий домен ≥0.8; promote в core. Idle → dormant + agent_despawned. Связь: bridges в мостах (7).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_dept_yaml",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 292
+      },
+      "parentId": "f_dept",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "file",
+        "title": "config/org.yaml",
+        "subtitle": "sales — пример",
+        "status": "planned",
+        "items": [
+          "core",
+          "lead claude max1",
+          "executor deepseek max4",
+          "skills · bridges",
+          "budget 150 · idle 15"
+        ]
+      }
+    },
+    {
+      "id": "n_dept_tmp",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 292
+      },
+      "parentId": "f_dept",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "module",
+        "title": "Временные отделы",
+        "subtitle": "out_of_scope",
+        "status": "planned",
+        "items": [
+          "DeptTemplateDraft",
+          "TeamCore",
+          "после done → dept_templates",
+          "событие dept_template_saved"
+        ]
+      }
+    },
+    {
+      "id": "n_dept_sim",
+      "type": "decision",
+      "position": {
+        "x": 20,
+        "y": 444
+      },
+      "parentId": "f_dept",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "decision",
+        "title": "Похожий домен",
+        "subtitle": "эмбеддинг ≥ 0.8",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_dept_promo",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 444
+      },
+      "parentId": "f_dept",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "person",
+        "title": "Promote в core",
+        "subtitle": "admin / owner",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_dept_idle",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 614
+      },
+      "parentId": "f_dept",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "event",
+        "title": "Расформирование",
+        "subtitle": "агенты runtime",
+        "status": "planned",
+        "items": [
+          "idle_despawn_minutes",
+          "dormant + agent_despawned",
+          "новая задача → agent_spawned"
+        ]
+      }
+    },
+    {
+      "id": "f_bridge",
+      "type": "frame",
+      "position": {
+        "x": 2008,
+        "y": 2513
+      },
+      "data": {
+        "kind": "frame",
+        "title": "7. Мосты",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#ff375f14",
+        "accentColor": "#ff375f"
+      },
+      "style": {
+        "width": 592,
+        "height": 733
+      }
+    },
+    {
+      "id": "n_note_f_bridge",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_bridge",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 7. Мосты",
+        "description": "bridge_request/response по bridges; совместные блоки с deps; ACL БЗ; контур 24/7: маркетинг → заявка → сделка → продажи. UI анимирует по bridge_*. Связь: отделы (6), БЗ (8), граф (12).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_br_req",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 260
+      },
+      "parentId": "f_bridge",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "event",
+        "title": "Запрос данных",
+        "subtitle": "bridge_request / response",
+        "status": "planned",
+        "items": [
+          "по bridges из org.yaml"
+        ]
+      }
+    },
+    {
+      "id": "n_br_joint",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 260
+      },
+      "parentId": "f_bridge",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "Совместная задача",
+        "subtitle": "блоки с deps",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_br_acl",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 448
+      },
+      "parentId": "f_bridge",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "auth",
+        "title": "ACL базы знаний",
+        "subtitle": "доступ по мостам",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_br_247",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 448
+      },
+      "parentId": "f_bridge",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "module",
+        "title": "Контур продаж 24/7",
+        "status": "doing",
+        "items": [
+          "маркетинг → заявка",
+          "сделка → продажи"
+        ]
+      }
+    },
+    {
+      "id": "n_br_ui",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 564
+      },
+      "parentId": "f_bridge",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "entry",
+        "title": "UI анимация",
+        "subtitle": "по событиям bridge_*",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "f_kb",
+      "type": "frame",
+      "position": {
+        "x": 2688,
+        "y": 2513
+      },
+      "data": {
+        "kind": "frame",
+        "title": "8. База знаний",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#5856d614",
+        "accentColor": "#5856d6"
+      },
+      "style": {
+        "width": 592,
+        "height": 1023
+      }
+    },
+    {
+      "id": "n_note_f_kb",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_kb",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 8. База знаний",
+        "description": "Узлы topic/doc/lesson; рёбра in_topic/relates/fixes/supersedes/derived_from. +embedding vector(1024) HNSW, fts GIN, department_id/acl. Hybrid RRF → ACL → до 8 фрагментов. API GET /kb/graph, /kb/nodes/:id, /kb/search. Связь: таблицы (9), REST KB (11).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_kb_nodes",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 292
+      },
+      "parentId": "f_kb",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "Узлы Anton",
+        "status": "planned",
+        "items": [
+          "topic",
+          "doc",
+          "lesson"
+        ]
+      }
+    },
+    {
+      "id": "n_kb_edges",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 292
+      },
+      "parentId": "f_kb",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "module",
+        "title": "Рёбра",
+        "status": "planned",
+        "items": [
+          "in_topic",
+          "relates",
+          "fixes",
+          "supersedes",
+          "derived_from"
+        ]
+      }
+    },
+    {
+      "id": "n_kb_meta",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 471
+      },
+      "parentId": "f_kb",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "file",
+        "title": "Мета Anton",
+        "status": "planned",
+        "items": [
+          "librarian",
+          "kb_requests",
+          "confidence / uses",
+          "retrieved_count",
+          "retract_flags"
+        ]
+      }
+    },
+    {
+      "id": "n_kb_vec",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 471
+      },
+      "parentId": "f_kb",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "embedding vector(1024)",
+        "subtitle": "HNSW",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_kb_fts",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 616
+      },
+      "parentId": "f_kb",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "fts tsvector",
+        "subtitle": "GIN",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_kb_acl",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 616
+      },
+      "parentId": "f_kb",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "auth",
+        "title": "Поля доступа",
+        "status": "planned",
+        "items": [
+          "department_id",
+          "acl",
+          "entity + fields jsonb",
+          "root"
+        ]
+      }
+    },
+    {
+      "id": "n_kb_search",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 727
+      },
+      "parentId": "f_kb",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "tool",
+        "title": "Hybrid search",
+        "subtitle": "RRF → ACL → до 8 фрагментов",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_kb_api",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 727
+      },
+      "parentId": "f_kb",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "api",
+        "title": "API БЗ",
+        "status": "planned",
+        "items": [
+          "GET /kb/graph",
+          "GET /kb/nodes/:id",
+          "GET /kb/search"
+        ]
+      }
+    },
+    {
+      "id": "f_db",
+      "type": "frame",
+      "position": {
+        "x": 80,
+        "y": 3624
+      },
+      "data": {
+        "kind": "frame",
+        "title": "9. Модель данных",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#ffd60a14",
+        "accentColor": "#ffd60a"
+      },
+      "style": {
+        "width": 876,
+        "height": 1602
+      }
+    },
+    {
+      "id": "n_note_f_db",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 9. Модель данных",
+        "description": "Все таблицы PG: users…audit_log. Миграции node-pg-migrate. Core пишет только свои таблицы. Связь: kb_nodes/edges/requests из БЗ (8).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_mig",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 228
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "tool",
+        "title": "Миграции",
+        "subtitle": "node-pg-migrate",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_core",
+      "type": "comment",
+      "position": {
+        "x": 304,
+        "y": 228
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "comment",
+        "title": "Граница Core",
+        "description": "Core пишет только свои таблицы.",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_users",
+      "type": "kind",
+      "position": {
+        "x": 588,
+        "y": 228
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "users",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_permissions",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 380
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "permissions",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_departments",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 380
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "departments",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_dept_templates",
+      "type": "kind",
+      "position": {
+        "x": 588,
+        "y": 380
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "dept_templates",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_tasks",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 532
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "tasks",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_task_steps",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 532
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "task_steps",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_todo_items",
+      "type": "kind",
+      "position": {
+        "x": 588,
+        "y": 532
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "todo_items",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_schedules",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 684
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "schedules",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_task_templates",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 684
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "task_templates",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_approvals",
+      "type": "kind",
+      "position": {
+        "x": 588,
+        "y": 684
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "approvals",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_clients",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 836
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "clients",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_deals",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 836
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "deals",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_funnel_stages",
+      "type": "kind",
+      "position": {
+        "x": 588,
+        "y": 836
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "funnel_stages",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_kb_nodes",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 988
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "kb_nodes",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_kb_edges",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 988
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "kb_edges",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_kb_requests",
+      "type": "kind",
+      "position": {
+        "x": 588,
+        "y": 988
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "kb_requests",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_skills",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 1140
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "skills",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_skill_versions",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 1140
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "skill_versions",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_services",
+      "type": "kind",
+      "position": {
+        "x": 588,
+        "y": 1140
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "services",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_model_usage",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 1292
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "model_usage",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_chat_sessions",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 1292
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "chat_sessions",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_chat_messages",
+      "type": "kind",
+      "position": {
+        "x": 588,
+        "y": 1292
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "chat_messages",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_event_log",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 1444
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "event_log",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_db_audit_log",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 1444
+      },
+      "parentId": "f_db",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "audit_log",
+        "subtitle": "PostgreSQL 16",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "f_sec",
+      "type": "frame",
+      "position": {
+        "x": 1044,
+        "y": 3624
+      },
+      "data": {
+        "kind": "frame",
+        "title": "10. Доступ и безопасность",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#ff9f0a14",
+        "accentColor": "#ff9f0a"
+      },
+      "style": {
+        "width": 592,
+        "height": 781
+      }
+    },
+    {
+      "id": "n_note_f_sec",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_sec",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 10. Доступ и безопасность",
+        "description": "admin → owner → employee; argon2id; cookie httpOnly 12ч в Redis; TOTP admin/owner; RBAC на каждый REST/WS; audit_log; Telegram /start; Mini App HMAC initData ≤1ч; rate 5/15 мин. Связь: API (11), бот (13).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_sec_rbac",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 276
+      },
+      "parentId": "f_sec",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "auth",
+        "title": "RBAC",
+        "subtitle": "admin → owner → employee",
+        "status": "doing",
+        "items": [
+          "на каждый REST / WS"
+        ]
+      }
+    },
+    {
+      "id": "n_sec_pwd",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 276
+      },
+      "parentId": "f_sec",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "auth",
+        "title": "Пароли",
+        "status": "planned",
+        "items": [
+          "argon2id",
+          "must_change_password"
+        ]
+      }
+    },
+    {
+      "id": "n_sec_sess",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 463
+      },
+      "parentId": "f_sec",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "cache",
+        "title": "Сессия",
+        "subtitle": "cookie httpOnly 12ч",
+        "status": "planned",
+        "items": [
+          "хранилище Redis"
+        ]
+      }
+    },
+    {
+      "id": "n_sec_totp",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 463
+      },
+      "parentId": "f_sec",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "auth",
+        "title": "TOTP",
+        "subtitle": "admin / owner",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_sec_audit",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 460
+      },
+      "parentId": "f_sec",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "file",
+        "title": "audit_log",
+        "subtitle": "все чувствительные действия",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_sec_tg",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 460
+      },
+      "parentId": "f_sec",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "webhook",
+        "title": "Telegram /start",
+        "subtitle": "код привязки",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_sec_mini",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 552
+      },
+      "parentId": "f_sec",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "auth",
+        "title": "Mini App HMAC",
+        "subtitle": "initData ≤ 1ч",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_sec_rate",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 552
+      },
+      "parentId": "f_sec",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "env",
+        "title": "Rate limit",
+        "subtitle": "5 / 15 мин",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "f_api",
+      "type": "frame",
+      "position": {
+        "x": 2008,
+        "y": 3624
+      },
+      "data": {
+        "kind": "frame",
+        "title": "11. API",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#5856d614",
+        "accentColor": "#5856d6"
+      },
+      "style": {
+        "width": 592,
+        "height": 657
+      }
+    },
+    {
+      "id": "n_note_f_api",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_api",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 11. API",
+        "description": "REST: Auth, Users, Tasks, Todo/schedules/templates, Approvals, Org, KB, Clients, Chat+SSE+STT, Services/Skills, Dashboard. WS /stream. Durable vs ephemeral события. Связь: экраны (12), статусы ЖЦ (5).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_api_rest",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 276
+      },
+      "parentId": "f_api",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "api",
+        "title": "REST-группы",
+        "status": "doing",
+        "items": [
+          "Auth · Users · Tasks",
+          "Todo / schedules / templates",
+          "Approvals · Org · KB",
+          "Clients · Chat+SSE+STT",
+          "Services / Skills",
+          "Dashboard"
+        ]
+      }
+    },
+    {
+      "id": "n_api_ws",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 276
+      },
+      "parentId": "f_api",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "api",
+        "title": "WS /stream",
+        "subtitle": "живой поток",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_api_dur",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 455
+      },
+      "parentId": "f_api",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "event",
+        "title": "Durable events",
+        "status": "planned",
+        "items": [
+          "task_triaged · plan_created",
+          "review_verdict · acceptance_verdict",
+          "rework_requested · task_escalated",
+          "approval_requested / decided",
+          "dept_* · bridge_* · direct_answer"
+        ]
+      }
+    },
+    {
+      "id": "n_api_eph",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 455
+      },
+      "parentId": "f_api",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "event",
+        "title": "Ephemeral events",
+        "status": "planned",
+        "items": [
+          "agent_step",
+          "agent_tokens_updated",
+          "provider_call_*",
+          "model_fallback",
+          "service_status"
+        ]
+      }
+    },
+    {
+      "id": "f_fe",
+      "type": "frame",
+      "position": {
+        "x": 2688,
+        "y": 3624
+      },
+      "data": {
+        "kind": "frame",
+        "title": "12. Frontend",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#0071e314",
+        "accentColor": "#0071e3"
+      },
+      "style": {
+        "width": 592,
+        "height": 845
+      }
+    },
+    {
+      "id": "n_note_f_fe",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_fe",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 12. Frontend",
+        "description": "Экраны от входа до настроек. Граф Canvas 2D force-layout 60fps при ≤200, пульсы, prefers-reduced-motion. Чат SSE + голос. Темы Авто/Светлая/Тёмная. Mini App ?tg=1. Связь: API (11), бот (13).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_fe_screens",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 260
+      },
+      "parentId": "f_fe",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "entry",
+        "title": "Экраны",
+        "status": "doing",
+        "items": [
+          "вход · дашборд · орг",
+          "процессы · Todo · подтверждения",
+          "клиенты / воронка · БЗ",
+          "скиллы · сервисы · модели/расходы",
+          "журнал · пользователи · настройки"
+        ]
+      }
+    },
+    {
+      "id": "n_fe_graph",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 260
+      },
+      "parentId": "f_fe",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "module",
+        "title": "Граф Canvas 2D",
+        "subtitle": "force-layout",
+        "status": "planned",
+        "items": [
+          "60 fps при ≤ 200 узлов",
+          "пульсы",
+          "prefers-reduced-motion"
+        ]
+      }
+    },
+    {
+      "id": "n_fe_chat",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 448
+      },
+      "parentId": "f_fe",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "entry",
+        "title": "Чат",
+        "status": "planned",
+        "items": [
+          "SSE",
+          "голос"
+        ]
+      }
+    },
+    {
+      "id": "n_fe_theme",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 448
+      },
+      "parentId": "f_fe",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "env",
+        "title": "Темы",
+        "status": "planned",
+        "items": [
+          "Авто",
+          "Светлая",
+          "Тёмная"
+        ]
+      }
+    },
+    {
+      "id": "n_fe_mini",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 564
+      },
+      "parentId": "f_fe",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "entry",
+        "title": "Mini App",
+        "subtitle": "?tg=1",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "f_bot",
+      "type": "frame",
+      "position": {
+        "x": 80,
+        "y": 5314
+      },
+      "data": {
+        "kind": "frame",
+        "title": "13. Telegram-бот",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#32ade614",
+        "accentColor": "#32ade6"
+      },
+      "style": {
+        "width": 592,
+        "height": 722
+      }
+    },
+    {
+      "id": "n_note_f_bot",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_bot",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 13. Telegram-бот",
+        "description": "/start код, /app, /status, /tasks; текст/голос; inline подтвердить/отклонить; intent через триаж. Связь: Первичная оценка (4), HMAC (10).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_bot_start",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 228
+      },
+      "parentId": "f_bot",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "webhook",
+        "title": "/start",
+        "subtitle": "код привязки",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_bot_app",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 228
+      },
+      "parentId": "f_bot",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "entry",
+        "title": "/app",
+        "subtitle": "открыть Mini App",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_bot_status",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 320
+      },
+      "parentId": "f_bot",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "api",
+        "title": "/status",
+        "subtitle": "состояние",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_bot_tasks",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 320
+      },
+      "parentId": "f_bot",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "api",
+        "title": "/tasks",
+        "subtitle": "список задач",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_bot_io",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 532
+      },
+      "parentId": "f_bot",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "entry",
+        "title": "Текст / голос",
+        "subtitle": "STT → триаж",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_bot_inline",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 532
+      },
+      "parentId": "f_bot",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "Inline",
+        "status": "planned",
+        "items": [
+          "подтвердить",
+          "отклонить"
+        ]
+      }
+    },
+    {
+      "id": "n_bot_intent",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 504
+      },
+      "parentId": "f_bot",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "agent",
+        "title": "Intent",
+        "subtitle": "через триаж",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "f_int",
+      "type": "frame",
+      "position": {
+        "x": 1044,
+        "y": 5314
+      },
+      "data": {
+        "kind": "frame",
+        "title": "14. Интеграции / ServiceConnector",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#ff453a14",
+        "accentColor": "#ff453a"
+      },
+      "style": {
+        "width": 592,
+        "height": 929
+      }
+    },
+    {
+      "id": "n_note_f_int",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_int",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 14. Интеграции / ServiceConnector",
+        "description": "ServiceConnector {id, kind default|custom, auth oauth2|api_key|webhook, health, actions}. Telegram, Google, WhatsApp, Meta, Serper/Brave, STT. Секреты AES-GCM. Связь: парсер (15), STT → чат/бот.",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_int_sc",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 260
+      },
+      "parentId": "f_int",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "module",
+        "title": "ServiceConnector",
+        "status": "planned",
+        "items": [
+          "id",
+          "kind default|custom",
+          "auth oauth2|api_key|webhook",
+          "health",
+          "actions"
+        ]
+      }
+    },
+    {
+      "id": "n_int_tg",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 260
+      },
+      "parentId": "f_int",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "external",
+        "title": "Telegram",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_int_g",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 396
+      },
+      "parentId": "f_int",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "external",
+        "title": "Google",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_int_wa",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 396
+      },
+      "parentId": "f_int",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "external",
+        "title": "WhatsApp",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_int_meta",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 532
+      },
+      "parentId": "f_int",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "external",
+        "title": "Meta",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_int_search",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 532
+      },
+      "parentId": "f_int",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "external",
+        "title": "Serper / Brave",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_int_stt",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 716
+      },
+      "parentId": "f_int",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "external",
+        "title": "STT",
+        "subtitle": "SpeechKit + Whisper",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_int_sec",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 716
+      },
+      "parentId": "f_int",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "auth",
+        "title": "Секреты",
+        "subtitle": "AES-GCM",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "f_par",
+      "type": "frame",
+      "position": {
+        "x": 2008,
+        "y": 5314
+      },
+      "data": {
+        "kind": "frame",
+        "title": "15. Парсер",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#30d15814",
+        "accentColor": "#30d158"
+      },
+      "style": {
+        "width": 592,
+        "height": 581
+      }
+    },
+    {
+      "id": "n_note_f_par",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_par",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 15. Парсер",
+        "description": "BullMQ: поиск → загрузка → текст → дедуп → суммаризация → kb_requests. robots.txt, 1 rps/домен, защита от prompt injection. Связь: БЗ (8), коннекторы (14).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_par_q",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 244
+      },
+      "parentId": "f_par",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "queue",
+        "title": "BullMQ pipeline",
+        "status": "doing",
+        "items": [
+          "поиск",
+          "загрузка",
+          "текст",
+          "дедуп",
+          "суммаризация → kb_requests"
+        ]
+      }
+    },
+    {
+      "id": "n_par_robots",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 244
+      },
+      "parentId": "f_par",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "file",
+        "title": "robots.txt",
+        "subtitle": "соблюдаем",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_par_rps",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 336
+      },
+      "parentId": "f_par",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "env",
+        "title": "1 rps / домен",
+        "subtitle": "вежливый обход",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_par_inj",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 336
+      },
+      "parentId": "f_par",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "auth",
+        "title": "Защита",
+        "subtitle": "prompt injection",
+        "status": "doing",
+        "items": []
+      }
+    },
+    {
+      "id": "f_sk",
+      "type": "frame",
+      "position": {
+        "x": 2688,
+        "y": 5314
+      },
+      "data": {
+        "kind": "frame",
+        "title": "16. Скиллы",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#ff9f0a14",
+        "accentColor": "#ff9f0a"
+      },
+      "style": {
+        "width": 320,
+        "height": 613
+      }
+    },
+    {
+      "id": "n_note_f_sk",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_sk",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 16. Скиллы",
+        "description": "Поля: name/description/departments/instructions/tools/examples. skill_versions: review → active. Подбор top-3 по эмбеддингу. Связь: эмбеддинги парсера (15).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_sk_fields",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 244
+      },
+      "parentId": "f_sk",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "file",
+        "title": "Поля скилла",
+        "status": "planned",
+        "items": [
+          "name / description",
+          "departments",
+          "instructions",
+          "tools",
+          "examples"
+        ]
+      }
+    },
+    {
+      "id": "n_sk_ver",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 336
+      },
+      "parentId": "f_sk",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "file",
+        "title": "skill_versions",
+        "subtitle": "review → active",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_sk_pick",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 428
+      },
+      "parentId": "f_sk",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "tool",
+        "title": "Подбор",
+        "subtitle": "top-3 по эмбеддингу",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "f_appr",
+      "type": "frame",
+      "position": {
+        "x": 80,
+        "y": 6331
+      },
+      "data": {
+        "kind": "frame",
+        "title": "17. Подтверждения, лимиты, расходы",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#ffd60a14",
+        "accentColor": "#ffd60a"
+      },
+      "style": {
+        "width": 592,
+        "height": 740
+      }
+    },
+    {
+      "id": "n_note_f_appr",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_appr",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 17. Подтверждения, лимиты, расходы",
+        "description": "approvals.yaml, пауза шага. Стек: Budgeted → RateLimited → CircuitBroken → Retrying → Throttled. model_usage. Fallback Claude → DeepSeek V4 Pro + событие model_fallback. Связь: awaiting_approval (5).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_ap_yaml",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 276
+      },
+      "parentId": "f_appr",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "file",
+        "title": "approvals.yaml",
+        "subtitle": "правила паузы",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_ap_pause",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 276
+      },
+      "parentId": "f_appr",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "Пауза шага",
+        "subtitle": "ждём решение",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_ap_stack",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 515
+      },
+      "parentId": "f_appr",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "module",
+        "title": "Provider stack",
+        "status": "planned",
+        "items": [
+          "Budgeted",
+          "RateLimited",
+          "CircuitBroken",
+          "Retrying",
+          "Throttled"
+        ]
+      }
+    },
+    {
+      "id": "n_ap_usage",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 515
+      },
+      "parentId": "f_appr",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "model_usage",
+        "subtitle": "учёт токенов / $",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_ap_fb",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 530
+      },
+      "parentId": "f_appr",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "event",
+        "title": "Fallback",
+        "subtitle": "Claude → DeepSeek V4 Pro",
+        "status": "planned",
+        "items": [
+          "событие model_fallback"
+        ]
+      }
+    },
+    {
+      "id": "f_infra",
+      "type": "frame",
+      "position": {
+        "x": 1044,
+        "y": 6331
+      },
+      "data": {
+        "kind": "frame",
+        "title": "18. Инфраструктура",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#8e8e9314",
+        "accentColor": "#8e8e93"
+      },
+      "style": {
+        "width": 592,
+        "height": 911
+      }
+    },
+    {
+      "id": "n_note_f_infra",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_infra",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 18. Инфраструктура",
+        "description": "compose: caddy, web, backend, core, workers, embeddings, redis, postgres. TLS Cloudflare+Caddy, .env.prod 600, pg_dump 14 дней R2/B2, JSON logs, Sentry/Grafana/UptimeRobot, GHA SSH, TZ Asia/Tashkent. Связь: среды (3).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_inf_compose",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 276
+      },
+      "parentId": "f_infra",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "service",
+        "title": "compose (local)",
+        "status": "planned",
+        "items": [
+          "caddy · web · backend",
+          "core · workers · embeddings",
+          "redis · postgres"
+        ]
+      }
+    },
+    {
+      "id": "n_inf_tls",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 276
+      },
+      "parentId": "f_infra",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "auth",
+        "title": "TLS",
+        "subtitle": "Cloudflare + Caddy",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_inf_env",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 463
+      },
+      "parentId": "f_infra",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "env",
+        "title": ".env.prod",
+        "subtitle": "права 600",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_inf_bak",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 463
+      },
+      "parentId": "f_infra",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "store",
+        "title": "Бэкапы",
+        "subtitle": "pg_dump 14 дней",
+        "status": "planned",
+        "items": [
+          "R2 / B2"
+        ]
+      }
+    },
+    {
+      "id": "n_inf_logs",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 566
+      },
+      "parentId": "f_infra",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "file",
+        "title": "JSON logs",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_inf_obs",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 566
+      },
+      "parentId": "f_infra",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "tool",
+        "title": "Наблюдение",
+        "status": "planned",
+        "items": [
+          "Sentry",
+          "Grafana",
+          "UptimeRobot"
+        ]
+      }
+    },
+    {
+      "id": "n_inf_ci",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 552
+      },
+      "parentId": "f_infra",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "tool",
+        "title": "GHA deploy",
+        "subtitle": "SSH",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_inf_tz",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 552
+      },
+      "parentId": "f_infra",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "env",
+        "title": "TZ",
+        "subtitle": "Asia/Tashkent",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "f_test",
+      "type": "frame",
+      "position": {
+        "x": 2008,
+        "y": 6331
+      },
+      "data": {
+        "kind": "frame",
+        "title": "19. Тестирование",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#32ade614",
+        "accentColor": "#32ade6"
+      },
+      "style": {
+        "width": 592,
+        "height": 598
+      }
+    },
+    {
+      "id": "n_note_f_test",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_test",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 19. Тестирование",
+        "description": "Unit ctest/Vitest, контракты Zod, интеграция docker, E2E Playwright, оценка ≥30 задач ≥85%, безопасность RBAC + injection. Связь: критерии перехода в среды (3).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_t_unit",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 244
+      },
+      "parentId": "f_test",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "test",
+        "title": "Unit",
+        "status": "planned",
+        "items": [
+          "ctest",
+          "Vitest"
+        ]
+      }
+    },
+    {
+      "id": "n_t_zod",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 244
+      },
+      "parentId": "f_test",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "test",
+        "title": "Контракты",
+        "subtitle": "Zod fail-closed",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_t_int",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 336
+      },
+      "parentId": "f_test",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "test",
+        "title": "Интеграция",
+        "subtitle": "docker",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_t_e2e",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 336
+      },
+      "parentId": "f_test",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "test",
+        "title": "E2E",
+        "subtitle": "Playwright",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_t_eval",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 500
+      },
+      "parentId": "f_test",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "test",
+        "title": "Оценка агентов",
+        "status": "planned",
+        "items": [
+          "≥ 30 задач",
+          "≥ 85%"
+        ]
+      }
+    },
+    {
+      "id": "n_t_sec",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 500
+      },
+      "parentId": "f_test",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "test",
+        "title": "Безопасность",
+        "status": "planned",
+        "items": [
+          "RBAC",
+          "injection"
+        ]
+      }
+    },
+    {
+      "id": "f_ms",
+      "type": "frame",
+      "position": {
+        "x": 2688,
+        "y": 6331
+      },
+      "data": {
+        "kind": "frame",
+        "title": "20. Вехи M0–M10",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#bf5af214",
+        "accentColor": "#bf5af2"
+      },
+      "style": {
+        "width": 592,
+        "height": 834
+      }
+    },
+    {
+      "id": "n_note_f_ms",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_ms",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 20. Вехи M0–M10",
+        "description": "M0 репо/CI → M1 Core → M2 отделы/мосты → M3 БД/БЗ → M4 Backend → M5 Web → M6 Telegram → M7 парсер/коннекторы/скиллы → M8 прод-критерии → M9 деплой/тестовый месяц → M10 отчёт этап 2. Связь: слои 2, 6–8, 12–16 и этапы (1).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_m0",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 276
+      },
+      "parentId": "f_ms",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "M0",
+        "subtitle": "репо / CI",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_m1",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 276
+      },
+      "parentId": "f_ms",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "M1",
+        "subtitle": "Core: оценка / план / гейт / PgStore",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_m2",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 368
+      },
+      "parentId": "f_ms",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "M2",
+        "subtitle": "временные отделы / мосты",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_m3",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 368
+      },
+      "parentId": "f_ms",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "M3",
+        "subtitle": "БД / БЗ / бэкапы",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_m4",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 460
+      },
+      "parentId": "f_ms",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "M4",
+        "subtitle": "Backend auth / RBAC / задачи",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_m5",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 460
+      },
+      "parentId": "f_ms",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "M5",
+        "subtitle": "Web",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_m6",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 552
+      },
+      "parentId": "f_ms",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "M6",
+        "subtitle": "Telegram",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_m7",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 552
+      },
+      "parentId": "f_ms",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "M7",
+        "subtitle": "парсер / коннекторы / скиллы",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_m8",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 644
+      },
+      "parentId": "f_ms",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "M8",
+        "subtitle": "прод-критерии + демо",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_m9",
+      "type": "kind",
+      "position": {
+        "x": 304,
+        "y": 644
+      },
+      "parentId": "f_ms",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "M9",
+        "subtitle": "деплой + тестовый месяц",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_m10",
+      "type": "kind",
+      "position": {
+        "x": 20,
+        "y": 736
+      },
+      "parentId": "f_ms",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "job",
+        "title": "M10",
+        "subtitle": "отчёт этап 2",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "f_risk",
+      "type": "frame",
+      "position": {
+        "x": 80,
+        "y": 7330
+      },
+      "data": {
+        "kind": "frame",
+        "title": "21. Риски и открытые вопросы",
+        "status": "planned",
+        "items": [],
+        "fillColor": "#ff453a14",
+        "accentColor": "#ff453a"
+      },
+      "style": {
+        "width": 592,
+        "height": 818
+      }
+    },
+    {
+      "id": "n_note_f_risk",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 46
+      },
+      "parentId": "f_risk",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Заметка: 21. Риски и открытые вопросы",
+        "description": "Объём vs $3000; KbStore SQLite→PG; DeepSeek uz; одобрения WhatsApp/Meta; цена WA в РУз; нужны ли Закупки/Склад/Логистика; учётка 1С/МойСклад/Excel. Связь: «не входит» (1), перенос БЗ (2, 8).",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_rk_vol",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 260
+      },
+      "parentId": "f_risk",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Объём vs $3000",
+        "description": "Риск расползания скоупа относительно бюджета.",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_rk_kb",
+      "type": "note",
+      "position": {
+        "x": 304,
+        "y": 260
+      },
+      "parentId": "f_risk",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "KbStore SQLite → PG",
+        "description": "Перенос логики БЗ Anton на PostgreSQL + pgvector.",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_rk_uz",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 394
+      },
+      "parentId": "f_risk",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "DeepSeek uz",
+        "description": "Качество узбекского у DeepSeek — открытый вопрос.",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_rk_meta",
+      "type": "note",
+      "position": {
+        "x": 304,
+        "y": 394
+      },
+      "parentId": "f_risk",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "WhatsApp / Meta",
+        "description": "Нужны одобрения платформ.",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_rk_wa",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 528
+      },
+      "parentId": "f_risk",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Цена WA в РУз",
+        "description": "Стоимость WhatsApp в Узбекистане неясна.",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_rk_depts",
+      "type": "note",
+      "position": {
+        "x": 304,
+        "y": 528
+      },
+      "parentId": "f_risk",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Нужны ли отделы?",
+        "description": "Закупки / Склад / Логистика — открытый вопрос.",
+        "status": "planned",
+        "items": []
+      }
+    },
+    {
+      "id": "n_rk_acc",
+      "type": "note",
+      "position": {
+        "x": 20,
+        "y": 710
+      },
+      "parentId": "f_risk",
+      "expandParent": true,
+      "extent": "parent",
+      "data": {
+        "kind": "note",
+        "title": "Учётка",
+        "description": "1С / МойСклад / Excel — не в MVP, но вопрос учёта остаётся.",
+        "status": "planned",
+        "items": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_1",
+      "source": "n_root",
+      "target": "f_ctx",
+      "data": {
+        "label": "границы",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_2",
+      "source": "n_root",
+      "target": "f_arch",
+      "data": {
+        "label": "как устроено",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_3",
+      "source": "n_root",
+      "target": "f_env",
+      "data": {
+        "label": "где крутится",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_4",
+      "source": "n_root",
+      "target": "f_roles",
+      "data": {
+        "label": "кто делает",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_5",
+      "source": "n_root",
+      "target": "f_lc",
+      "data": {
+        "label": "как идёт задача",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_6",
+      "source": "n_root",
+      "target": "f_dept",
+      "data": {
+        "label": "оргструктура",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_7",
+      "source": "n_root",
+      "target": "f_bridge",
+      "data": {
+        "label": "связки",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_8",
+      "source": "n_root",
+      "target": "f_kb",
+      "data": {
+        "label": "память",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_9",
+      "source": "n_root",
+      "target": "f_db",
+      "data": {
+        "label": "таблицы",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_10",
+      "source": "n_root",
+      "target": "f_sec",
+      "data": {
+        "label": "доступ",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_11",
+      "source": "n_root",
+      "target": "f_api",
+      "data": {
+        "label": "контракты",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_12",
+      "source": "n_root",
+      "target": "f_fe",
+      "data": {
+        "label": "экраны",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_13",
+      "source": "n_root",
+      "target": "f_bot",
+      "data": {
+        "label": "мессенджер",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_14",
+      "source": "n_root",
+      "target": "f_int",
+      "data": {
+        "label": "внешний мир",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_15",
+      "source": "n_root",
+      "target": "f_par",
+      "data": {
+        "label": "сбор данных",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_16",
+      "source": "n_root",
+      "target": "f_sk",
+      "data": {
+        "label": "навыки",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_17",
+      "source": "n_root",
+      "target": "f_appr",
+      "data": {
+        "label": "деньги и паузы",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_18",
+      "source": "n_root",
+      "target": "f_infra",
+      "data": {
+        "label": "прод",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_19",
+      "source": "n_root",
+      "target": "f_test",
+      "data": {
+        "label": "качество",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_20",
+      "source": "n_root",
+      "target": "f_ms",
+      "data": {
+        "label": "план",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_21",
+      "source": "n_root",
+      "target": "f_risk",
+      "data": {
+        "label": "неясно",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_22",
+      "source": "n_guide",
+      "target": "f_ctx",
+      "data": {
+        "label": "начать с границ",
+        "color": "#0071e3"
+      }
+    },
+    {
+      "id": "e_23",
+      "source": "n_root",
+      "target": "n_root_product",
+      "data": {
+        "label": "о чём",
+        "color": "#0071e3"
+      }
+    },
+    {
+      "id": "e_24",
+      "source": "n_root_product",
+      "target": "f_ctx",
+      "data": {
+        "label": "детали",
+        "color": "#0071e3"
+      }
+    },
+    {
+      "id": "e_25",
+      "source": "n_arch_spa",
+      "target": "n_arch_bff",
+      "data": {
+        "label": "HTTPS/WSS",
+        "color": "#5e5ce6"
+      }
+    },
+    {
+      "id": "e_26",
+      "source": "n_arch_mini",
+      "target": "n_arch_bff",
+      "data": {
+        "label": "HTTPS/WSS",
+        "color": "#5e5ce6"
+      }
+    },
+    {
+      "id": "e_27",
+      "source": "n_arch_bot",
+      "target": "n_arch_bff",
+      "data": {
+        "label": "HTTPS/WSS",
+        "color": "#5e5ce6"
+      }
+    },
+    {
+      "id": "e_28",
+      "source": "n_arch_bff",
+      "target": "n_arch_core",
+      "data": {
+        "label": "REST/WS + events",
+        "color": "#5e5ce6"
+      }
+    },
+    {
+      "id": "e_29",
+      "source": "n_arch_bff",
+      "target": "n_arch_redis",
+      "data": {
+        "label": "очереди",
+        "color": "#5e5ce6"
+      }
+    },
+    {
+      "id": "e_30",
+      "source": "n_arch_redis",
+      "target": "n_arch_workers",
+      "data": {
+        "label": "BullMQ",
+        "color": "#30d158"
+      }
+    },
+    {
+      "id": "e_31",
+      "source": "n_arch_workers",
+      "target": "n_arch_pg",
+      "data": {
+        "label": "эмбеддинги / парсер",
+        "color": "#ffd60a"
+      }
+    },
+    {
+      "id": "e_32",
+      "source": "n_arch_bff",
+      "target": "n_arch_pg",
+      "data": {
+        "label": "данные",
+        "color": "#ffd60a"
+      }
+    },
+    {
+      "id": "e_33",
+      "source": "n_arch_core",
+      "target": "n_arch_pg",
+      "data": {
+        "label": "свои таблицы",
+        "color": "#ffd60a"
+      }
+    },
+    {
+      "id": "e_34",
+      "source": "n_arch_core",
+      "target": "n_arch_claude",
+      "data": {
+        "label": "оркестрация",
+        "color": "#30d158"
+      }
+    },
+    {
+      "id": "e_35",
+      "source": "n_arch_bff",
+      "target": "n_stack_be",
+      "data": {
+        "label": "слой",
+        "color": "#ff9f0a"
+      }
+    },
+    {
+      "id": "e_36",
+      "source": "n_arch_core",
+      "target": "n_stack_core",
+      "data": {
+        "label": "слой",
+        "color": "#ff9f0a"
+      }
+    },
+    {
+      "id": "e_37",
+      "source": "n_arch_spa",
+      "target": "n_stack_fe",
+      "data": {
+        "label": "слой",
+        "color": "#ff9f0a"
+      }
+    },
+    {
+      "id": "e_38",
+      "source": "n_anton_take",
+      "target": "n_arch_core",
+      "data": {
+        "label": "база",
+        "color": "#30d158"
+      }
+    },
+    {
+      "id": "e_39",
+      "source": "n_anton_take",
+      "target": "n_arch_bff",
+      "data": {
+        "label": "bff-основа",
+        "color": "#30d158"
+      }
+    },
+    {
+      "id": "e_40",
+      "source": "n_role_triage",
+      "target": "n_lc_flow",
+      "data": {
+        "label": "triage",
+        "color": "#30d158"
+      }
+    },
+    {
+      "id": "e_41",
+      "source": "n_role_base",
+      "target": "n_lc_flow",
+      "data": {
+        "label": "direct_answer",
+        "color": "#30d158"
+      }
+    },
+    {
+      "id": "e_42",
+      "source": "n_role_plan",
+      "target": "n_lc_flow",
+      "data": {
+        "label": "planning",
+        "color": "#30d158"
+      }
+    },
+    {
+      "id": "e_43",
+      "source": "n_role_exec",
+      "target": "n_lc_flow",
+      "data": {
+        "label": "in_work",
+        "color": "#30d158"
+      }
+    },
+    {
+      "id": "e_44",
+      "source": "n_role_rev",
+      "target": "n_lc_flow",
+      "data": {
+        "label": "review",
+        "color": "#30d158"
+      }
+    },
+    {
+      "id": "e_45",
+      "source": "n_role_acc",
+      "target": "n_lc_flow",
+      "data": {
+        "label": "acceptance",
+        "color": "#30d158"
+      }
+    },
+    {
+      "id": "e_46",
+      "source": "n_role_orch",
+      "target": "n_lc_stop",
+      "data": {
+        "label": "стоп-условия",
+        "color": "#ff453a"
+      }
+    },
+    {
+      "id": "e_47",
+      "source": "n_role_rev",
+      "target": "n_lc_rework",
+      "data": {
+        "label": "rework",
+        "color": "#ff9f0a"
+      }
+    },
+    {
+      "id": "e_48",
+      "source": "n_role_acc",
+      "target": "n_lc_rework",
+      "data": {
+        "label": "rework",
+        "color": "#ff9f0a"
+      }
+    },
+    {
+      "id": "e_49",
+      "source": "n_lc_limits",
+      "target": "n_lc_approval",
+      "data": {
+        "label": "бюджет",
+        "color": "#ffd60a"
+      }
+    },
+    {
+      "id": "e_50",
+      "source": "n_ap_yaml",
+      "target": "n_lc_approval",
+      "data": {
+        "label": "пауза",
+        "color": "#ffd60a"
+      }
+    },
+    {
+      "id": "e_51",
+      "source": "n_role_triage",
+      "target": "n_role_r1",
+      "data": {
+        "label": "маршрутизация",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_52",
+      "source": "n_role_r3",
+      "target": "n_dept_tmp",
+      "data": {
+        "label": "временный отдел",
+        "color": "#64d2ff"
+      }
+    },
+    {
+      "id": "e_53",
+      "source": "n_role_r4",
+      "target": "n_fe_chat",
+      "data": {
+        "label": "вопрос",
+        "color": "#0071e3"
+      }
+    },
+    {
+      "id": "e_54",
+      "source": "n_role_r2",
+      "target": "n_lc_flow",
+      "data": {
+        "label": "suggest_task",
+        "color": "#30d158"
+      }
+    },
+    {
+      "id": "e_55",
+      "source": "n_dept_yaml",
+      "target": "n_br_req",
+      "data": {
+        "label": "bridges",
+        "color": "#ff375f"
+      }
+    },
+    {
+      "id": "e_56",
+      "source": "n_dept_tmp",
+      "target": "n_br_joint",
+      "data": {
+        "label": "совместные блоки",
+        "color": "#ff375f"
+      }
+    },
+    {
+      "id": "e_57",
+      "source": "n_br_acl",
+      "target": "n_kb_acl",
+      "data": {
+        "label": "ACL БЗ",
+        "color": "#5856d6"
+      }
+    },
+    {
+      "id": "e_58",
+      "source": "n_br_247",
+      "target": "n_fe_graph",
+      "data": {
+        "label": "пульсы bridge_*",
+        "color": "#0071e3"
+      }
+    },
+    {
+      "id": "e_59",
+      "source": "n_kb_nodes",
+      "target": "n_db_kb_nodes",
+      "data": {
+        "label": "таблица",
+        "color": "#ffd60a"
+      }
+    },
+    {
+      "id": "e_60",
+      "source": "n_kb_edges",
+      "target": "n_db_kb_edges",
+      "data": {
+        "label": "таблица",
+        "color": "#ffd60a"
+      }
+    },
+    {
+      "id": "e_61",
+      "source": "n_kb_api",
+      "target": "n_api_rest",
+      "data": {
+        "label": "группа KB",
+        "color": "#5856d6"
+      }
+    },
+    {
+      "id": "e_62",
+      "source": "n_kb_search",
+      "target": "n_stack_data",
+      "data": {
+        "label": "pgvector + FTS",
+        "color": "#ff9f0a"
+      }
+    },
+    {
+      "id": "e_63",
+      "source": "n_sec_rbac",
+      "target": "n_api_rest",
+      "data": {
+        "label": "RBAC",
+        "color": "#ff9f0a"
+      }
+    },
+    {
+      "id": "e_64",
+      "source": "n_sec_rbac",
+      "target": "n_api_ws",
+      "data": {
+        "label": "RBAC",
+        "color": "#ff9f0a"
+      }
+    },
+    {
+      "id": "e_65",
+      "source": "n_sec_tg",
+      "target": "n_bot_start",
+      "data": {
+        "label": "код",
+        "color": "#32ade6"
+      }
+    },
+    {
+      "id": "e_66",
+      "source": "n_sec_mini",
+      "target": "n_fe_mini",
+      "data": {
+        "label": "HMAC",
+        "color": "#0071e3"
+      }
+    },
+    {
+      "id": "e_67",
+      "source": "n_api_rest",
+      "target": "n_fe_screens",
+      "data": {
+        "label": "экраны",
+        "color": "#0071e3"
+      }
+    },
+    {
+      "id": "e_68",
+      "source": "n_api_ws",
+      "target": "n_fe_graph",
+      "data": {
+        "label": "/stream",
+        "color": "#0071e3"
+      }
+    },
+    {
+      "id": "e_69",
+      "source": "n_fe_chat",
+      "target": "n_api_rest",
+      "data": {
+        "label": "Chat+SSE+STT",
+        "color": "#0071e3"
+      }
+    },
+    {
+      "id": "e_70",
+      "source": "n_bot_intent",
+      "target": "n_role_triage",
+      "data": {
+        "label": "intent",
+        "color": "#30d158"
+      }
+    },
+    {
+      "id": "e_71",
+      "source": "n_bot_inline",
+      "target": "n_ap_pause",
+      "data": {
+        "label": "подтвердить/отклонить",
+        "color": "#ffd60a"
+      }
+    },
+    {
+      "id": "e_72",
+      "source": "n_arch_bot",
+      "target": "f_bot",
+      "data": {
+        "label": "контур",
+        "color": "#32ade6"
+      }
+    },
+    {
+      "id": "e_73",
+      "source": "n_int_sc",
+      "target": "n_par_q",
+      "data": {
+        "label": "поиск",
+        "color": "#30d158"
+      }
+    },
+    {
+      "id": "e_74",
+      "source": "n_par_q",
+      "target": "n_kb_meta",
+      "data": {
+        "label": "kb_requests",
+        "color": "#5856d6"
+      }
+    },
+    {
+      "id": "e_75",
+      "source": "n_sk_pick",
+      "target": "n_par_q",
+      "data": {
+        "label": "эмбеддинги",
+        "color": "#ff9f0a"
+      }
+    },
+    {
+      "id": "e_76",
+      "source": "n_int_stt",
+      "target": "n_fe_chat",
+      "data": {
+        "label": "голос",
+        "color": "#32ade6"
+      }
+    },
+    {
+      "id": "e_77",
+      "source": "n_int_stt",
+      "target": "n_bot_io",
+      "data": {
+        "label": "голос",
+        "color": "#32ade6"
+      }
+    },
+    {
+      "id": "e_78",
+      "source": "n_env_local",
+      "target": "n_inf_compose",
+      "data": {
+        "label": "local",
+        "color": "#ac8e68"
+      }
+    },
+    {
+      "id": "e_79",
+      "source": "n_env_prod",
+      "target": "n_inf_env",
+      "data": {
+        "label": ".env.prod",
+        "color": "#ac8e68"
+      }
+    },
+    {
+      "id": "e_80",
+      "source": "n_env_go",
+      "target": "n_m8",
+      "data": {
+        "label": "прод-критерии",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_81",
+      "source": "n_env_ops",
+      "target": "n_inf_bak",
+      "data": {
+        "label": "бэкап",
+        "color": "#8e8e93"
+      }
+    },
+    {
+      "id": "e_82",
+      "source": "n_m1",
+      "target": "n_arch_core",
+      "data": {
+        "label": "Core",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_83",
+      "source": "n_m2",
+      "target": "n_dept_tmp",
+      "data": {
+        "label": "отделы",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_84",
+      "source": "n_m2",
+      "target": "n_br_req",
+      "data": {
+        "label": "мосты",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_85",
+      "source": "n_m3",
+      "target": "n_arch_pg",
+      "data": {
+        "label": "БД/БЗ",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_86",
+      "source": "n_m4",
+      "target": "n_arch_bff",
+      "data": {
+        "label": "Backend",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_87",
+      "source": "n_m5",
+      "target": "n_fe_screens",
+      "data": {
+        "label": "Web",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_88",
+      "source": "n_m6",
+      "target": "n_bot_start",
+      "data": {
+        "label": "Telegram",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_89",
+      "source": "n_m7",
+      "target": "n_par_q",
+      "data": {
+        "label": "парсер",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_90",
+      "source": "n_m7",
+      "target": "n_int_sc",
+      "data": {
+        "label": "коннекторы",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_91",
+      "source": "n_m7",
+      "target": "n_sk_fields",
+      "data": {
+        "label": "скиллы",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_92",
+      "source": "n_m8",
+      "target": "n_env_go",
+      "data": {
+        "label": "критерии",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_93",
+      "source": "n_m9",
+      "target": "n_ctx_s1",
+      "data": {
+        "label": "тестовый месяц",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_94",
+      "source": "n_m10",
+      "target": "n_ctx_s2",
+      "data": {
+        "label": "этап 2",
+        "color": "#bf5af2"
+      }
+    },
+    {
+      "id": "e_95",
+      "source": "n_rk_kb",
+      "target": "n_anton_drop",
+      "data": {
+        "label": "SQLite→PG",
+        "color": "#ff453a"
+      }
+    },
+    {
+      "id": "e_96",
+      "source": "n_rk_acc",
+      "target": "n_ctx_out",
+      "data": {
+        "label": "не в MVP",
+        "color": "#ff453a"
+      }
+    },
+    {
+      "id": "e_97",
+      "source": "n_rk_vol",
+      "target": "n_m8",
+      "data": {
+        "label": "бюджет",
+        "color": "#ff453a"
+      }
+    },
+    {
+      "id": "e_98",
+      "source": "n_ctx_product",
+      "target": "n_ctx_cycle",
+      "data": {
+        "label": "цикл",
+        "color": "#0071e3"
+      }
+    },
+    {
+      "id": "e_99",
+      "source": "n_ctx_dev",
+      "target": "n_ctx_s1",
+      "data": {
+        "label": "далее",
+        "color": "#ac8e68"
+      }
+    },
+    {
+      "id": "e_100",
+      "source": "n_ctx_s1",
+      "target": "n_ctx_s2",
+      "data": {
+        "label": "далее",
+        "color": "#ac8e68"
+      }
+    },
+    {
+      "id": "e_101",
+      "source": "n_ctx_s2",
+      "target": "n_ctx_s3",
+      "data": {
+        "label": "далее",
+        "color": "#ac8e68"
+      }
+    }
+  ],
+  "viewport": {
+    "x": 24,
+    "y": 16,
+    "zoom": 0.38
+  },
+  "updatedAt": "2026-09-14T22:38:24.455Z"
+}

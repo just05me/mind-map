@@ -14,6 +14,7 @@ import {
   useEffect,
   useMemo,
   useReducer,
+  useRef,
   type ReactNode,
 } from 'react'
 import { mergeBuiltinKinds, removeKind, upsertKind } from '../model/kinds'
@@ -39,7 +40,10 @@ import {
   reparentNode,
   type Graph,
 } from './graph'
+import { useAuth } from './AuthContext'
+import { listRemoteProjects } from './api'
 import { createEmptyProject, duplicateProject } from './project-factory'
+import { createRemoteSync } from './remote-sync'
 import { loadStore, saveStore } from './storage'
 import { loadUiPrefs, saveUiPrefs } from './ui-prefs'
 
@@ -118,6 +122,7 @@ type Action =
   | { type: 'updateKind'; kind: KindDef }
   | { type: 'removeKind'; id: KindId }
   | { type: 'importProject'; project: Project }
+  | { type: 'hydrateRemote'; projects: Project[] }
   | { type: 'requestLayout'; layout: LayoutCommand | null }
   | { type: 'togglePanel'; panel: PanelId; open?: boolean }
   | { type: 'toggleAllPanels' }
@@ -556,6 +561,20 @@ function reducer(state: AppState, action: Action): AppState {
         ],
         currentId: action.project.id,
       })
+    case 'hydrateRemote': {
+      if (action.projects.length === 0) return state
+      const currentId = action.projects.some((item) => item.id === state.currentId)
+        ? state.currentId
+        : action.projects[0].id
+      return resetTransient({
+        ...state,
+        projects: action.projects.map((project) => ({
+          ...project,
+          kinds: mergeBuiltinKinds(project.kinds),
+        })),
+        currentId,
+      })
+    }
     case 'requestLayout':
       return { ...state, layoutCommand: action.layout }
     case 'togglePanel': {
@@ -604,10 +623,53 @@ function createInitialState(): AppState {
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, undefined, createInitialState)
+  const { status } = useAuth()
+  const projectsRef = useRef(state.projects)
+  const remoteSync = useRef(createRemoteSync())
+  const remoteReady = useRef(false)
+  const prevStatus = useRef(status)
+  projectsRef.current = state.projects
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', state.theme === 'dark')
   }, [state.theme])
+
+  useEffect(() => {
+    if (prevStatus.current === 'ready' && status === 'guest') {
+      dispatch({ type: 'hydrateRemote', projects: [createEmptyProject()] })
+      remoteSync.current.mark([])
+      remoteReady.current = false
+    }
+    prevStatus.current = status
+  }, [status])
+
+  useEffect(() => {
+    if (status !== 'ready') {
+      remoteReady.current = false
+      return
+    }
+    let cancelled = false
+    void (async () => {
+      try {
+        const remote = await listRemoteProjects()
+        if (cancelled) return
+        if (remote.length > 0) {
+          dispatch({ type: 'hydrateRemote', projects: remote })
+          remoteSync.current.mark(remote)
+        } else {
+          remoteSync.current.mark([])
+          await remoteSync.current.flush(projectsRef.current)
+        }
+      } catch {
+        remoteSync.current.mark(projectsRef.current)
+      } finally {
+        if (!cancelled) remoteReady.current = true
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [status])
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -616,9 +678,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
         currentId: state.currentId,
         theme: state.theme,
       })
+      if (status === 'ready' && remoteReady.current) {
+        void remoteSync.current.flush(state.projects).catch(() => {
+          // Local cache already saved; next debounce retries the API.
+        })
+      }
     }, 350)
     return () => window.clearTimeout(timer)
-  }, [state.projects, state.currentId, state.theme])
+  }, [state.projects, state.currentId, state.theme, status])
 
   useEffect(() => {
     saveUiPrefs({

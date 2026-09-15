@@ -1,0 +1,38 @@
+---
+description: Именование и стиль TypeScript/React для mind_map
+alwaysApply: true
+---
+
+# Стиль и правописание кода
+
+Идентификаторы, имена файлов и ключи storage — **английские**. Строки UI, `aria-label`, подсказки и ошибки пользователю — **русские**. Отдельного i18n нет: не вводи библиотеку переводов без запроса.
+
+## Именование
+
+| Вид | Паттерн | Пример |
+|---|---|---|
+| Функции, переменные, действия | camelCase | `updateNodeData`, `createEmptyProject` |
+| Компоненты, типы | PascalCase | `KindNode`, `AppNode`, `PersistedStore` |
+| Константы | UPPER_SNAKE | `BUILTIN_KINDS`, `STORAGE_KEY` |
+| Компонент (`.tsx`) | `{Name}.tsx` | `SidePanel.tsx`, `LabeledEdge.tsx` |
+| Модуль без JSX | kebab-case | `create-node.ts`, `ui-prefs.ts` |
+| Хук | `use{Name}` | `useApp`, `useUiMotion` |
+| Действие reducer | camelCase в `type` | `'addCustomKind'` |
+
+Типы — `export type`. Поля модели и JSON — camelCase (`updatedAt`, не `updated_at`).
+
+Запрещены имена: `helper`, `utils2`, `Manager`, `data`, `temp`, `handleStuff`, `processData`.
+
+Новый код — в ближайший домен (`model`, `store`, `canvas`, `board`, `ui`, `export`). `src/lib` — только чистые хелперы (`id.ts`, `motion.ts`).
+
+## Формат
+
+- TypeScript ESM, `verbatimModuleSyntax`: типы через `import type`.
+- Импорты **только в начале модуля**, без `import()` внутри функций.
+- `switch` по union/enum — полный; в `default` проверка `never` (как в `status.ts` и reducer).
+- Именованный export. Default — только корневой `App`.
+- UTF-8, LF, финальный перевод строки, пробелы, отступ **2**.
+- Строгий `tsconfig.app.json`: не глуши `strict` / unused.
+- Не коммить секреты и `.env`.
+
+Не навязывай ESLint/Prettier, которых нет в репо.

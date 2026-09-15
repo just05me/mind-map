@@ -3,7 +3,7 @@ import { parseImportedProject } from '../export/json'
 import { useApp } from '../store/AppContext'
 import { Dropdown } from './Dropdown'
 import { Icon } from './Icon'
-import { MenuButton } from './Toolbar'
+import { MenuButton } from './MenuButton'
 
 export function ProjectMenu() {
   const { state, project, createProject, duplicateCurrent, deleteProject, switchProject, importProject } = useApp()

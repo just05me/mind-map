@@ -1,28 +1,104 @@
+<div align="center">
+
 # Доска схем
 
-Веб-приложение для схем архитектуры и статусов задач. На одной карте можно собрать модули, сервисы, API, агентов и заметки, связать их стрелками и переключиться на доску по статусам.
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&pause=1400&color=5B8DEF&center=true&vCenter=true&width=640&height=40&lines=%D0%A1%D1%85%D0%B5%D0%BC%D1%8B+%D0%B0%D1%80%D1%85%D0%B8%D1%82%D0%B5%D0%BA%D1%82%D1%83%D1%80%D1%8B+%D0%BA%D0%B0%D0%BA+%D0%B2+FigJam;%D0%A2%D0%B5+%D0%B6%D0%B5+%D1%83%D0%B7%D0%BB%D1%8B+%D0%BD%D0%B0+%D0%B4%D0%BE%D1%81%D0%BA%D0%B5+%D1%81%D1%82%D0%B0%D1%82%D1%83%D1%81%D0%BE%D0%B2;%D0%90%D0%BA%D0%BA%D0%B0%D1%83%D0%BD%D1%82%2C+API+%D0%B8+PostgreSQL)](https://github.com/just05me/mind-map)
 
-Проекты хранятся в PostgreSQL у вашего аккаунта. В браузере остаётся локальный кэш (`localStorage`) — старые JSON и импорт по-прежнему читаются.
+Веб-приложение для карт архитектуры и статусов задач: модули, сервисы, API, агенты и заметки на одном холсте.
+
+[![React](https://img.shields.io/badge/React_19-111827?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-111827?style=for-the-badge&logo=typescript&logoColor=3178C6)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite_7-111827?style=for-the-badge&logo=vite&logoColor=646CFF)](https://vite.dev/)
+[![Hono](https://img.shields.io/badge/Hono-111827?style=for-the-badge&logo=hono&logoColor=E36002)](https://hono.dev/)
+[![Prisma](https://img.shields.io/badge/Prisma-111827?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-111827?style=for-the-badge&logo=postgresql&logoColor=4169E1)](https://www.postgresql.org/)
+
+[![stars](https://img.shields.io/github/stars/just05me/mind-map?style=flat&color=5B8DEF)](https://github.com/just05me/mind-map/stargazers)
+[![last commit](https://img.shields.io/github/last-commit/just05me/mind-map?style=flat&color=30d158)](https://github.com/just05me/mind-map/commits/main)
+[![issues](https://img.shields.io/github/issues/just05me/mind-map?style=flat&color=ff9f0a)](https://github.com/just05me/mind-map/issues)
+
+[Сайт](https://ffinance.uz) · [Репозиторий](https://github.com/just05me/mind-map)
+
+<p>
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=react,ts,vite,tailwind,nodejs,postgres,prisma,docker" alt="Стек" />
+  </a>
+</p>
+
+</div>
+
+---
+
+## Содержание
+
+- [О проекте](#о-проекте)
+- [Возможности](#возможности)
+- [Стек](#стек)
+- [Как это устроено](#как-это-устроено)
+- [Локальный запуск](#локальный-запуск)
+- [Деплой через Docker](#деплой-через-docker)
+- [Как пользоваться](#как-пользоваться)
+- [Структура](#структура)
+- [Скрипты](#скрипты)
+
+## О проекте
+
+На одной карте можно собрать систему: входы, модули, сервисы, хранилища, API, агентов, очереди и свои типы. Узлы связываются подписанными стрелками. Тот же граф открывается видом **Статусы** — колонки «Задумано», «В работе», «Готово», «Сломано».
+
+После регистрации схемы пишутся в PostgreSQL у аккаунта. В браузере остаётся локальный кэш (`localStorage`): старые JSON и импорт по-прежнему читаются. Очистка хранилища сайта не удаляет проекты на сервере.
+
+Редактор в духе FigJam: отмена и повтор, копирование, рамки, стикеры, комментарии, решения.
 
 ## Возможности
 
-- **Схема** — холст на [XYFlow](https://reactflow.dev/) в духе FigJam: узлы, стикеры, текст, рамки, комментарии, решения, подписанные связи
-- **Статусы** — те же элементы по колонкам: задумано, в работе, готово, сломано
-- **Типы узлов** — входы, модули, сервисы, хранилища, API, агенты, очереди, вебхуки и свои типы
-- **Правка как в Figma** — отмена и повтор, копирование, дублирование, контекстное меню, панель действий над выделением
-- **Скрываемые панели** — «Элементы» слева и «Свойства» справа
-- **Несколько проектов** — создание, дублирование, удаление, переключение
-- **Аккаунт** — регистрация и вход по почте и паролю; после входа схемы пишутся на сервер
-- **Экспорт и импорт** — JSON, Markdown и PNG схемы
-- **Автораскладка** — слева направо, сверху вниз или показать всё
-- **Темы** — светлая и тёмная
+| | |
+| --- | --- |
+| **Схема** | Холст на [XYFlow](https://reactflow.dev/): узлы, стикеры, текст, рамки, комментарии, решения, подписанные связи |
+| **Статусы** | Те же элементы по колонкам: задумано, в работе, готово, сломано |
+| **Типы узлов** | Входы, модули, сервисы, хранилища, API, агенты, очереди, вебхуки и свои типы |
+| **Правка как в Figma** | Отмена и повтор, копирование, дублирование, контекстное меню, панель над выделением |
+| **Панели** | «Элементы» слева и «Свойства» справа, скрываются с холста |
+| **Проекты** | Создание, дублирование, удаление, переключение |
+| **Аккаунт** | Регистрация и вход по почте и паролю; после входа схемы синхронизируются с сервером |
+| **Экспорт** | JSON, Markdown и PNG схемы |
+| **Автораскладка** | Слева направо, сверху вниз или показать всё |
+| **Темы** | Светлая и тёмная |
 
 ## Стек
 
-- React 19 + TypeScript + Vite 7
-- [@xyflow/react](https://reactflow.dev/), Tailwind CSS 4, Motion
-- Hono (Node) + Prisma + PostgreSQL
-- Сессия: JWT в httpOnly cookie
+| Слой | Технологии |
+| --- | --- |
+| Интерфейс | React 19, TypeScript, Vite 7, Tailwind CSS 4, Motion |
+| Холст | [@xyflow/react](https://reactflow.dev/), Dagre |
+| API | Hono на Node, JWT в httpOnly cookie |
+| Данные | Prisma, PostgreSQL |
+| Запуск | Docker Compose (приложение + база) |
+
+## Как это устроено
+
+```text
+UI (canvas / board / ui)
+  → useApp / dispatch
+  → reducer
+  → Project в сторе + /api/projects
+  → PostgreSQL
+```
+
+- Правила графа, undo и владение данными — в `src/store` и `src/model`, не в узлах.
+- XYFlow рисует холст, это не второй источник истины.
+- После входа проекты уходят на API; без сессии остаётся локальный кэш.
+- Пользователи и ACL — только в `server/`. Из React в базу ходить нельзя.
+
+```mermaid
+flowchart LR
+  browser["Браузер"] --> vite["Vite :5173"]
+  vite -->|"/api"| hono["Hono :3000"]
+  hono --> prisma["Prisma"]
+  prisma --> pg["PostgreSQL"]
+  hono --> dist["Сборка фронтенда в production"]
+```
+
+В dev Vite проксирует `/api` на `http://127.0.0.1:3000`. В production тот же процесс отдаёт API и папку `dist`.
 
 ## Локальный запуск
 
@@ -38,7 +114,7 @@ npm run dev
 
 Откройте **http://localhost:5173/**
 
-Vite проксирует `/api` на бэкенд (`http://127.0.0.1:3000`). Сервер Vite слушает и IPv4 (`127.0.0.1`), и IPv6 (`::1`), поэтому адрес открывается в Chrome и в Safari. Если Safari сам подставляет `https://`, введите URL вручную с `http://`. Запасной адрес: http://127.0.0.1:5173/
+Сервер Vite слушает IPv4 (`127.0.0.1`) и IPv6 (`::1`), поэтому адрес открывается в Chrome и в Safari. Если Safari сам подставляет `https://`, введите URL вручную с `http://`. Запасной адрес: http://127.0.0.1:5173/
 
 Сборка и просмотр фронтенда:
 
@@ -75,7 +151,7 @@ docker compose up --build -d
 7. Переключатель **Схема / Статусы** в шапке меняет вид, элементы общие.
 8. Все горячие клавиши — по `?` или значку клавиатуры в шапке.
 
-Очистка хранилища сайта в браузере не удаляет проекты на сервере. Удаление аккаунта из интерфейса не предусмотрено.
+Удаление аккаунта из интерфейса не предусмотрено.
 
 ## Структура
 
@@ -103,3 +179,13 @@ docker compose up --build -d
 | `npm start` | Запуск собранного API (раздаёт фронтенд в production) |
 | `npm run preview` | Локальный просмотр сборки фронтенда |
 | `npm run db:deploy` | Применить миграции Prisma |
+
+---
+
+<div align="center">
+
+Если доска полезна — поставьте звезду репозиторию.
+
+[![Star](https://img.shields.io/github/stars/just05me/mind-map?style=social)](https://github.com/just05me/mind-map)
+
+</div>

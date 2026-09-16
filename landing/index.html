@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Доска схем — карты архитектуры и статусов задач на одном холсте</title>
+    <meta
+      name="description"
+      content="Бесплатный open-source редактор схем архитектуры в духе FigJam: модули, сервисы, API, агенты и заметки на холсте, те же узлы — на доске статусов. Экспорт в JSON, Markdown и PNG, импорт макета из JSON, промпт для ИИ."
+    />
+    <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0b0d" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Доска схем" />
+    <meta property="og:title" content="Доска схем — карты архитектуры и статусов задач" />
+    <meta
+      property="og:description"
+      content="Бесплатно и open source. Схема архитектуры и доска статусов из одних и тех же узлов. Экспорт, импорт из JSON, промпт для ИИ, тёмная тема."
+    />
+    <meta property="og:url" content="https://ffinance.uz/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Доска схем — карты архитектуры и статусов задач" />
+    <meta
+      name="twitter:description"
+      content="Бесплатный open-source редактор схем: модули, сервисы, API и агенты на одном холсте, те же узлы — на доске статусов."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href="https://ffinance.uz/" />
+    <script>
+      // Apply the saved or system theme before first paint to avoid a flash.
+      try {
+        var saved = localStorage.getItem('mind-map.landing.theme')
+        var dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches
+        if (dark) document.documentElement.classList.add('dark')
+      } catch (_) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

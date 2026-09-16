@@ -1,0 +1,224 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Tokens mirror the app's src/index.css so the landing looks like the product. */
+:root {
+  color-scheme: light;
+  --bg: #f5f5f7;
+  --panel: rgba(255, 255, 255, 0.62);
+  --panel-solid: #f6f6f8;
+  --panel-heavy: rgba(250, 250, 252, 0.92);
+  --panel-muted: rgba(255, 255, 255, 0.42);
+  --border: rgba(0, 0, 0, 0.08);
+  --hairline: rgba(255, 255, 255, 0.55);
+  --text: #1d1d1f;
+  --muted: #6e6e73;
+  --accent: #0071e3;
+  --accent-soft: rgba(0, 113, 227, 0.12);
+  --shadow: 0 10px 32px rgba(15, 18, 28, 0.1);
+  --shadow-soft: 0 4px 18px rgba(15, 18, 28, 0.06);
+  --canvas-dot: rgba(40, 40, 44, 0.22);
+  --code-bg: #1d1d1f;
+  --code-text: #f5f5f7;
+  font: 100%/1.47 system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: #0b0b0d;
+  --panel: rgba(28, 28, 30, 0.72);
+  --panel-solid: #1c1c1e;
+  --panel-heavy: rgba(44, 44, 46, 0.88);
+  --panel-muted: rgba(44, 44, 46, 0.55);
+  --border: rgba(255, 255, 255, 0.1);
+  --hairline: rgba(255, 255, 255, 0.12);
+  --text: #f5f5f7;
+  --muted: #a1a1a6;
+  --accent: #0a84ff;
+  --accent-soft: rgba(10, 132, 255, 0.18);
+  --shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.28);
+  --canvas-dot: rgba(255, 255, 255, 0.14);
+  --code-bg: #141416;
+  --code-text: #f5f5f7;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel-solid: var(--panel-solid);
+  --color-panel-heavy: var(--panel-heavy);
+  --color-panel-muted: var(--panel-muted);
+  --color-line: var(--border);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --shadow-soft: var(--shadow-soft);
+  --shadow-panel: var(--shadow);
+  --radius-node: 0.9rem;
+  --radius-shape: 1rem;
+  --radius-frame: 1.25rem;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  letter-spacing: 0;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+.display {
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+.chrome {
+  background: var(--panel);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+}
+
+.chrome-heavy {
+  background: var(--panel-heavy);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.chrome-bar {
+  background: var(--panel);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+}
+
+.pressable {
+  transition: transform 100ms ease-out, background-color 120ms ease, color 120ms ease;
+}
+
+.pressable:active {
+  transform: scale(0.97);
+}
+
+/* Dotted canvas paper, same 20px gap as the app's XYFlow background. */
+.paper {
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--canvas-dot) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.node-card {
+  background: var(--panel-solid);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+}
+
+.node-shape {
+  background: var(--panel-solid);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+}
+
+.edge-label {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.4rem;
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 10.5px;
+  white-space: nowrap;
+}
+
+.segmented {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 0.65rem;
+  background: color-mix(in srgb, var(--text) 7%, transparent);
+}
+
+.segmented > button {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 0.5rem;
+  font-size: 12.5px;
+  color: var(--muted);
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.segmented > button:hover {
+  color: var(--text);
+}
+
+.segmented > button[aria-pressed='true'] {
+  background: var(--panel-solid);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.kbd {
+  font: 500 11px/1 ui-monospace, 'SF Mono', Menlo, monospace;
+  color: var(--muted);
+  padding: 0.25rem 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: 0.35rem;
+  background: var(--panel-solid);
+}
+
+.code-block {
+  background: var(--code-bg);
+  color: var(--code-text);
+  font: 12.5px/1.6 ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .chrome,
+  .chrome-heavy,
+  .chrome-bar {
+    background: var(--panel-solid);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .pressable,
+  .pressable:active {
+    transition: none;
+    transform: none;
+  }
+}

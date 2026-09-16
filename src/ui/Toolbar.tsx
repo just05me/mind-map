@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { buildImportPrompt } from '../export/ai-prompt'
+import { copyText } from '../export/clipboard'
 import { exportProjectJson } from '../export/json'
 import { exportProjectMarkdown } from '../export/markdown'
 import { exportMapPng } from '../export/png'
@@ -11,10 +13,25 @@ import { MenuButton } from './MenuButton'
 import { ProjectMenu } from './ProjectMenu'
 
 export function Toolbar() {
-  const { project, state, setView, setTheme, renameProject, requestLayout, setShortcutsOpen, toggleAllPanels } =
+  const { project, state, setView, setInteractionMode, setTheme, renameProject, requestLayout, setShortcutsOpen, toggleAllPanels } =
     useApp()
   const [error, setError] = useState<string | null>(null)
+  const [notice, setNotice] = useState<string | null>(null)
   const panelsHidden = !state.leftPanelOpen && !state.rightPanelOpen
+  const readOnly = state.interactionMode === 'view'
+
+  useEffect(() => {
+    if (!notice) return undefined
+    const timer = window.setTimeout(() => setNotice(null), 2400)
+    return () => window.clearTimeout(timer)
+  }, [notice])
+
+  const copyPrompt = () => {
+    setError(null)
+    void copyText(buildImportPrompt(project))
+      .then(() => setNotice('Промпт скопирован'))
+      .catch((err: unknown) => setError(err instanceof Error ? err.message : 'Не удалось скопировать'))
+  }
 
   return (
     <header className="chrome-bar relative z-30 grid h-12 shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-3 px-2">
@@ -25,6 +42,7 @@ export function Toolbar() {
           className="min-w-0 max-w-[320px] flex-1 truncate rounded-md bg-transparent px-1.5 py-1 text-[13px] font-semibold outline-none hover:bg-[var(--panel-muted)] focus:bg-[var(--panel-muted)]"
           value={project.title}
           aria-label="Название проекта"
+          readOnly={readOnly}
           onChange={(event) => renameProject(event.target.value, project.description)}
         />
       </div>
@@ -36,6 +54,8 @@ export function Toolbar() {
           <button type="button" className="mr-2 text-[11px] text-red-500" onClick={() => setError(null)}>
             {error} ✕
           </button>
+        ) : notice ? (
+          <span className="mr-2 text-[11px] text-[var(--accent)]">{notice}</span>
         ) : null}
 
         {state.view === 'map' ? (
@@ -58,6 +78,18 @@ export function Toolbar() {
           </Dropdown>
         ) : null}
 
+        <button
+          type="button"
+          className={`bar-btn ${readOnly ? 'is-active' : ''}`}
+          data-tip={readOnly ? 'Вернуться к правке' : 'Только смотреть и выбирать'}
+          aria-label={readOnly ? 'Режим просмотра включён' : 'Включить режим просмотра'}
+          data-tip-side="bottom"
+          onClick={() => setInteractionMode(readOnly ? 'edit' : 'view')}
+        >
+          <Icon name="eye" size={15} />
+          <span className="hidden md:inline">{readOnly ? 'Просмотр' : 'Правка'}</span>
+        </button>
+
         <Dropdown
           align="right"
           trigger={({ toggle, open }) => (
@@ -77,6 +109,12 @@ export function Toolbar() {
               }} />
               <MenuButton label="Markdown — текстом" onClick={() => { exportProjectMarkdown(project); close() }} />
               <MenuButton label="JSON — для импорта" onClick={() => { exportProjectJson(project); close() }} />
+              <div className="my-1 h-px bg-[var(--border)]" />
+              <MenuButton
+                icon="copy"
+                label="Промпт для ИИ — в буфер"
+                onClick={() => { copyPrompt(); close() }}
+              />
             </>
           )}
         </Dropdown>

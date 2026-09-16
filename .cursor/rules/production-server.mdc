@@ -1,0 +1,69 @@
+---
+description: Прод ffinance.uz — SSH, AWS и деплой для агентов Cursor
+alwaysApply: true
+---
+
+# Прод-сервер
+
+Живой сайт: **https://ffinance.uz** (www редиректит на apex). Хостинг — EC2 + Docker Compose + Caddy, не Amplify и не S3.
+
+Другая сессия Cursor на этом Mac может зайти так же: AWS CLI уже настроен у пользователя `cursor-deploy`, ключ SSH лежит локально, не в git.
+
+## Доступ
+
+```text
+AWS аккаунт     338184108076
+IAM пользователь  cursor-deploy
+Регион          eu-central-1
+Инстанс         i-04736134a25d5560c  (Name=mindmap-prod, t3.small)
+EIP             3.70.84.61
+SG              sg-097932b9a67b29ebb  (22 только с IP ноута, 80/443 открыты)
+SSH             ubuntu@3.70.84.61
+Ключ            ~/.ssh/mindmap-prod.pem   (chmod 400, имя пары mindmap-prod)
+Код на сервере  /opt/mindmap
+.env на сервере /opt/mindmap/.env         (не копировать в репо и не печатать)
+```
+
+Перед командами:
+
+```bash
+export PATH="$HOME/Library/Python/3.9/bin:$PATH"
+aws sts get-caller-identity
+ssh -i ~/.ssh/mindmap-prod.pem -o BatchMode=yes ubuntu@3.70.84.61 'echo ok'
+```
+
+Если SSH таймаутится: твой публичный IPv4, скорее всего, сменился. Добавь его в SG на порт 22 (`82.215.88.23/32` — адрес на момент первого деплоя). Не открывай 22 в `0.0.0.0/0`. Порт Postgres 5432 в SG не открывать.
+
+## Что крутится
+
+- `mindmap-app-1` — Node/Hono, слушает `127.0.0.1:3000`, отдаёт API и `dist`
+- `mindmap-db-1` — Postgres 16, том `mindmap_pgdata`
+- Caddy — `/etc/caddy/Caddyfile`, HTTPS Let’s Encrypt, прокси на `:3000`
+
+Проверка с сервера: `curl -sS http://127.0.0.1:3000/api/health` → `{"ok":true,"db":"up"}`.
+
+## Выкатить код
+
+```bash
+rsync -az --delete \
+  -e "ssh -i $HOME/.ssh/mindmap-prod.pem -o BatchMode=yes" \
+  --exclude node_modules --exclude dist --exclude server/dist \
+  --exclude .git --exclude .env --exclude .env.* \
+  ./ ubuntu@3.70.84.61:/opt/mindmap/
+
+ssh -i ~/.ssh/mindmap-prod.pem ubuntu@3.70.84.61 \
+  'cd /opt/mindmap && sudo docker compose up --build -d'
+```
+
+Не затирай `/opt/mindmap/.env`. Секреты (`SESSION_SECRET`, `POSTGRES_PASSWORD`) только там. `CORS_ORIGIN=https://ffinance.uz`.
+
+## DNS (aHOST)
+
+Кабинет: https://clients.ahost.uz — зона `ffinance.uz`.
+
+| Имя | Тип | Значение |
+|---|---|---|
+| `@` | A | `3.70.84.61` |
+| `www` | A | `3.70.84.61` |
+
+Не коммить `.pem`, ключи AWS и `.env`. Не создавать второй инстанс «на всякий случай» — этот уже прод.

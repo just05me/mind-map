@@ -21,7 +21,8 @@ export function InlineTitle({
   field = 'title',
 }: InlineTitleProps) {
   const { state, updateNodeData, setEditingNode } = useApp()
-  const editing = state.editingNodeId === nodeId && state.editingField === field
+  const readOnly = state.interactionMode === 'view'
+  const editing = !readOnly && state.editingNodeId === nodeId && state.editingField === field
   const ref = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
@@ -81,6 +82,7 @@ export function InlineTitle({
         style={style}
         onDoubleClick={(event) => {
           event.stopPropagation()
+          if (readOnly) return
           setEditingNode(nodeId, field)
         }}
       >

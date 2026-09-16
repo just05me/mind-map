@@ -3,13 +3,14 @@ import {
   EdgeLabelRenderer,
   getBezierPath,
   useInternalNode,
+  useStore,
   type EdgeProps,
 } from '@xyflow/react'
 import { useEffect, useRef, useState } from 'react'
 import { useApp } from '../../store/AppContext'
 import type { AppEdge } from '../../model/types'
 import { Icon } from '../../ui/Icon'
-import { getEdgeParams } from './floating'
+import { getEdgeParams, getRoutedPath } from './floating'
 
 export function LabeledEdge({
   id,
@@ -26,9 +27,11 @@ export function LabeledEdge({
   selected,
   data,
 }: EdgeProps<AppEdge>) {
-  const { deleteElements, updateEdgeData } = useApp()
+  const { deleteElements, state, updateEdgeData } = useApp()
   const [editing, setEditing] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const internalNodes = useStore((store) => Array.from(store.nodeLookup.values()))
+  const readOnly = state.interactionMode === 'view'
 
   // Float the endpoints to the nearest borders once both nodes are measured;
   // fall back to the handle-based coordinates React Flow supplies otherwise.
@@ -37,7 +40,7 @@ export function LabeledEdge({
   const floating =
     sourceNode && targetNode ? getEdgeParams(sourceNode, targetNode) : null
 
-  const [path, labelX, labelY] = getBezierPath({
+  const [fallbackPath, fallbackLabelX, fallbackLabelY] = getBezierPath({
     sourceX: floating?.sx ?? sourceX,
     sourceY: floating?.sy ?? sourceY,
     targetX: floating?.tx ?? targetX,
@@ -46,6 +49,17 @@ export function LabeledEdge({
     targetPosition: floating?.targetPos ?? targetPosition,
     curvature: 0.3,
   })
+  const routed = floating
+    ? getRoutedPath(
+        { x: floating.sx, y: floating.sy },
+        { x: floating.tx, y: floating.ty },
+        internalNodes,
+        new Set([source, target]),
+      )
+    : null
+  const path = routed?.path ?? fallbackPath
+  const labelX = routed?.labelX ?? fallbackLabelX
+  const labelY = routed?.labelY ?? fallbackLabelY
   const label = data?.label ?? ''
 
   useEffect(() => {
@@ -53,8 +67,8 @@ export function LabeledEdge({
   }, [editing])
 
   useEffect(() => {
-    if (!selected) setEditing(false)
-  }, [selected])
+    if (!selected || readOnly) setEditing(false)
+  }, [readOnly, selected])
 
   return (
     <>
@@ -80,12 +94,14 @@ export function LabeledEdge({
             <button
               type="button"
               className={`edge-label ${selected ? 'is-selected' : ''}`}
-              onDoubleClick={() => setEditing(true)}
+              onDoubleClick={() => {
+                if (!readOnly) setEditing(true)
+              }}
             >
               {label}
             </button>
           ) : null}
-          {selected && !editing ? (
+          {selected && !editing && !readOnly ? (
             <div className="chrome mt-1 flex items-center gap-0.5 rounded-full p-0.5">
               <button
                 type="button"

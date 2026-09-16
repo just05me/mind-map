@@ -17,6 +17,7 @@ export function Palette() {
   const [collapsed, setCollapsed] = useState<Partial<Record<KindGroupId, boolean>>>({})
   const motionUi = useUiMotion()
   const needle = query.trim().toLowerCase()
+  const readOnly = state.interactionMode === 'view'
 
   const renderKind = (kind: KindDef) => {
     const active = state.pendingKind === kind.id
@@ -24,14 +25,18 @@ export function Palette() {
       <button
         key={kind.id}
         type="button"
-        draggable
+        draggable={!readOnly}
+        disabled={readOnly}
         onDragStart={(event) => {
+          if (readOnly) return
           event.dataTransfer.setData('application/mind-map-kind', kind.id)
           event.dataTransfer.effectAllowed = 'copy'
         }}
         onClick={() => setPendingKind(active ? null : kind.id)}
-        title="Кликните и поставьте на холст, или перетащите"
-        className={`pressable flex w-full cursor-grab items-center gap-2 rounded-lg px-2 py-1.5 text-left text-[13px] active:cursor-grabbing ${
+        title={readOnly ? 'В режиме просмотра элементы нельзя добавлять' : 'Кликните и поставьте на холст, или перетащите'}
+        className={`pressable flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-[13px] ${
+          readOnly ? 'cursor-default opacity-70' : 'cursor-grab active:cursor-grabbing'
+        } ${
           active ? 'bg-[var(--accent-soft)] text-[var(--accent)]' : 'hover:bg-[var(--panel-muted)]'
         }`}
       >
@@ -89,6 +94,7 @@ export function Palette() {
           )
         })}
       </div>
+      {!readOnly ? (
       <div className="sticky bottom-0 border-t border-[var(--border)] bg-[var(--panel-solid)] p-2">
         <AnimatePresence initial={false} mode="wait">
           {formOpen ? (
@@ -152,6 +158,7 @@ export function Palette() {
           )}
         </AnimatePresence>
       </div>
+      ) : null}
     </>
   )
 }

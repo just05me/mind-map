@@ -1,5 +1,5 @@
 import { mergeBuiltinKinds } from '../model/kinds'
-import type { PersistedStore, Project, ThemeMode } from '../model/types'
+import type { EdgeData, PersistedStore, Project, ThemeMode } from '../model/types'
 import { createEmptyProject } from './project-factory'
 
 const STORAGE_KEY = 'mind-map.store.v1'
@@ -21,7 +21,21 @@ export function hydrateProject(project: Project): Project {
   return {
     ...project,
     kinds: mergeBuiltinKinds(project.kinds),
+    edges: project.edges.map((edge) => ({
+      ...edge,
+      data: hydrateEdgeData(edge.data),
+    })),
     canvasColor: typeof project.canvasColor === 'string' ? project.canvasColor : undefined,
+  }
+}
+
+export function hydrateEdgeData(data: EdgeData | undefined): EdgeData {
+  const width = typeof data?.width === 'number' && Number.isFinite(data.width)
+    ? Math.min(Math.max(data.width, 1), 8)
+    : undefined
+  return {
+    ...(data ?? {}),
+    width,
   }
 }
 

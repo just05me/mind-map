@@ -16,11 +16,12 @@ export function Sidebar() {
   const selectedNodes = project.nodes.filter((item) => item.selected)
   const node = project.nodes.find((item) => item.id === state.selectedNodeId)
   const edge = project.edges.find((item) => item.id === state.selectedEdgeId)
+  const readOnly = state.interactionMode === 'view'
 
-  if (node) return <NodeInspector key={node.id} node={node} />
-  if (edge) return <EdgeInspector key={edge.id} edgeId={edge.id} />
-  if (selectedNodes.length > 1) return <MultiInspector nodes={selectedNodes} />
-  return <BoardInspector />
+  if (node) return <NodeInspector key={node.id} node={node} readOnly={readOnly} />
+  if (edge) return <EdgeInspector key={edge.id} edgeId={edge.id} readOnly={readOnly} />
+  if (selectedNodes.length > 1) return <MultiInspector nodes={selectedNodes} readOnly={readOnly} />
+  return <BoardInspector readOnly={readOnly} />
 }
 
 function Section({
@@ -53,7 +54,15 @@ function FieldLabel({ children }: { children: ReactNode }) {
   return <span className="mb-1 block text-[11px] text-[var(--muted)]">{children}</span>
 }
 
-function StatusPicker({ value, onChange }: { value?: Status; onChange: (status: Status) => void }) {
+function StatusPicker({
+  value,
+  onChange,
+  readOnly = false,
+}: {
+  value?: Status
+  onChange: (status: Status) => void
+  readOnly?: boolean
+}) {
   return (
     <div className="grid grid-cols-2 gap-1">
       {STATUSES.map((status) => (
@@ -66,6 +75,7 @@ function StatusPicker({ value, onChange }: { value?: Status; onChange: (status: 
               ? `border-transparent ${statusClass(status)} font-medium`
               : 'border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)]'
           }`}
+          disabled={readOnly}
           onClick={() => onChange(status)}
         >
           {statusLabel(status)}
@@ -78,9 +88,11 @@ function StatusPicker({ value, onChange }: { value?: Status; onChange: (status: 
 function SwatchRow({
   value,
   onChange,
+  readOnly = false,
 }: {
   value?: string
   onChange: (color: string | undefined) => void
+  readOnly?: boolean
 }) {
   return (
     <div className="flex flex-wrap items-center gap-1.5">
@@ -91,6 +103,7 @@ function SwatchRow({
           aria-label={`Цвет ${color}`}
           className={`swatch !h-5 !w-5 ${value === color ? 'is-active' : ''}`}
           style={{ background: color }}
+          disabled={readOnly}
           onClick={() => onChange(color)}
         />
       ))}
@@ -99,10 +112,11 @@ function SwatchRow({
           type="color"
           className="absolute inset-0 cursor-pointer opacity-0"
           value={value && /^#[0-9a-f]{6}$/i.test(value) ? value : '#8e8e93'}
+          disabled={readOnly}
           onChange={(event) => onChange(event.target.value)}
         />
       </label>
-      {value ? (
+      {value && !readOnly ? (
         <button type="button" className="ml-auto text-[11px] text-[var(--muted)] hover:text-[var(--text)]" onClick={() => onChange(undefined)}>
           Сброс
         </button>
@@ -120,7 +134,7 @@ function InspectorHeader({
   eyebrow: ReactNode
   children: ReactNode
   onDuplicate?: () => void
-  onDelete: () => void
+  onDelete?: () => void
 }) {
   return (
     <div className="border-b border-[var(--border)] px-3 py-3">
@@ -132,9 +146,11 @@ function InspectorHeader({
               <Icon name="copy" size={15} />
             </button>
           ) : null}
-          <button type="button" className="icon-btn danger" aria-label="Удалить" data-tip="Удалить" data-tip-side="left" onClick={onDelete}>
-            <Icon name="trash" size={15} />
-          </button>
+          {onDelete ? (
+            <button type="button" className="icon-btn danger" aria-label="Удалить" data-tip="Удалить" data-tip-side="left" onClick={onDelete}>
+              <Icon name="trash" size={15} />
+            </button>
+          ) : null}
         </div>
       </div>
       {children}
@@ -142,7 +158,7 @@ function InspectorHeader({
   )
 }
 
-function BoardInspector() {
+function BoardInspector({ readOnly }: { readOnly: boolean }) {
   const { project, state, setCanvasColor, updateKind, selectNode, setShortcutsOpen } = useApp()
   const preset = matchPaperPreset(project.canvasColor, state.theme)
   const cards = project.nodes.filter((node) => isStatusBoardType(node.type))
@@ -153,7 +169,7 @@ function BoardInspector() {
   return (
     <>
       <div className="px-3 py-3 text-[12px] leading-5 text-[var(--muted)]">
-        Выберите элемент на холсте, чтобы изменить его.{' '}
+        {readOnly ? 'Выберите элемент на холсте, чтобы посмотреть свойства.' : 'Выберите элемент на холсте, чтобы изменить его.'}{' '}
         <button type="button" className="underline hover:text-[var(--text)]" onClick={() => setShortcutsOpen(true)}>
           Горячие клавиши
         </button>
@@ -207,6 +223,15 @@ function BoardInspector() {
         </Section>
       ) : null}
 
+      {readOnly ? (
+        <Section title="Просмотр">
+          <div className="text-[12px] leading-5 text-[var(--muted)]">
+            Можно двигать холст, менять масштаб и выбирать элементы для чтения свойств.
+          </div>
+        </Section>
+      ) : null}
+
+      {!readOnly ? (
       <Section title="Холст">
         <div className="grid grid-cols-3 gap-1.5">
           {PAPER_PRESETS.map((item) => {
@@ -235,7 +260,9 @@ function BoardInspector() {
           onChange={(color) => setCanvasColor(color)}
         />
       </Section>
+      ) : null}
 
+      {!readOnly ? (
       <Section title="Цвета типов" defaultOpen={false}>
         <div className="space-y-1.5">
           {project.kinds.map((kind) => (
@@ -243,11 +270,12 @@ function BoardInspector() {
           ))}
         </div>
       </Section>
+      ) : null}
     </>
   )
 }
 
-function MultiInspector({ nodes }: { nodes: AppNode[] }) {
+function MultiInspector({ nodes, readOnly }: { nodes: AppNode[]; readOnly: boolean }) {
   const { updateNodeData, duplicateNodes, deleteElements } = useApp()
   const ids = nodes.map((node) => node.id)
   const cards = nodes.filter((node) => isStatusBoardType(node.type))
@@ -259,8 +287,8 @@ function MultiInspector({ nodes }: { nodes: AppNode[] }) {
     <>
       <InspectorHeader
         eyebrow="Несколько элементов"
-        onDuplicate={() => duplicateNodes(ids)}
-        onDelete={() => deleteElements(ids)}
+        onDuplicate={readOnly ? undefined : () => duplicateNodes(ids)}
+        onDelete={readOnly ? undefined : () => deleteElements(ids)}
       >
         <div className="mt-1 text-[15px] font-medium">Выбрано: {nodes.length}</div>
       </InspectorHeader>
@@ -268,6 +296,7 @@ function MultiInspector({ nodes }: { nodes: AppNode[] }) {
         <Section title="Статус">
           <StatusPicker
             value={sharedStatus}
+            readOnly={readOnly}
             onChange={(status) => {
               for (const node of cards) updateNodeData(node.id, { status })
             }}
@@ -276,6 +305,7 @@ function MultiInspector({ nodes }: { nodes: AppNode[] }) {
       ) : null}
       <Section title="Цвет">
         <SwatchRow
+          readOnly={readOnly}
           onChange={(color) => {
             for (const id of ids) updateNodeData(id, { accentColor: color })
           }}
@@ -285,7 +315,7 @@ function MultiInspector({ nodes }: { nodes: AppNode[] }) {
   )
 }
 
-function EdgeInspector({ edgeId }: { edgeId: string }) {
+function EdgeInspector({ edgeId, readOnly }: { edgeId: string; readOnly: boolean }) {
   const { project, updateEdgeData, deleteElements, selectNode } = useApp()
   const edge = project.edges.find((item) => item.id === edgeId)
   if (!edge) return null
@@ -294,7 +324,7 @@ function EdgeInspector({ edgeId }: { edgeId: string }) {
 
   return (
     <>
-      <InspectorHeader eyebrow="Связь" onDelete={() => deleteElements([], [edgeId])}>
+      <InspectorHeader eyebrow="Связь" onDelete={readOnly ? undefined : () => deleteElements([], [edgeId])}>
         <div className="mt-1 flex items-center gap-1.5 text-[13px]">
           <button type="button" className="truncate hover:underline" onClick={() => source && selectNode(source.id)}>
             {source?.data.title || '—'}
@@ -310,17 +340,37 @@ function EdgeInspector({ edgeId }: { edgeId: string }) {
           className="field text-[13px]"
           placeholder="Например: session, first message"
           value={edge.data?.label ?? ''}
+          readOnly={readOnly}
           onChange={(event) => updateEdgeData(edgeId, { label: event.target.value || undefined })}
         />
       </Section>
       <Section title="Цвет линии">
-        <SwatchRow value={edge.data?.color} onChange={(color) => updateEdgeData(edgeId, { color })} />
+        <SwatchRow
+          value={edge.data?.color}
+          readOnly={readOnly}
+          onChange={(color) => updateEdgeData(edgeId, { color })}
+        />
+      </Section>
+      <Section title="Толщина линии">
+        <label className="block">
+          <FieldLabel>{edge.data?.width ?? 1.6}</FieldLabel>
+          <input
+            type="range"
+            min={1}
+            max={8}
+            step={0.2}
+            value={edge.data?.width ?? 1.6}
+            className="w-full accent-[var(--accent)]"
+            disabled={readOnly}
+            onChange={(event) => updateEdgeData(edgeId, { width: Number(event.target.value) })}
+          />
+        </label>
       </Section>
     </>
   )
 }
 
-function NodeInspector({ node }: { node: AppNode }) {
+function NodeInspector({ node, readOnly }: { node: AppNode; readOnly: boolean }) {
   const {
     project,
     updateNodeData,
@@ -346,14 +396,15 @@ function NodeInspector({ node }: { node: AppNode }) {
             {parent ? <span className="truncate">· в «{parent.data.title}»</span> : null}
           </span>
         }
-        onDuplicate={() => duplicateNodes([node.id])}
-        onDelete={() => deleteElements([node.id])}
+        onDuplicate={readOnly ? undefined : () => duplicateNodes([node.id])}
+        onDelete={readOnly ? undefined : () => deleteElements([node.id])}
       >
         {node.type === 'text' ? null : (
           <input
             className="mt-1 w-full rounded-md bg-transparent px-1 -mx-1 text-[15px] font-medium tracking-[-0.015em] outline-none hover:bg-[var(--panel-muted)] focus:bg-[var(--panel-muted)]"
             value={node.data.title}
             placeholder="Название"
+            readOnly={readOnly}
             onChange={(event) => updateNodeData(node.id, { title: event.target.value })}
           />
         )}
@@ -364,15 +415,20 @@ function NodeInspector({ node }: { node: AppNode }) {
           <textarea
             className="field min-h-[64px] text-[13px]"
             value={node.data.title}
+            readOnly={readOnly}
             onChange={(event) => updateNodeData(node.id, { title: event.target.value })}
           />
-          <TextControls node={node} />
+          <TextControls node={node} readOnly={readOnly} />
         </Section>
       ) : null}
 
       {hasStatus ? (
         <Section title="Статус">
-          <StatusPicker value={node.data.status} onChange={(status) => updateNodeData(node.id, { status })} />
+          <StatusPicker
+            value={node.data.status}
+            readOnly={readOnly}
+            onChange={(status) => updateNodeData(node.id, { status })}
+          />
         </Section>
       ) : null}
 
@@ -380,11 +436,19 @@ function NodeInspector({ node }: { node: AppNode }) {
         <Section title="Цвет">
           <div>
             <FieldLabel>Акцент</FieldLabel>
-            <SwatchRow value={node.data.accentColor} onChange={(color) => updateNodeData(node.id, { accentColor: color })} />
+            <SwatchRow
+              value={node.data.accentColor}
+              readOnly={readOnly}
+              onChange={(color) => updateNodeData(node.id, { accentColor: color })}
+            />
           </div>
           <div>
             <FieldLabel>Заливка</FieldLabel>
-            <SwatchRow value={node.data.fillColor} onChange={(color) => updateNodeData(node.id, { fillColor: color })} />
+            <SwatchRow
+              value={node.data.fillColor}
+              readOnly={readOnly}
+              onChange={(color) => updateNodeData(node.id, { fillColor: color })}
+            />
           </div>
         </Section>
       ) : null}
@@ -397,6 +461,7 @@ function NodeInspector({ node }: { node: AppNode }) {
               className="field text-[13px]"
               placeholder={fields?.subtitlePlaceholder ?? 'Короткое пояснение'}
               value={node.data.subtitle ?? ''}
+              readOnly={readOnly}
               onChange={(event) => updateNodeData(node.id, { subtitle: event.target.value })}
             />
           </label>
@@ -405,6 +470,7 @@ function NodeInspector({ node }: { node: AppNode }) {
             <textarea
               className="field min-h-[72px] text-[13px]"
               value={node.data.description ?? ''}
+              readOnly={readOnly}
               onChange={(event) => updateNodeData(node.id, { description: event.target.value })}
             />
           </label>
@@ -420,6 +486,7 @@ function NodeInspector({ node }: { node: AppNode }) {
                 className="field font-mono text-xs"
                 placeholder="src/lib/example.ts"
                 value={node.data.path ?? ''}
+                readOnly={readOnly}
                 onChange={(event) => updateNodeData(node.id, { path: event.target.value })}
               />
             </label>
@@ -433,6 +500,7 @@ function NodeInspector({ node }: { node: AppNode }) {
                     className="field flex-1 text-xs"
                     placeholder={fields?.itemsPlaceholder}
                     value={item}
+                    readOnly={readOnly}
                     onChange={(event) => {
                       const next = [...items]
                       next[index] = event.target.value
@@ -443,12 +511,14 @@ function NodeInspector({ node }: { node: AppNode }) {
                     type="button"
                     className="icon-btn"
                     aria-label="Убрать пункт"
+                    disabled={readOnly}
                     onClick={() => updateNodeData(node.id, { items: items.filter((_, i) => i !== index) })}
                   >
                     <Icon name="close" size={13} />
                   </button>
                 </div>
               ))}
+              {!readOnly ? (
               <button
                 type="button"
                 className="flex items-center gap-1 text-xs text-[var(--accent)]"
@@ -456,14 +526,15 @@ function NodeInspector({ node }: { node: AppNode }) {
               >
                 <Icon name="plus" size={12} /> Пункт
               </button>
+              ) : null}
             </div>
           </div>
         </Section>
       ) : null}
 
-      <RelationsSection node={node} />
+      <RelationsSection node={node} readOnly={readOnly} />
 
-      {parent || !kind.builtin ? (
+      {!readOnly && (parent || !kind.builtin) ? (
         <div className="flex flex-col items-start gap-2 px-3 py-3">
           {parent ? (
             <button type="button" className="btn-ghost !px-0" onClick={() => detachFromGroup(node.id)}>
@@ -481,7 +552,7 @@ function NodeInspector({ node }: { node: AppNode }) {
   )
 }
 
-function TextControls({ node }: { node: AppNode }) {
+function TextControls({ node, readOnly }: { node: AppNode; readOnly: boolean }) {
   const { updateNodeData } = useApp()
   const weight = (node.data.fontWeight ?? 500) as TextWeight
   const align = (node.data.textAlign ?? 'left') as TextAlign
@@ -496,6 +567,7 @@ function TextControls({ node }: { node: AppNode }) {
           max={72}
           value={node.data.fontSize ?? 28}
           className="w-full accent-[var(--accent)]"
+          disabled={readOnly}
           onChange={(event) => updateNodeData(node.id, { fontSize: Number(event.target.value) })}
         />
       </label>
@@ -511,6 +583,7 @@ function TextControls({ node }: { node: AppNode }) {
               type="button"
               aria-pressed={weight === value}
               style={{ fontWeight: value }}
+              disabled={readOnly}
               onClick={() => updateNodeData(node.id, { fontWeight: value })}
             >
               {label}
@@ -527,6 +600,7 @@ function TextControls({ node }: { node: AppNode }) {
               key={value}
               type="button"
               aria-pressed={align === value}
+              disabled={readOnly}
               onClick={() => updateNodeData(node.id, { textAlign: value })}
             >
               {label}
@@ -536,13 +610,17 @@ function TextControls({ node }: { node: AppNode }) {
       </div>
       <div>
         <FieldLabel>Цвет текста</FieldLabel>
-        <SwatchRow value={node.data.textColor} onChange={(color) => updateNodeData(node.id, { textColor: color })} />
+        <SwatchRow
+          value={node.data.textColor}
+          readOnly={readOnly}
+          onChange={(color) => updateNodeData(node.id, { textColor: color })}
+        />
       </div>
     </>
   )
 }
 
-function RelationsSection({ node }: { node: AppNode }) {
+function RelationsSection({ node, readOnly }: { node: AppNode; readOnly: boolean }) {
   const { project, selectNode, deleteElements } = useApp()
   const relations = project.edges.flatMap((edge): { edge: AppEdge; other: AppNode; direction: 'in' | 'out' }[] => {
     if (edge.source === node.id) {
@@ -580,6 +658,7 @@ function RelationsSection({ node }: { node: AppNode }) {
                   <span className="truncate text-[10px] text-[var(--muted)]">{edge.data.label}</span>
                 ) : null}
               </button>
+              {!readOnly ? (
               <button
                 type="button"
                 className="icon-btn danger opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
@@ -588,6 +667,7 @@ function RelationsSection({ node }: { node: AppNode }) {
               >
                 <Icon name="close" size={12} />
               </button>
+              ) : null}
             </div>
           ))}
         </div>

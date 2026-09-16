@@ -24,6 +24,7 @@ const TOOLS: DockTool[] = [
 export function CanvasToolbar() {
   const { state, setCanvasTool, setPendingKind, undo, redo } = useApp()
   const motionUi = useUiMotion()
+  const readOnly = state.interactionMode === 'view'
 
   const activeId = (() => {
     if (state.canvasTool === 'add') return state.pendingKind === 'note' ? 'sticky' : 'node'
@@ -48,6 +49,22 @@ export function CanvasToolbar() {
       default:
         return
     }
+  }
+
+  if (readOnly) {
+    return (
+      <motion.div
+        initial={motionUi.reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={motionUi.spring}
+        className="chrome-heavy pointer-events-auto flex items-center gap-2 rounded-2xl px-3 py-2 text-[12px] text-[var(--muted)]"
+        role="status"
+        aria-label="Режим просмотра"
+      >
+        <Icon name="eye" size={16} />
+        Просмотр: можно двигать холст и выбирать элементы
+      </motion.div>
+    )
   }
 
   return (

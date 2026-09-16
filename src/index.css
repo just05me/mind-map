@@ -473,7 +473,8 @@ h2,
   cursor: text;
 }
 
-.tool-pan .react-flow__pane {
+.tool-pan .react-flow__pane,
+.tool-view .react-flow__pane {
   cursor: grab;
 }
 

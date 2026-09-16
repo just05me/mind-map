@@ -10,6 +10,7 @@ export function ProjectMenu() {
   const fileRef = useRef<HTMLInputElement>(null)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [importError, setImportError] = useState<string | null>(null)
+  const readOnly = state.interactionMode === 'view'
 
   return (
     <>
@@ -57,33 +58,37 @@ export function ProjectMenu() {
                 </button>
               ))}
             </div>
-            <div className="my-1 h-px bg-[var(--border)]" />
-            <MenuButton icon="plus" label="Новый проект" onClick={() => { createProject(); close() }} />
-            <MenuButton icon="copy" label="Дублировать текущий" onClick={() => { duplicateCurrent(); close() }} />
-            <MenuButton icon="folder" label="Импорт из JSON…" onClick={() => fileRef.current?.click()} />
-            {importError ? <div className="px-2.5 py-1 text-[11px] text-red-500">{importError}</div> : null}
-            <div className="my-1 h-px bg-[var(--border)]" />
-            {confirmDelete ? (
-              <div className="flex items-center gap-1 px-1 py-1">
-                <span className="flex-1 px-1.5 text-[12px]">Удалить «{project.title}»?</span>
-                <button
-                  type="button"
-                  className="rounded-lg bg-red-500 px-2 py-1 text-[12px] text-white"
-                  onClick={() => {
-                    deleteProject(project.id)
-                    setConfirmDelete(false)
-                    close()
-                  }}
-                >
-                  Удалить
-                </button>
-                <button type="button" className="btn-ghost" onClick={() => setConfirmDelete(false)}>
-                  Нет
-                </button>
-              </div>
-            ) : (
-              <MenuButton icon="trash" label="Удалить текущий" danger onClick={() => setConfirmDelete(true)} />
-            )}
+            {!readOnly ? (
+              <>
+                <div className="my-1 h-px bg-[var(--border)]" />
+                <MenuButton icon="plus" label="Новый проект" onClick={() => { createProject(); close() }} />
+                <MenuButton icon="copy" label="Дублировать текущий" onClick={() => { duplicateCurrent(); close() }} />
+                <MenuButton icon="folder" label="Импорт из JSON…" onClick={() => fileRef.current?.click()} />
+                {importError ? <div className="px-2.5 py-1 text-[11px] text-red-500">{importError}</div> : null}
+                <div className="my-1 h-px bg-[var(--border)]" />
+                {confirmDelete ? (
+                  <div className="flex items-center gap-1 px-1 py-1">
+                    <span className="flex-1 px-1.5 text-[12px]">Удалить «{project.title}»?</span>
+                    <button
+                      type="button"
+                      className="rounded-lg bg-red-500 px-2 py-1 text-[12px] text-white"
+                      onClick={() => {
+                        deleteProject(project.id)
+                        setConfirmDelete(false)
+                        close()
+                      }}
+                    >
+                      Удалить
+                    </button>
+                    <button type="button" className="btn-ghost" onClick={() => setConfirmDelete(false)}>
+                      Нет
+                    </button>
+                  </div>
+                ) : (
+                  <MenuButton icon="trash" label="Удалить текущий" danger onClick={() => setConfirmDelete(true)} />
+                )}
+              </>
+            ) : null}
           </>
         )}
       </Dropdown>

@@ -24,6 +24,7 @@ import type {
   AppNode,
   CanvasTool,
   EdgeData,
+  InteractionMode,
   KindDef,
   KindId,
   LayoutCommand,
@@ -56,6 +57,7 @@ type AppState = {
   projects: Project[]
   currentId: string
   view: ViewMode
+  interactionMode: InteractionMode
   theme: ThemeMode
   /** Set only when exactly one node (or edge) is selected; multi-selection lives on node.selected. */
   selectedNodeId: string | null
@@ -88,6 +90,7 @@ type Point = { x: number; y: number }
 
 type Action =
   | { type: 'setView'; view: ViewMode }
+  | { type: 'setInteractionMode'; mode: InteractionMode }
   | { type: 'setTheme'; theme: ThemeMode }
   | { type: 'selectNode'; id: string | null }
   | { type: 'selectEdge'; id: string | null }
@@ -133,6 +136,7 @@ type AppContextValue = {
   project: Project
   dispatch: (action: Action) => void
   setView: (view: ViewMode) => void
+  setInteractionMode: (mode: InteractionMode) => void
   setTheme: (theme: ThemeMode) => void
   selectNode: (id: string | null) => void
   selectEdge: (id: string | null) => void
@@ -267,7 +271,62 @@ function nodesChangeHistoryKey(changes: NodeChange<AppNode>[]): string | null | 
   return 'skip'
 }
 
+function isBlockedInViewMode(action: Action): boolean {
+  switch (action.type) {
+    case 'setInteractionMode':
+    case 'setView':
+    case 'setTheme':
+    case 'selectNode':
+    case 'selectEdge':
+    case 'setViewport':
+    case 'switchProject':
+    case 'togglePanel':
+    case 'toggleAllPanels':
+    case 'setShortcutsOpen':
+    case 'hydrateRemote':
+      return false
+    case 'requestLayout':
+      return action.layout !== 'fit' && action.layout !== null
+    case 'selectAll':
+    case 'setPendingKind':
+    case 'setCanvasTool':
+    case 'setEditingNode':
+    case 'setConnectSource':
+    case 'createProject':
+    case 'duplicateProject':
+    case 'deleteProject':
+    case 'renameProject':
+    case 'setCanvasColor':
+    case 'setGraph':
+    case 'nodesChange':
+    case 'edgesChange':
+    case 'connect':
+    case 'updateNodeData':
+    case 'updateEdgeData':
+    case 'addNode':
+    case 'addEdge':
+    case 'deleteElements':
+    case 'duplicateNodes':
+    case 'copyNodes':
+    case 'paste':
+    case 'reparent':
+    case 'undo':
+    case 'redo':
+    case 'addCustomKind':
+    case 'updateKind':
+    case 'removeKind':
+    case 'importProject':
+      return true
+    default: {
+      const _never: never = action
+      return _never
+    }
+  }
+}
+
 function reducer(state: AppState, action: Action): AppState {
+  if (state.interactionMode === 'view' && isBlockedInViewMode(action)) return state
+
   switch (action.type) {
     case 'setView':
       return {
@@ -275,6 +334,15 @@ function reducer(state: AppState, action: Action): AppState {
         view: action.view,
         editingNodeId: null,
         connectSourceId: null,
+        canvasTool: 'select',
+      }
+    case 'setInteractionMode':
+      return {
+        ...state,
+        interactionMode: action.mode,
+        editingNodeId: null,
+        connectSourceId: null,
+        pendingKind: null,
         canvasTool: 'select',
       }
     case 'setTheme':
@@ -552,15 +620,19 @@ function reducer(state: AppState, action: Action): AppState {
             : node,
         ),
       }))
-    case 'importProject':
+    case 'importProject': {
+      const imported = { ...action.project, kinds: mergeBuiltinKinds(action.project.kinds) }
+      const current = state.projects.find((item) => item.id === state.currentId)
+      // Importing right after «Новый проект» fills that project instead of leaving it empty.
+      const fillsCurrent = current != null && current.nodes.length === 0 && current.edges.length === 0
       return resetTransient({
         ...state,
-        projects: [
-          ...state.projects,
-          { ...action.project, kinds: mergeBuiltinKinds(action.project.kinds) },
-        ],
-        currentId: action.project.id,
+        projects: fillsCurrent
+          ? state.projects.map((item) => (item.id === state.currentId ? imported : item))
+          : [...state.projects, imported],
+        currentId: imported.id,
       })
+    }
     case 'hydrateRemote': {
       if (action.projects.length === 0) return state
       const currentId = action.projects.some((item) => item.id === state.currentId)
@@ -602,6 +674,7 @@ function createInitialState(): AppState {
     projects: initial.projects,
     currentId: initial.currentId,
     view: 'map',
+    interactionMode: 'edit',
     theme: initial.theme,
     selectedNodeId: null,
     selectedEdgeId: null,
@@ -698,6 +771,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const project = useMemo(() => currentProject(state), [state])
 
   const setView = useCallback((view: ViewMode) => dispatch({ type: 'setView', view }), [])
+  const setInteractionMode = useCallback(
+    (mode: InteractionMode) => dispatch({ type: 'setInteractionMode', mode }),
+    [],
+  )
   const setTheme = useCallback((theme: ThemeMode) => dispatch({ type: 'setTheme', theme }), [])
   const selectNode = useCallback((id: string | null) => dispatch({ type: 'selectNode', id }), [])
   const selectEdge = useCallback((id: string | null) => dispatch({ type: 'selectEdge', id }), [])
@@ -827,6 +904,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       project,
       dispatch,
       setView,
+      setInteractionMode,
       setTheme,
       selectNode,
       selectEdge,
@@ -873,6 +951,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       state,
       project,
       setView,
+      setInteractionMode,
       setTheme,
       selectNode,
       selectEdge,

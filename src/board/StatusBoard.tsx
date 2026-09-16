@@ -10,6 +10,7 @@ export function StatusBoard() {
   const { project, updateNodeData, selectNode, state } = useApp()
   const [overColumn, setOverColumn] = useState<Status | null>(null)
   const cards = project.nodes.filter((node) => isStatusBoardType(node.type))
+  const readOnly = state.interactionMode === 'view'
 
   return (
     <div
@@ -24,11 +25,13 @@ export function StatusBoard() {
               overColumn === status ? 'border-[var(--accent)]' : ''
             }`}
             onDragOver={(event) => {
+              if (readOnly) return
               event.preventDefault()
               setOverColumn(status)
             }}
             onDragLeave={() => setOverColumn((current) => (current === status ? null : current))}
             onDrop={(event) => {
+              if (readOnly) return
               event.preventDefault()
               const id = event.dataTransfer.getData('application/mind-map-node')
               if (id) updateNodeData(id, { status })
@@ -52,6 +55,7 @@ export function StatusBoard() {
                   key={node.id}
                   node={node}
                   selected={state.selectedNodeId === node.id}
+                  readOnly={readOnly}
                   onSelect={() => selectNode(node.id)}
                 />
               ))}
@@ -66,10 +70,12 @@ export function StatusBoard() {
 function BoardCard({
   node,
   selected,
+  readOnly,
   onSelect,
 }: {
   node: AppNode
   selected: boolean
+  readOnly: boolean
   onSelect: () => void
 }) {
   const { project } = useApp()
@@ -80,13 +86,14 @@ function BoardCard({
   return (
     <article
       aria-label={node.data.title}
-      draggable
+      draggable={!readOnly}
       onDragStart={(event) => {
+        if (readOnly) return
         event.dataTransfer.setData('application/mind-map-node', node.id)
         event.dataTransfer.effectAllowed = 'move'
       }}
       onPointerDown={onSelect}
-      className={`pressable cursor-grab rounded-[1rem] border p-3 ${
+      className={`pressable rounded-[1rem] border p-3 ${readOnly ? 'cursor-pointer' : 'cursor-grab'} ${
         selected ? 'border-[var(--accent)] ring-2 ring-[var(--accent)]/20' : 'border-[var(--border)]'
       }`}
       style={{ background: fill, boxShadow: `inset 3px 0 0 ${accent}` }}

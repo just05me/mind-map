@@ -81,10 +81,19 @@ export function Board() {
   const connectingNodeId = useRef<string | null>(null)
   const [menu, setMenu] = useState<ContextMenuState | null>(null)
   const [spacePan, setSpacePan] = useState(false)
-  // Fit only when opening a project that has content but no saved camera.
-  const [fitOnOpen] = useState(() => project.nodes.length > 0 && !project.viewport)
+  // Fit only when opening a project that has content but no saved camera. Recomputed per
+  // project, because switching or importing remounts ReactFlow but not Board.
+  const [fitTarget, setFitTarget] = useState(() => ({
+    id: project.id,
+    fit: project.nodes.length > 0 && !project.viewport,
+  }))
+  if (fitTarget.id !== project.id) {
+    setFitTarget({ id: project.id, fit: project.nodes.length > 0 && !project.viewport })
+  }
+  const fitOnOpen = fitTarget.fit
   const lastPointer = useRef<{ x: number; y: number } | null>(null)
   const canvasColor = resolveCanvasColor(project.canvasColor, state.theme)
+  const readOnly = state.interactionMode === 'view'
 
   // Frames and groups sit under edges so lines crossing them stay visible.
   const layeredNodes = useMemo<AppNode[]>(
@@ -99,6 +108,7 @@ export function Board() {
     const byId = new Map(project.nodes.map((node) => [node.id, node]))
     return project.edges.map((edge) => {
       const source = byId.get(edge.source)
+      const width = Math.min(Math.max(edge.data?.width ?? 1.6, 1), 8)
       const color =
         edge.data?.color ??
         source?.data.accentColor ??
@@ -108,7 +118,7 @@ export function Board() {
         style: {
           ...edge.style,
           stroke: color,
-          strokeWidth: edge.selected ? 2.6 : 1.6,
+          strokeWidth: edge.selected ? width + 1 : width,
         },
         markerEnd: {
           type: MarkerType.ArrowClosed,
@@ -147,6 +157,7 @@ export function Board() {
 
   const onConnectEnd: OnConnectEnd = useCallback(
     (event, connectionState) => {
+      if (readOnly) return
       const sourceId = connectingNodeId.current
       connectingNodeId.current = null
       if (!sourceId || connectionState.isValid) return
@@ -163,11 +174,16 @@ export function Board() {
       const node = createNodeAt(project, kind, screenToFlowPosition(point))
       addNode(node, { fromNodeId: sourceId, edit: true })
     },
-    [addNode, project, screenToFlowPosition, state.pendingKind],
+    [addNode, project, readOnly, screenToFlowPosition, state.pendingKind],
   )
 
   const onPaneClick = useCallback(
     (event: MouseEvent) => {
+      if (readOnly) {
+        selectNode(null)
+        selectEdge(null)
+        return
+      }
       const point = { x: event.clientX, y: event.clientY }
       const tool = state.canvasTool
       switch (tool) {
@@ -194,11 +210,15 @@ export function Board() {
         }
       }
     },
-    [placeAtClient, selectNode, setConnectSource, state.canvasTool, state.pendingKind],
+    [placeAtClient, readOnly, selectEdge, selectNode, setConnectSource, state.canvasTool, state.pendingKind],
   )
 
   const onNodeClick = useCallback(
     (_event: MouseEvent, node: AppNode) => {
+      if (readOnly) {
+        selectNode(node.id)
+        return
+      }
       if (state.canvasTool === 'connect') {
         if (!state.connectSourceId) {
           setConnectSource(node.id)
@@ -217,17 +237,18 @@ export function Board() {
         setEditingNode(node.id, 'title')
       }
     },
-    [addEdge, selectNode, setConnectSource, setEditingNode, state.canvasTool, state.connectSourceId],
+    [addEdge, readOnly, selectNode, setConnectSource, setEditingNode, state.canvasTool, state.connectSourceId],
   )
 
   const onNodeDoubleClick = useCallback(
     (_event: MouseEvent, node: AppNode) => {
+      if (readOnly) return
       if (supportsInlineTitle(node.type)) {
         selectNode(node.id)
         setEditingNode(node.id, 'title')
       }
     },
-    [selectNode, setEditingNode],
+    [readOnly, selectNode, setEditingNode],
   )
 
   const onEdgeClick = useCallback(
@@ -239,6 +260,7 @@ export function Board() {
 
   const onNodeDragStop: OnNodeDrag<AppNode> = useCallback(
     (_event, node, nodes) => {
+      if (readOnly) return
       if (nodes.length > 1 || isContainerType(node.type)) return
       const containers = getIntersectingNodes(node).filter(
         (item) => isContainerType(item.type) && item.id !== node.id,
@@ -251,44 +273,48 @@ export function Board() {
       const container = containers.at(-1)
       if (container) reparent(node.id, container.id)
     },
-    [getIntersectingNodes, reparent],
+    [getIntersectingNodes, readOnly, reparent],
   )
 
   const onDragOver = useCallback((event: DragEvent) => {
+    if (readOnly) return
     event.preventDefault()
     event.dataTransfer.dropEffect = 'copy'
-  }, [])
+  }, [readOnly])
 
   const onDrop = useCallback(
     (event: DragEvent) => {
+      if (readOnly) return
       event.preventDefault()
       const kind = event.dataTransfer.getData('application/mind-map-kind')
       if (!kind) return
       placeAtClient(kind, { x: event.clientX, y: event.clientY })
     },
-    [placeAtClient],
+    [placeAtClient, readOnly],
   )
 
   const openMenu = useCallback(
     (event: MouseEvent | globalThis.MouseEvent, target: ContextMenuState['target']) => {
       event.preventDefault()
+      if (readOnly) return
       const client = { x: event.clientX, y: event.clientY }
       setMenu({ client, flow: screenToFlowPosition(client), target })
     },
-    [screenToFlowPosition],
+    [readOnly, screenToFlowPosition],
   )
 
   useEffect(() => {
     const pane = document.querySelector('.react-flow__pane')
     if (!(pane instanceof HTMLElement)) return undefined
     const onDouble = (event: globalThis.MouseEvent) => {
+      if (state.interactionMode === 'view') return
       if (state.canvasTool !== 'select' && state.canvasTool !== 'text') return
       if (!isPaneTarget(event.target)) return
       placeAtClient('text', { x: event.clientX, y: event.clientY }, { edit: true })
     }
     pane.addEventListener('dblclick', onDouble)
     return () => pane.removeEventListener('dblclick', onDouble)
-  }, [placeAtClient, state.canvasTool, project.id])
+  }, [placeAtClient, state.canvasTool, state.interactionMode, project.id])
 
   useEffect(() => {
     const command = state.layoutCommand
@@ -324,6 +350,34 @@ export function Board() {
       if (isTypingTarget(event.target)) {
         if (event.key === 'Escape') current.setEditingNode(null)
         return
+      }
+      if (current.state.interactionMode === 'view') {
+        const mod = isModifier(event)
+        if (mod && event.key === '\\') {
+          event.preventDefault()
+          current.toggleAllPanels()
+          return
+        }
+        switch (event.key) {
+          case 'Escape':
+            current.selectNode(null)
+            current.selectEdge(null)
+            return
+          case '!':
+            current.requestLayout('fit')
+            return
+          case '?':
+            current.setShortcutsOpen(true)
+            return
+          case '[':
+            current.togglePanel('left')
+            return
+          case ']':
+            current.togglePanel('right')
+            return
+          default:
+            return
+        }
       }
       const selectedIds = current.project.nodes.filter((node) => node.selected).map((node) => node.id)
       const mod = isModifier(event)
@@ -462,7 +516,7 @@ export function Board() {
   }, [screenToFlowPosition])
 
   const tool: CanvasTool = spacePan ? 'pan' : state.canvasTool
-  const interaction = interactionForTool(tool)
+  const interaction = readOnly ? interactionForViewMode() : interactionForTool(tool)
 
   return (
     <div className="h-full w-full" style={{ background: canvasColor }}>
@@ -515,12 +569,13 @@ export function Board() {
         selectionOnDrag={interaction.selectionOnDrag}
         nodesDraggable={interaction.nodesDraggable}
         nodesConnectable={interaction.nodesConnectable}
+        edgesReconnectable={!readOnly}
         elementsSelectable={interaction.elementsSelectable}
         panOnScroll
         zoomOnDoubleClick={false}
         minZoom={0.1}
         maxZoom={3}
-        className={`h-full w-full tool-${tool}`}
+        className={`h-full w-full tool-${readOnly ? 'view' : tool}`}
       >
         <Background
           variant={BackgroundVariant.Dots}
@@ -598,5 +653,15 @@ function interactionForTool(tool: CanvasTool): {
       const _never: never = tool
       return _never
     }
+  }
+}
+
+function interactionForViewMode(): ReturnType<typeof interactionForTool> {
+  return {
+    panOnDrag: true,
+    selectionOnDrag: false,
+    nodesDraggable: false,
+    nodesConnectable: false,
+    elementsSelectable: true,
   }
 }

@@ -6,6 +6,8 @@ export type KindId = string
 
 export type ViewMode = 'map' | 'board'
 
+export type InteractionMode = 'edit' | 'view'
+
 export type ThemeMode = 'light' | 'dark'
 
 export type LayoutCommand = 'horizontal' | 'vertical' | 'fit'
@@ -53,6 +55,7 @@ export type KindDef = {
 export type EdgeData = {
   color?: string
   label?: string
+  width?: number
 }
 
 export type AppNode = Node<NodeData, AppNodeType>

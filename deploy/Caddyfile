@@ -1,0 +1,16 @@
+# Host Caddy on the production EC2. TLS is terminated here.
+# Copy to /etc/caddy/Caddyfile and reload — do not run a second Caddy in Docker.
+
+www.ffinance.uz {
+	redir https://ffinance.uz{uri} permanent
+}
+
+ffinance.uz {
+	encode gzip
+	reverse_proxy 127.0.0.1:8080
+}
+
+app.ffinance.uz {
+	encode gzip
+	reverse_proxy 127.0.0.1:3000
+}

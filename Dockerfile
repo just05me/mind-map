@@ -1,3 +1,15 @@
+FROM node:22-alpine AS landing-build
+WORKDIR /landing
+COPY landing/package.json landing/package-lock.json ./
+RUN npm ci
+COPY landing/ ./
+RUN npm run build
+
+FROM nginx:stable-alpine AS landing
+COPY --from=landing-build /landing/dist /usr/share/nginx/html
+COPY deploy/landing.nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+
 FROM node:22-alpine AS build
 RUN apk add --no-cache openssl libc6-compat
 WORKDIR /app

@@ -20,6 +20,7 @@ function cookieOptions() {
     secure: env.nodeEnv === 'production',
     sameSite: 'Lax' as const,
     maxAge: SESSION_MAX_AGE_SEC,
+    // No Domain: host-only cookie on the board host (app.ffinance.uz), not the marketing apex.
   }
 }
 

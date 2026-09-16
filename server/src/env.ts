@@ -68,6 +68,7 @@ export function loadEnv(): AppEnv {
     port,
     databaseUrl: requireValue('DATABASE_URL'),
     sessionSecret,
+    // Production board host is https://app.ffinance.uz (same-origin /api). Do not put the marketing apex here.
     corsOrigins: parseCorsOrigins(process.env.CORS_ORIGIN ?? 'http://localhost:5173'),
   }
 }

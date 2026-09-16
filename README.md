@@ -17,7 +17,7 @@
 [![last commit](https://img.shields.io/github/last-commit/just05me/mind-map?style=flat&color=30d158)](https://github.com/just05me/mind-map/commits/main)
 [![issues](https://img.shields.io/github/issues/just05me/mind-map?style=flat&color=ff9f0a)](https://github.com/just05me/mind-map/issues)
 
-[Сайт](https://ffinance.uz) · [Репозиторий](https://github.com/just05me/mind-map)
+[Сайт](https://ffinance.uz) · [Доска](https://app.ffinance.uz) · [Репозиторий](https://github.com/just05me/mind-map)
 
 <p>
   <a href="https://skillicons.dev">
@@ -99,10 +99,14 @@ flowchart LR
   vite -->|"/api"| hono["Hono :3000"]
   hono --> prisma["Prisma"]
   prisma --> pg["PostgreSQL"]
-  hono --> dist["Сборка фронтенда в production"]
+  hono --> dist["Сборка доски в production"]
 ```
 
-В dev Vite проксирует `/api` на `http://127.0.0.1:3000`. В production тот же процесс отдаёт API и папку `dist`.
+В dev Vite проксирует `/api` на `http://127.0.0.1:3000`. В production Caddy разделяет хосты:
+
+- `https://ffinance.uz` — статический лендинг (`landing/`, контейнер на `:8080`)
+- `https://www.ffinance.uz` — редирект на apex
+- `https://app.ffinance.uz` — Hono на `:3000` (API и `dist` доски, same-origin `/api`)
 
 ## Локальный запуск
 
@@ -133,14 +137,17 @@ npm run preview
 
 1. Скопируйте `.env.example` в `.env` на сервере.
 2. Задайте **случайный** `SESSION_SECRET` (не короче 32 символов) и сильный `POSTGRES_PASSWORD`. Не оставляйте значения из примера.
-3. Укажите `CORS_ORIGIN` — точный origin сайта, например `https://boards.example.com`.
-4. Соберите и запустите:
+3. Укажите `CORS_ORIGIN` — точный origin **доски**, например `https://app.ffinance.uz`. Лендинг в API не ходит.
+4. Соберите и запустите — одна команда собирает лендинг и приложение:
 
 ```bash
 docker compose up --build -d
 ```
 
-Приложение слушает **http://localhost:3000/** (API и собранный фронтенд в одном контейнере). Проверка: `GET /api/health` должен вернуть `{ "ok": true, "db": "up" }`.
+- лендинг: **http://localhost:8080/**
+- доска и API: **http://localhost:3000/** — `GET /api/health` должен вернуть `{ "ok": true, "db": "up" }`
+
+Перед публичным HTTPS поставьте Caddy (или другой прокси) как в `deploy/Caddyfile`: apex → `:8080`, `app.` → `:3000`. Cookie сессии host-only, без `Domain=.example.com`.
 
 Отдельного демо-пользователя в образе нет: создайте аккаунт на экране регистрации.
 
@@ -202,7 +209,8 @@ docker compose up --build -d
 | `server/` | API: авторизация, проекты, Prisma |
 | `boards/` | Готовые JSON проектов |
 | `scripts/` | Генераторы JSON в `boards/` |
-| `landing/` | Отдельный маркетинговый сайт (не входит в Docker-сборку приложения) |
+| `landing/` | Маркетинговый сайт: собирается отдельным образом и отдаётся с apex |
+| `deploy/` | Caddyfile продакшена и nginx-конфиг лендинга |
 
 ## Скрипты
 

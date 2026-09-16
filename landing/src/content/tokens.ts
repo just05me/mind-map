@@ -4,7 +4,7 @@
  */
 
 export const LINKS = {
-  app: 'https://ffinance.uz',
+  app: 'https://app.ffinance.uz',
   github: 'https://github.com/just05me/mind-map',
   issues: 'https://github.com/just05me/mind-map/issues',
   stars: 'https://github.com/just05me/mind-map/stargazers',

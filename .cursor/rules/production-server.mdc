@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Прод-сервер
 
-Живой сайт: **https://ffinance.uz** (www редиректит на apex). Хостинг — EC2 + Docker Compose + Caddy, не Amplify и не S3.
+Живой сайт: **https://ffinance.uz** (лендинг; www редиректит на apex). Доска и API: **https://app.ffinance.uz**. Хостинг — EC2 + Docker Compose + Caddy, не Amplify и не S3.
 
 Другая сессия Cursor на этом Mac может зайти так же: AWS CLI уже настроен у пользователя `cursor-deploy`, ключ SSH лежит локально, не в git.
 
@@ -22,6 +22,7 @@ SSH             ubuntu@3.70.84.61
 Ключ            ~/.ssh/mindmap-prod.pem   (chmod 400, имя пары mindmap-prod)
 Код на сервере  /opt/mindmap
 .env на сервере /opt/mindmap/.env         (не копировать в репо и не печатать)
+Caddyfile       /etc/caddy/Caddyfile      (канон в репо: deploy/Caddyfile)
 ```
 
 Перед командами:
@@ -36,11 +37,19 @@ ssh -i ~/.ssh/mindmap-prod.pem -o BatchMode=yes ubuntu@3.70.84.61 'echo ok'
 
 ## Что крутится
 
-- `mindmap-app-1` — Node/Hono, слушает `127.0.0.1:3000`, отдаёт API и `dist`
-- `mindmap-db-1` — Postgres 16, том `mindmap_pgdata`
-- Caddy — `/etc/caddy/Caddyfile`, HTTPS Let’s Encrypt, прокси на `:3000`
+- `mindmap-landing-1` — nginx, слушает `127.0.0.1:8080`, статика `landing/`
+- `mindmap-app-1` — Node/Hono, слушает `127.0.0.1:3000`, API и `dist` доски
+- `mindmap-db-1` — Postgres 16, том `mindmap_pgdata`, порт только на `127.0.0.1:5432`
+- Caddy — `/etc/caddy/Caddyfile`, HTTPS Let’s Encrypt:
+
+```text
+https://ffinance.uz        → 127.0.0.1:8080
+https://www.ffinance.uz    → редирект на https://ffinance.uz
+https://app.ffinance.uz    → 127.0.0.1:3000
+```
 
 Проверка с сервера: `curl -sS http://127.0.0.1:3000/api/health` → `{"ok":true,"db":"up"}`.
+Лендинг: `curl -sS -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/` → `200`.
 
 ## Выкатить код
 
@@ -55,7 +64,9 @@ ssh -i ~/.ssh/mindmap-prod.pem ubuntu@3.70.84.61 \
   'cd /opt/mindmap && sudo docker compose up --build -d'
 ```
 
-Не затирай `/opt/mindmap/.env`. Секреты (`SESSION_SECRET`, `POSTGRES_PASSWORD`) только там. `CORS_ORIGIN=https://ffinance.uz`.
+После смены хостов скопируйте `deploy/Caddyfile` в `/etc/caddy/Caddyfile` (с бэкапом) и `sudo systemctl reload caddy`.
+
+Не затирай `/opt/mindmap/.env`. Секреты (`SESSION_SECRET`, `POSTGRES_PASSWORD`) только там. `CORS_ORIGIN=https://app.ffinance.uz`. Cookie сессии host-only на `app.ffinance.uz`, без `Domain=.ffinance.uz`.
 
 ## DNS (aHOST)
 
@@ -65,5 +76,6 @@ ssh -i ~/.ssh/mindmap-prod.pem ubuntu@3.70.84.61 \
 |---|---|---|
 | `@` | A | `3.70.84.61` |
 | `www` | A | `3.70.84.61` |
+| `app` | A | `3.70.84.61` |
 
 Не коммить `.pem`, ключи AWS и `.env`. Не создавать второй инстанс «на всякий случай» — этот уже прод.

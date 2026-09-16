@@ -23,7 +23,7 @@ export function FinalCta() {
                 iconRight="arrowRight"
                 className="!bg-white !text-accent hover:!brightness-95"
               >
-                Открыть ffinance.uz
+                Открыть доску
               </LinkButton>
               <LinkButton
                 href={LINKS.github}
@@ -56,7 +56,7 @@ export function Footer() {
         <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px]" aria-label="Ссылки">
           <a href={LINKS.app} target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-1.5 text-muted hover:text-ink">
             <Icon name="external" size={13} />
-            ffinance.uz
+            Доска
           </a>
           <a href={LINKS.github} target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-1.5 text-muted hover:text-ink">
             <Icon name="github" size={13} />

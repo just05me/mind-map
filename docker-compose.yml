@@ -1,6 +1,10 @@
 # Скопируйте .env.example → .env и задайте SESSION_SECRET и POSTGRES_PASSWORD.
 # В production не оставляйте пароли и секреты из примера — compose подставит
 # значения из .env, слабых значений по умолчанию здесь нет.
+#
+# Два артефакта из одного Dockerfile:
+#   landing — статика маркетингового сайта (Caddy: ffinance.uz → :8080)
+#   app     — Hono + dist доски (Caddy: app.ffinance.uz → :3000)
 
 services:
   db:
@@ -12,17 +16,26 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U mindmap -d mindmap"]
       interval: 5s
       timeout: 5s
       retries: 10
 
-  app:
-    build: .
+  landing:
+    build:
+      context: .
+      target: landing
     ports:
-      - "${PORT:-3000}:3000"
+      - "127.0.0.1:8080:80"
+
+  app:
+    build:
+      context: .
+      target: runtime
+    ports:
+      - "127.0.0.1:${PORT:-3000}:3000"
     environment:
       NODE_ENV: production
       PORT: 3000

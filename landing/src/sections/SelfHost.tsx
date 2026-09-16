@@ -23,7 +23,7 @@ export function SelfHost() {
             <p>
               Задайте случайный <code className="font-mono text-[12.5px] text-ink">SESSION_SECRET</code> не короче 32 символов,
               сильный <code className="font-mono text-[12.5px] text-ink">POSTGRES_PASSWORD</code> и точный{' '}
-              <code className="font-mono text-[12.5px] text-ink">CORS_ORIGIN</code> сайта. Демо-пользователя в образе нет —
+              <code className="font-mono text-[12.5px] text-ink">CORS_ORIGIN</code> доски. Демо-пользователя в образе нет —
               зарегистрируйтесь на экране входа.
             </p>
             <div className="mt-4">

@@ -39,9 +39,10 @@ npm install
 npx prisma migrate deploy
 npm run dev`
 
-export const DOCKER_RUN = `# .env: SESSION_SECRET (32+ символов), POSTGRES_PASSWORD, CORS_ORIGIN
+export const DOCKER_RUN = `# .env: SESSION_SECRET (32+), POSTGRES_PASSWORD, CORS_ORIGIN доски
 docker compose up --build -d
-curl http://localhost:3000/api/health   # { "ok": true, "db": "up" }`
+curl http://localhost:3000/api/health   # { "ok": true, "db": "up" }
+curl http://localhost:8080/             # лендинг`
 
 export const CLONE = `git clone https://github.com/just05me/mind-map.git
 cd mind-map`

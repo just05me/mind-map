@@ -39,7 +39,7 @@ export function OpenSource() {
                 Инструмент, который не попросит карту
               </h2>
               <p className="mt-4 text-[16px] leading-relaxed text-muted md:text-[17px]">
-                Доска схем — открытый проект. Пользуйтесь на ffinance.uz или разверните собственную копию: код,
+                Доска схем — открытый проект. Пользуйтесь на app.ffinance.uz или разверните собственную копию: код,
                 Docker Compose и миграции уже в репозитории.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">

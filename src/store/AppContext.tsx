@@ -131,9 +131,20 @@ type Action =
   | { type: 'toggleAllPanels' }
   | { type: 'setShortcutsOpen'; open: boolean }
 
-type AppContextValue = {
-  state: AppState
-  project: Project
+/**
+ * Everything canvas nodes and edges read from the store. Kept in its own context with a
+ * memoized value so the hundreds of node components do not re-render on every dispatch
+ * (drag frames, viewport, panels) — only when kinds or the editing state actually change.
+ */
+export type NodeScene = {
+  kinds: KindDef[]
+  editingNodeId: string | null
+  editingField: 'title' | 'description'
+  /** True in «Просмотр» mode: inline editing and edge tools are disabled. */
+  readOnly: boolean
+}
+
+type AppActions = {
   dispatch: (action: Action) => void
   setView: (view: ViewMode) => void
   setInteractionMode: (mode: InteractionMode) => void
@@ -180,7 +191,15 @@ type AppContextValue = {
   setShortcutsOpen: (open: boolean) => void
 }
 
+type AppContextValue = AppActions & {
+  state: AppState
+  project: Project
+}
+
 const AppContext = createContext<AppContextValue | null>(null)
+/** Stable for the provider's lifetime: components that only dispatch never re-render from it. */
+const AppActionsContext = createContext<AppActions | null>(null)
+const NodeSceneContext = createContext<NodeScene | null>(null)
 
 function currentProject(state: AppState): Project {
   return state.projects.find((item) => item.id === state.currentId) ?? state.projects[0]
@@ -769,6 +788,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [state.leftPanelOpen, state.rightPanelOpen, state.minimapOpen])
 
   const project = useMemo(() => currentProject(state), [state])
+  const projectRef = useRef(project)
+  projectRef.current = project
 
   const setView = useCallback((view: ViewMode) => dispatch({ type: 'setView', view }), [])
   const setInteractionMode = useCallback(
@@ -848,12 +869,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [],
   )
   const deleteSelection = useCallback(() => {
+    // Reads the latest project through a ref so the callback (and the actions object) stays stable.
+    const current = projectRef.current
     dispatch({
       type: 'deleteElements',
-      nodeIds: project.nodes.filter((node) => node.selected).map((node) => node.id),
-      edgeIds: project.edges.filter((edge) => edge.selected).map((edge) => edge.id),
+      nodeIds: current.nodes.filter((node) => node.selected).map((node) => node.id),
+      edgeIds: current.edges.filter((edge) => edge.selected).map((edge) => edge.id),
     })
-  }, [project.edges, project.nodes])
+  }, [])
   const duplicateNodes = useCallback(
     (ids: string[]) => dispatch({ type: 'duplicateNodes', ids }),
     [],
@@ -898,10 +921,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [],
   )
 
-  const value = useMemo<AppContextValue>(
+  const actions = useMemo<AppActions>(
     () => ({
-      state,
-      project,
       dispatch,
       setView,
       setInteractionMode,
@@ -948,8 +969,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setShortcutsOpen,
     }),
     [
-      state,
-      project,
       setView,
       setInteractionMode,
       setTheme,
@@ -996,13 +1015,52 @@ export function AppProvider({ children }: { children: ReactNode }) {
     ],
   )
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>
+  const value = useMemo<AppContextValue>(
+    () => ({ ...actions, state, project }),
+    [actions, state, project],
+  )
+
+  const scene = useMemo<NodeScene>(
+    () => ({
+      kinds: project.kinds,
+      editingNodeId: state.editingNodeId,
+      editingField: state.editingField,
+      readOnly: state.interactionMode === 'view',
+    }),
+    [project.kinds, state.editingNodeId, state.editingField, state.interactionMode],
+  )
+
+  return (
+    <AppActionsContext.Provider value={actions}>
+      <NodeSceneContext.Provider value={scene}>
+        <AppContext.Provider value={value}>{children}</AppContext.Provider>
+      </NodeSceneContext.Provider>
+    </AppActionsContext.Provider>
+  )
 }
 
 export function useApp(): AppContextValue {
   const ctx = useContext(AppContext)
   if (!ctx) {
     throw new Error('useApp должен вызываться внутри AppProvider')
+  }
+  return ctx
+}
+
+/** Actions only — for components that dispatch but should not re-render on every state change. */
+export function useAppActions(): AppActions {
+  const ctx = useContext(AppActionsContext)
+  if (!ctx) {
+    throw new Error('useAppActions должен вызываться внутри AppProvider')
+  }
+  return ctx
+}
+
+/** The slice of store state that canvas nodes and edges render from. */
+export function useNodeScene(): NodeScene {
+  const ctx = useContext(NodeSceneContext)
+  if (!ctx) {
+    throw new Error('useNodeScene должен вызываться внутри AppProvider')
   }
   return ctx
 }

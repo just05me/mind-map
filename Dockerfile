@@ -32,7 +32,8 @@ ENV PORT=3000
 COPY package.json package-lock.json ./
 COPY server/prisma ./server/prisma
 ENV DATABASE_URL="postgresql://mindmap:mindmap@127.0.0.1:5432/mindmap"
-RUN npm ci --omit=dev
+# The npm download cache is dead weight in the final image.
+RUN npm ci --omit=dev && npm cache clean --force
 
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/server/dist ./server/dist

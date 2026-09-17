@@ -1,5 +1,5 @@
 import { useEffect, useRef, type CSSProperties, type KeyboardEvent } from 'react'
-import { useApp } from '../../store/AppContext'
+import { useAppActions, useNodeScene } from '../../store/AppContext'
 
 type InlineTitleProps = {
   nodeId: string
@@ -20,9 +20,9 @@ export function InlineTitle({
   multiline = false,
   field = 'title',
 }: InlineTitleProps) {
-  const { state, updateNodeData, setEditingNode } = useApp()
-  const readOnly = state.interactionMode === 'view'
-  const editing = !readOnly && state.editingNodeId === nodeId && state.editingField === field
+  const { updateNodeData, setEditingNode } = useAppActions()
+  const { readOnly, editingNodeId, editingField } = useNodeScene()
+  const editing = !readOnly && editingNodeId === nodeId && editingField === field
   const ref = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {

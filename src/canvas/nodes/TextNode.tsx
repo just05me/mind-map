@@ -1,11 +1,12 @@
 import { NodeResizer, type NodeProps } from '@xyflow/react'
-import { useApp } from '../../store/AppContext'
+import { memo } from 'react'
+import { useNodeScene } from '../../store/AppContext'
 import type { AppNode, TextAlign, TextWeight } from '../../model/types'
 import { InlineTitle } from './InlineTitle'
 
-export function TextNode({ id, data, selected }: NodeProps<AppNode>) {
-  const { state } = useApp()
-  const editing = state.editingNodeId === id
+export const TextNode = memo(function TextNode({ id, data, selected }: NodeProps<AppNode>) {
+  const { editingNodeId } = useNodeScene()
+  const editing = editingNodeId === id
   const fontSize = data.fontSize ?? 28
   const fontWeight = (data.fontWeight ?? 500) as TextWeight
   const textAlign = (data.textAlign ?? 'left') as TextAlign
@@ -39,4 +40,4 @@ export function TextNode({ id, data, selected }: NodeProps<AppNode>) {
       />
     </div>
   )
-}
+})

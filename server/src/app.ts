@@ -1,6 +1,7 @@
 import { serveStatic } from '@hono/node-server/serve-static'
 import type { Prisma } from '@prisma/client'
 import { Hono } from 'hono'
+import { bodyLimit } from 'hono/body-limit'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { secureHeaders } from 'hono/secure-headers'
@@ -9,6 +10,7 @@ import { env } from './env.js'
 import {
   assertPayloadSize,
   isProjectPayload,
+  MAX_PAYLOAD_BYTES,
   stripSessionFlags,
   type ProjectPayload,
 } from './project-payload.js'
@@ -83,6 +85,25 @@ function toClientProject(row: {
   }
 }
 
+/** Columns the client needs; skips `userId`/`createdAt` and keeps the JSON payload read once. */
+const PROJECT_ROW_SELECT = { id: true, name: true, payload: true, updatedAt: true } as const
+const PUBLIC_USER_SELECT = { id: true, email: true, createdAt: true } as const
+
+/** Rejects oversized project bodies before JSON parsing; the message matches the size check below. */
+const projectBodyLimit = bodyLimit({
+  // Pretty-printed JSON is larger than the compact form assertPayloadSize measures.
+  maxSize: MAX_PAYLOAD_BYTES * 2,
+  onError: (c) => c.json({ error: 'Проект слишком большой' }, 400),
+})
+
+/**
+ * Hashed files under /assets never change content, so browsers may keep them for a year;
+ * index.html must always be revalidated so a deploy is picked up immediately.
+ */
+function staticCacheControl(path: string): string {
+  return path.includes('/assets/') ? 'public, max-age=31536000, immutable' : 'no-cache'
+}
+
 export function createApp() {
   const app = new Hono<{ Variables: AppVariables }>()
 
@@ -110,7 +131,7 @@ export function createApp() {
   app.get('/api/auth/me', async (c) => {
     const session = await readSession(c)
     if (!session) return c.json({ error: 'Нужна авторизация' }, 401)
-    const user = await db.user.findUnique({ where: { id: session.sub } })
+    const user = await db.user.findUnique({ where: { id: session.sub }, select: PUBLIC_USER_SELECT })
     if (!user) {
       clearSession(c)
       return c.json({ error: 'Нужна авторизация' }, 401)
@@ -124,7 +145,7 @@ export function createApp() {
     }
     const parsed = parseAuthBody(await c.req.json().catch(() => null))
     if ('error' in parsed) return c.json({ error: parsed.error }, 400)
-    const exists = await db.user.findUnique({ where: { email: parsed.email } })
+    const exists = await db.user.findUnique({ where: { email: parsed.email }, select: { id: true } })
     if (exists) return c.json({ error: 'Такая почта уже зарегистрирована' }, 409)
     const user = await db.user.create({
       data: {
@@ -159,6 +180,7 @@ export function createApp() {
     const rows = await db.project.findMany({
       where: { userId: c.get('userId') },
       orderBy: { updatedAt: 'desc' },
+      select: PROJECT_ROW_SELECT,
     })
     const projects = rows.flatMap((row) => {
       const project = toClientProject(row)
@@ -170,6 +192,7 @@ export function createApp() {
   app.get('/api/projects/:id', requireUser, async (c) => {
     const row = await db.project.findFirst({
       where: { id: c.req.param('id'), userId: c.get('userId') },
+      select: PROJECT_ROW_SELECT,
     })
     if (!row) return c.json({ error: 'Проект не найден' }, 404)
     const project = toClientProject(row)
@@ -177,54 +200,59 @@ export function createApp() {
     return c.json({ project })
   })
 
-  app.post('/api/projects', requireUser, async (c) => {
+  app.post('/api/projects', requireUser, projectBodyLimit, async (c) => {
     const parsed = parseProjectBody(await c.req.json().catch(() => null))
     if ('error' in parsed) return c.json({ error: parsed.error }, 400)
     const userId = c.get('userId')
-    const existing = await db.project.findUnique({ where: { id: parsed.id } })
+    // Ownership check only needs the owner column, not the multi-megabyte payload.
+    const existing = await db.project.findUnique({ where: { id: parsed.id }, select: { userId: true } })
     if (existing && existing.userId !== userId) {
       return c.json({ error: 'Проект с таким id уже есть' }, 409)
     }
+    const payload = toJson(parsed)
     const row = await db.project.upsert({
       where: { id: parsed.id },
       create: {
         id: parsed.id,
         userId,
         name: parsed.title,
-        payload: toJson(parsed),
+        payload,
       },
       update: {
         name: parsed.title,
-        payload: toJson(parsed),
+        payload,
       },
+      select: PROJECT_ROW_SELECT,
     })
     const project = toClientProject(row)
     if (!project) return c.json({ error: 'Не удалось сохранить проект' }, 500)
     return c.json({ project }, existing ? 200 : 201)
   })
 
-  app.put('/api/projects/:id', requireUser, async (c) => {
+  app.put('/api/projects/:id', requireUser, projectBodyLimit, async (c) => {
     const parsed = parseProjectBody(await c.req.json().catch(() => null))
     if ('error' in parsed) return c.json({ error: parsed.error }, 400)
     const id = c.req.param('id')
     if (parsed.id !== id) return c.json({ error: 'id проекта не совпадает' }, 400)
     const userId = c.get('userId')
-    const existing = await db.project.findUnique({ where: { id } })
+    const existing = await db.project.findUnique({ where: { id }, select: { userId: true } })
     if (existing && existing.userId !== userId) {
       return c.json({ error: 'Нет доступа к проекту' }, 403)
     }
+    const payload = toJson(parsed)
     const row = await db.project.upsert({
       where: { id },
       create: {
         id,
         userId,
         name: parsed.title,
-        payload: toJson(parsed),
+        payload,
       },
       update: {
         name: parsed.title,
-        payload: toJson(parsed),
+        payload,
       },
+      select: PROJECT_ROW_SELECT,
     })
     const project = toClientProject(row)
     if (!project) return c.json({ error: 'Не удалось сохранить проект' }, 500)
@@ -251,9 +279,16 @@ export function createApp() {
       '/*',
       serveStatic({
         root: './dist',
+        onFound: (path, c) => c.header('Cache-Control', staticCacheControl(path)),
       }),
     )
-    app.get('*', serveStatic({ path: './dist/index.html' }))
+    app.get(
+      '*',
+      serveStatic({
+        path: './dist/index.html',
+        onFound: (_path, c) => c.header('Cache-Control', 'no-cache'),
+      }),
+    )
   }
 
   return app

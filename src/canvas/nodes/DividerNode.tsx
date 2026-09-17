@@ -1,12 +1,13 @@
 import { Handle, NodeResizer, Position, type NodeProps } from '@xyflow/react'
+import { memo } from 'react'
 import { nodeAccent } from '../../model/color'
 import { requireKind } from '../../model/kinds'
-import { useApp } from '../../store/AppContext'
+import { useNodeScene } from '../../store/AppContext'
 import type { AppNode } from '../../model/types'
 
-export function DividerNode({ data, selected }: NodeProps<AppNode>) {
-  const { project } = useApp()
-  const kind = requireKind(project.kinds, data.kind)
+export const DividerNode = memo(function DividerNode({ data, selected }: NodeProps<AppNode>) {
+  const { kinds } = useNodeScene()
+  const kind = requireKind(kinds, data.kind)
   const accent = nodeAccent(data, kind)
 
   return (
@@ -27,4 +28,4 @@ export function DividerNode({ data, selected }: NodeProps<AppNode>) {
       <Handle type="source" position={Position.Right} className="app-handle" />
     </div>
   )
-}
+})

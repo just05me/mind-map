@@ -10,7 +10,8 @@ export type ProjectPayload = {
   updatedAt: string
 }
 
-const MAX_PAYLOAD_BYTES = 4 * 1024 * 1024
+/** Limit on the serialized project; the raw request body is capped a bit above it. */
+export const MAX_PAYLOAD_BYTES = 4 * 1024 * 1024
 const MAX_ID_LENGTH = 80
 
 export function isProjectPayload(value: unknown): value is ProjectPayload {

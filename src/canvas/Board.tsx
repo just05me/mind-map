@@ -10,6 +10,7 @@ import {
   type OnConnectEnd,
   type OnConnectStart,
   type OnNodeDrag,
+  type Viewport,
 } from '@xyflow/react'
 import { useCallback, useEffect, useMemo, useRef, useState, type DragEvent, type MouseEvent } from 'react'
 import { requireKind } from '../model/kinds'
@@ -49,6 +50,17 @@ const nodeTypes = {
 const edgeTypes = {
   default: LabeledEdge,
 }
+
+// Hoisted so React Flow's prop-sync effects do not fire on every Board render.
+const FIT_VIEW_OPTIONS = { maxZoom: 1, padding: 0.2 }
+const FIT_ALL_OPTIONS = { padding: 0.18, duration: 300, maxZoom: 1.2 }
+const PRO_OPTIONS = { hideAttribution: true }
+const DEFAULT_EDGE_OPTIONS = { type: 'default' }
+const CONNECTION_LINE_STYLE = { stroke: 'var(--accent)', strokeWidth: 1.6 }
+const MULTI_SELECTION_KEYS = ['Meta', 'Control', 'Shift']
+
+/** Keeps identical results for unchanged inputs so React Flow does not rebuild untouched nodes/edges. */
+type StyledEdgeEntry = { edge: AppEdge; color: string; styled: AppEdge }
 
 /** True only for empty canvas: nodes and edges are rendered inside the pane element too. */
 function isPaneTarget(target: EventTarget | null): boolean {
@@ -95,25 +107,42 @@ export function Board() {
   const canvasColor = resolveCanvasColor(project.canvasColor, state.theme)
   const readOnly = state.interactionMode === 'view'
 
-  // Frames and groups sit under edges so lines crossing them stay visible.
+  // Frames and groups sit under edges so lines crossing them stay visible. The WeakMap hands
+  // back the same layered object for an unchanged node, so React Flow skips re-adopting it.
+  const layeredCache = useRef(new WeakMap<AppNode, AppNode>())
   const layeredNodes = useMemo<AppNode[]>(
     () =>
-      project.nodes.map((node) =>
-        isContainerType(node.type) && node.zIndex == null ? { ...node, zIndex: -1 } : node,
-      ),
+      project.nodes.map((node) => {
+        if (!isContainerType(node.type) || node.zIndex != null) return node
+        const cached = layeredCache.current.get(node)
+        if (cached) return cached
+        const layered = { ...node, zIndex: -1 }
+        layeredCache.current.set(node, layered)
+        return layered
+      }),
     [project.nodes],
   )
 
+  // Same idea for edges: an edge is rebuilt only when it or its resolved color changed,
+  // otherwise typing in one node would re-render every edge on the canvas.
+  const styledCache = useRef(new Map<string, StyledEdgeEntry>())
   const styledEdges = useMemo<AppEdge[]>(() => {
     const byId = new Map(project.nodes.map((node) => [node.id, node]))
-    return project.edges.map((edge) => {
+    const previous = styledCache.current
+    const next = new Map<string, StyledEdgeEntry>()
+    const result = project.edges.map((edge) => {
       const source = byId.get(edge.source)
-      const width = Math.min(Math.max(edge.data?.width ?? 1.6, 1), 8)
       const color =
         edge.data?.color ??
         source?.data.accentColor ??
         (source ? requireKind(project.kinds, source.data.kind).color : '#8e8e93')
-      return {
+      const cached = previous.get(edge.id)
+      if (cached && cached.edge === edge && cached.color === color) {
+        next.set(edge.id, cached)
+        return cached.styled
+      }
+      const width = Math.min(Math.max(edge.data?.width ?? 1.6, 1), 8)
+      const styled: AppEdge = {
         ...edge,
         style: {
           ...edge.style,
@@ -127,7 +156,11 @@ export function Board() {
           color,
         },
       }
+      next.set(edge.id, { edge, color, styled })
+      return styled
     })
+    styledCache.current = next
+    return result
   }, [project.edges, project.nodes, project.kinds])
 
   const onConnectStart: OnConnectStart = useCallback((_event, params) => {
@@ -319,17 +352,23 @@ export function Board() {
   useEffect(() => {
     const command = state.layoutCommand
     if (!command) return
+    // Dagre lives in a lazy chunk; the graph is captured now and applied once it resolves.
+    const applyLayout = (direction: 'LR' | 'TB') => {
+      const { nodes, edges } = project
+      void layoutGraph(nodes, edges, direction).then((placed) => {
+        setGraph(placed, edges)
+        window.setTimeout(() => void fitView(FIT_ALL_OPTIONS), 30)
+      })
+    }
     switch (command) {
       case 'fit':
-        void fitView({ padding: 0.18, duration: 300, maxZoom: 1.2 })
+        void fitView(FIT_ALL_OPTIONS)
         break
       case 'horizontal':
-        setGraph(layoutGraph(project.nodes, project.edges, 'LR'), project.edges)
-        window.setTimeout(() => void fitView({ padding: 0.18, duration: 300, maxZoom: 1.2 }), 30)
+        applyLayout('LR')
         break
       case 'vertical':
-        setGraph(layoutGraph(project.nodes, project.edges, 'TB'), project.edges)
-        window.setTimeout(() => void fitView({ padding: 0.18, duration: 300, maxZoom: 1.2 }), 30)
+        applyLayout('TB')
         break
       default: {
         const _never: never = command
@@ -337,7 +376,7 @@ export function Board() {
       }
     }
     clearLayout()
-  }, [clearLayout, fitView, project.edges, project.nodes, setGraph, state.layoutCommand])
+  }, [clearLayout, fitView, project, setGraph, state.layoutCommand])
 
   // Keep a live reference so the single keydown listener never reads stale state.
   const live = useRef(app)
@@ -515,6 +554,45 @@ export function Board() {
     }
   }, [screenToFlowPosition])
 
+  const onNodeContextMenu = useCallback(
+    (event: MouseEvent, node: AppNode) => {
+      if (!node.selected) selectNode(node.id)
+      openMenu(event, { type: 'node', id: node.id })
+    },
+    [openMenu, selectNode],
+  )
+  const onEdgeContextMenu = useCallback(
+    (event: MouseEvent, edge: AppEdge) => {
+      selectEdge(edge.id)
+      openMenu(event, { type: 'edge', id: edge.id })
+    },
+    [openMenu, selectEdge],
+  )
+  const onPaneContextMenu = useCallback(
+    (event: MouseEvent | globalThis.MouseEvent) => openMenu(event, { type: 'pane' }),
+    [openMenu],
+  )
+  const onSelectionContextMenu = useCallback(
+    (event: MouseEvent, nodes: AppNode[]) => {
+      const first = nodes[0]
+      if (first) openMenu(event, { type: 'node', id: first.id })
+    },
+    [openMenu],
+  )
+  const onMoveEnd = useCallback(
+    (_event: unknown, viewport: Viewport) => setViewport(viewport),
+    [setViewport],
+  )
+  const minimapNodeColor = useCallback(
+    (node: AppNode) => node.data.accentColor ?? requireKind(project.kinds, node.data.kind).color,
+    [project.kinds],
+  )
+  const closeMenu = useCallback(() => setMenu(null), [])
+  const placeFromMenu = useCallback(
+    (kind: KindId, flow: { x: number; y: number }) => placeNode(kind, flow),
+    [placeNode],
+  )
+
   const tool: CanvasTool = spacePan ? 'pan' : state.canvasTool
   const interaction = readOnly ? interactionForViewMode() : interactionForTool(tool)
 
@@ -536,34 +614,25 @@ export function Board() {
         onNodeDoubleClick={onNodeDoubleClick}
         onEdgeClick={onEdgeClick}
         onNodeDragStop={onNodeDragStop}
-        onNodeContextMenu={(event, node) => {
-          if (!node.selected) selectNode(node.id)
-          openMenu(event, { type: 'node', id: node.id })
-        }}
-        onEdgeContextMenu={(event, edge) => {
-          selectEdge(edge.id)
-          openMenu(event, { type: 'edge', id: edge.id })
-        }}
-        onPaneContextMenu={(event) => openMenu(event, { type: 'pane' })}
-        onSelectionContextMenu={(event, nodes) => {
-          const first = nodes[0]
-          if (first) openMenu(event, { type: 'node', id: first.id })
-        }}
+        onNodeContextMenu={onNodeContextMenu}
+        onEdgeContextMenu={onEdgeContextMenu}
+        onPaneContextMenu={onPaneContextMenu}
+        onSelectionContextMenu={onSelectionContextMenu}
         onDragOver={onDragOver}
         onDrop={onDrop}
-        onMoveEnd={(_event, viewport) => setViewport(viewport)}
+        onMoveEnd={onMoveEnd}
         defaultViewport={project.viewport}
         fitView={fitOnOpen}
-        fitViewOptions={{ maxZoom: 1, padding: 0.2 }}
+        fitViewOptions={FIT_VIEW_OPTIONS}
         colorMode={state.theme}
         deleteKeyCode={null}
         selectionKeyCode="Shift"
-        multiSelectionKeyCode={['Meta', 'Control', 'Shift']}
+        multiSelectionKeyCode={MULTI_SELECTION_KEYS}
         selectionMode={SelectionMode.Partial}
         connectionMode={ConnectionMode.Loose}
-        proOptions={{ hideAttribution: true }}
-        defaultEdgeOptions={{ type: 'default' }}
-        connectionLineStyle={{ stroke: 'var(--accent)', strokeWidth: 1.6 }}
+        proOptions={PRO_OPTIONS}
+        defaultEdgeOptions={DEFAULT_EDGE_OPTIONS}
+        connectionLineStyle={CONNECTION_LINE_STYLE}
         connectionRadius={28}
         panOnDrag={interaction.panOnDrag}
         selectionOnDrag={interaction.selectionOnDrag}
@@ -590,19 +659,11 @@ export function Board() {
             pannable
             zoomable
             className="!mb-16"
-            nodeColor={(node: AppNode) =>
-              node.data.accentColor ?? requireKind(project.kinds, node.data.kind).color
-            }
+            nodeColor={minimapNodeColor}
           />
         ) : null}
       </ReactFlow>
-      {menu ? (
-        <ContextMenu
-          menu={menu}
-          onClose={() => setMenu(null)}
-          onPlace={(kind, flow) => placeNode(kind, flow)}
-        />
-      ) : null}
+      {menu ? <ContextMenu menu={menu} onClose={closeMenu} onPlace={placeFromMenu} /> : null}
     </div>
   )
 }

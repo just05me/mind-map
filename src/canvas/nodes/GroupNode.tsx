@@ -1,14 +1,15 @@
 import { NodeResizer, type NodeProps } from '@xyflow/react'
+import { memo } from 'react'
 import { nodeAccent } from '../../model/color'
 import { requireKind } from '../../model/kinds'
-import { useApp } from '../../store/AppContext'
+import { useNodeScene } from '../../store/AppContext'
 import type { AppNode } from '../../model/types'
 import { InlineTitle } from './InlineTitle'
 import { NodeHandles } from './NodeHandles'
 
-export function GroupNode({ id, data, selected }: NodeProps<AppNode>) {
-  const { project } = useApp()
-  const kind = requireKind(project.kinds, data.kind)
+export const GroupNode = memo(function GroupNode({ id, data, selected }: NodeProps<AppNode>) {
+  const { kinds } = useNodeScene()
+  const kind = requireKind(kinds, data.kind)
   const accent = nodeAccent(data, kind)
   const fill = data.fillColor ?? (selected ? `${accent}14` : 'color-mix(in srgb, var(--text) 4%, transparent)')
 
@@ -36,4 +37,4 @@ export function GroupNode({ id, data, selected }: NodeProps<AppNode>) {
       <NodeHandles />
     </div>
   )
-}
+})

@@ -1,5 +1,14 @@
-import Dagre from '@dagrejs/dagre'
 import type { AppEdge, AppNode, AppNodeType } from '../model/types'
+
+// Dagre is only needed for auto-layout, so it ships as its own chunk.
+const loadLayoutEngine = () => import('@dagrejs/dagre')
+
+/** Warms the Dagre chunk (e.g. when the layout menu opens) so the command applies instantly. */
+export function preloadLayoutEngine(): void {
+  void loadLayoutEngine().catch(() => {
+    // Ignored here: layoutGraph rejects when the user actually runs a layout.
+  })
+}
 
 function nodeSize(node: AppNode): { width: number; height: number } {
   const measuredW = node.measured?.width
@@ -38,11 +47,12 @@ function sizeForType(type: AppNodeType | undefined): { width: number; height: nu
   }
 }
 
-export function layoutGraph(
+export async function layoutGraph(
   nodes: AppNode[],
   edges: AppEdge[],
   direction: 'LR' | 'TB',
-): AppNode[] {
+): Promise<AppNode[]> {
+  const { default: Dagre } = await loadLayoutEngine()
   const graph = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
   graph.setGraph({ rankdir: direction, nodesep: 48, ranksep: 90, marginx: 40, marginy: 40 })
 

@@ -1,18 +1,19 @@
 import { type NodeProps } from '@xyflow/react'
+import { memo } from 'react'
 import { contrastText, nodeAccent, nodeFill } from '../../model/color'
 import { requireKind } from '../../model/kinds'
 import { isShapeNode, nodeDesign } from '../../model/node-design'
 import { statusClass, statusLabel } from '../../model/status'
 import type { AppNode, NodeData } from '../../model/types'
-import { useApp } from '../../store/AppContext'
+import { useNodeScene } from '../../store/AppContext'
 import { InlineTitle } from './InlineTitle'
 import { KindGlyph } from './KindGlyph'
 import { NodeArt } from './NodeArt'
 import { NodeHandles } from './NodeHandles'
 
-export function KindNode({ id, data, selected }: NodeProps<AppNode>) {
-  const { project } = useApp()
-  const kind = requireKind(project.kinds, data.kind)
+export const KindNode = memo(function KindNode({ id, data, selected }: NodeProps<AppNode>) {
+  const { kinds } = useNodeScene()
+  const kind = requireKind(kinds, data.kind)
   const design = nodeDesign(data.kind)
   const accent = nodeAccent(data, kind)
 
@@ -20,7 +21,7 @@ export function KindNode({ id, data, selected }: NodeProps<AppNode>) {
     return <ShapeNode id={id} data={data} selected={selected} accent={accent} glyph={design.glyph} shape={design.shape} kindName={kind.name} />
   }
   return <CardNode id={id} data={data} selected={selected} accent={accent} glyph={design.glyph} kindName={kind.name} />
-}
+})
 
 type BaseProps = {
   id: string

@@ -6,13 +6,13 @@ import {
   useStore,
   type EdgeProps,
 } from '@xyflow/react'
-import { useEffect, useRef, useState } from 'react'
-import { useApp } from '../../store/AppContext'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { useAppActions, useNodeScene } from '../../store/AppContext'
 import type { AppEdge } from '../../model/types'
 import { Icon } from '../../ui/Icon'
 import { getEdgeParams, getRoutedPath } from './floating'
 
-export function LabeledEdge({
+export const LabeledEdge = memo(function LabeledEdge({
   id,
   source,
   target,
@@ -27,11 +27,19 @@ export function LabeledEdge({
   selected,
   data,
 }: EdgeProps<AppEdge>) {
-  const { deleteElements, state, updateEdgeData } = useApp()
+  const { deleteElements, updateEdgeData } = useAppActions()
+  const { readOnly } = useNodeScene()
   const [editing, setEditing] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
-  const internalNodes = useStore((store) => Array.from(store.nodeLookup.values()))
-  const readOnly = state.interactionMode === 'view'
+  // Obstacle routing needs every node's box. `nodeLookup` is one long-lived Map that React Flow
+  // refills in place, and `nodes` is replaced whenever any node moves, resizes or is measured —
+  // so together they re-run routing exactly when geometry changes, not on every pan/zoom frame.
+  const nodeLookup = useStore((store) => store.nodeLookup)
+  const nodesVersion = useStore((store) => store.nodes)
+  const internalNodes = useMemo(
+    () => (nodesVersion ? Array.from(nodeLookup.values()) : []),
+    [nodeLookup, nodesVersion],
+  )
 
   // Float the endpoints to the nearest borders once both nodes are measured;
   // fall back to the handle-based coordinates React Flow supplies otherwise.
@@ -49,14 +57,18 @@ export function LabeledEdge({
     targetPosition: floating?.targetPos ?? targetPosition,
     curvature: 0.3,
   })
-  const routed = floating
-    ? getRoutedPath(
-        { x: floating.sx, y: floating.sy },
-        { x: floating.tx, y: floating.ty },
-        internalNodes,
-        new Set([source, target]),
-      )
-    : null
+  // Routing is the expensive part; keyed on the endpoint coordinates and the node geometry version.
+  const sx = floating?.sx
+  const sy = floating?.sy
+  const tx = floating?.tx
+  const ty = floating?.ty
+  const routed = useMemo(
+    () =>
+      sx !== undefined && sy !== undefined && tx !== undefined && ty !== undefined
+        ? getRoutedPath({ x: sx, y: sy }, { x: tx, y: ty }, internalNodes, new Set([source, target]))
+        : null,
+    [sx, sy, tx, ty, internalNodes, source, target],
+  )
   const path = routed?.path ?? fallbackPath
   const labelX = routed?.labelX ?? fallbackLabelX
   const labelY = routed?.labelY ?? fallbackLabelY
@@ -127,4 +139,4 @@ export function LabeledEdge({
       </EdgeLabelRenderer>
     </>
   )
-}
+})

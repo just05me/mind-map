@@ -1,14 +1,15 @@
 import { type NodeProps } from '@xyflow/react'
+import { memo } from 'react'
 import { nodeAccent, nodeFill } from '../../model/color'
 import { requireKind } from '../../model/kinds'
-import { useApp } from '../../store/AppContext'
+import { useNodeScene } from '../../store/AppContext'
 import type { AppNode } from '../../model/types'
 import { InlineTitle } from './InlineTitle'
 import { NodeHandles } from './NodeHandles'
 
-export function CommentNode({ id, data, selected }: NodeProps<AppNode>) {
-  const { project } = useApp()
-  const kind = requireKind(project.kinds, data.kind)
+export const CommentNode = memo(function CommentNode({ id, data, selected }: NodeProps<AppNode>) {
+  const { kinds } = useNodeScene()
+  const kind = requireKind(kinds, data.kind)
   const fill = nodeFill(data, '#fff3d6')
   const accent = nodeAccent(data, kind)
 
@@ -43,4 +44,4 @@ export function CommentNode({ id, data, selected }: NodeProps<AppNode>) {
       />
     </div>
   )
-}
+})

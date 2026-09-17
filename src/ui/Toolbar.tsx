@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
+import { preloadLayoutEngine } from '../canvas/layout'
 import { buildImportPrompt } from '../export/ai-prompt'
 import { copyText } from '../export/clipboard'
 import { exportProjectJson } from '../export/json'
 import { exportProjectMarkdown } from '../export/markdown'
-import { exportMapPng } from '../export/png'
+import { exportMapPng, preloadPngRenderer } from '../export/png'
 import { useApp } from '../store/AppContext'
 import type { ViewMode } from '../model/types'
 import { AccountMenu } from './AccountMenu'
@@ -62,7 +63,14 @@ export function Toolbar() {
           <Dropdown
             align="right"
             trigger={({ toggle, open }) => (
-              <button type="button" className={`bar-btn ${open ? 'is-active' : ''}`} onClick={toggle}>
+              <button
+                type="button"
+                className={`bar-btn ${open ? 'is-active' : ''}`}
+                onClick={() => {
+                  preloadLayoutEngine()
+                  toggle()
+                }}
+              >
                 <Icon name="layout" size={15} />
                 <span className="hidden md:inline">Упорядочить</span>
               </button>
@@ -93,7 +101,14 @@ export function Toolbar() {
         <Dropdown
           align="right"
           trigger={({ toggle, open }) => (
-            <button type="button" className={`bar-btn ${open ? 'is-active' : ''}`} onClick={toggle}>
+            <button
+              type="button"
+              className={`bar-btn ${open ? 'is-active' : ''}`}
+              onClick={() => {
+                preloadPngRenderer()
+                toggle()
+              }}
+            >
               <Icon name="download" size={15} />
               <span className="hidden md:inline">Экспорт</span>
             </button>
